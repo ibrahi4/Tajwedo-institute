@@ -8,7 +8,7 @@ import Container from "@/components/shared/Container";
 import BlogCard from "./BlogCard";
 import BlogCTA from "./BlogCTA";
 import { useLocale } from "@/hooks/useLocale";
-import { BlogPost, BlogPostFormatted, formatBlogPost } from "@/types/blog";
+import { BlogPostFormatted } from "@/types/blog";
 
 const categories = ["all", "quran", "tajweed", "arabic", "islamic", "tips"] as const;
 
@@ -17,13 +17,13 @@ export default function BlogPageContent() {
   const { locale } = useLocale();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
-  
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { setLoading(false); }, []);
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
-  // Static fallback from translations
-  const staticPosts = useMemo(() => {
+  const staticPosts = useMemo<BlogPostFormatted[]>(() => {
     try {
       const totalCount = Number(t("posts.count"));
       return Array.from({ length: totalCount }, (_, i) => ({
@@ -37,22 +37,20 @@ export default function BlogPageContent() {
         date: t(`posts.items.${i}.date`),
         readTime: t(`posts.items.${i}.readTime`),
         author: t(`posts.items.${i}.author`),
-        tags: [],
+        tags: [] as string[],
       }));
     } catch {
       return [];
     }
   }, [t]);
 
-  const posts = staticPosts;
-
   const filtered = useMemo(() => {
-    let result = posts;
+    let result = staticPosts;
     if (activeCategory !== "all") {
       result = result.filter(
         (p) =>
           p.category === activeCategory ||
-          p.tags?.includes(activeCategory),
+          ((p.tags as string[] | undefined) || []).includes(activeCategory)
       );
     }
     if (searchQuery) {
@@ -60,11 +58,11 @@ export default function BlogPageContent() {
       result = result.filter(
         (p) =>
           p.title.toLowerCase().includes(q) ||
-          p.excerpt.toLowerCase().includes(q),
+          p.excerpt.toLowerCase().includes(q)
       );
     }
     return result;
-  }, [activeCategory, searchQuery, posts]);
+  }, [activeCategory, searchQuery, staticPosts]);
 
   return (
     <main>
