@@ -17,6 +17,7 @@ import { useLocale } from "@/hooks/useLocale";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { Link } from "@/i18n/navigation";
+import { trackEvent } from "@/components/shared/GoogleTagManager";
 import CountrySelect from "./CountrySelect";
 import PhoneInput from "./PhoneInput";
 import { findCountryByName } from "./countries-data";
@@ -368,6 +369,18 @@ ${form.parentName ? `*Parent:* ${form.parentName} (${form.parentRelation}) - ${f
     const waUrl = `${WHATSAPP_LINK}?text=${encoded}`;
 
     window.open(waUrl, "_blank");
+    trackEvent("generate_lead", {
+      form_name: "book_trial",
+      currency: "USD",
+      value: 1,
+      service: form.service,
+      country: form.country,
+    });
+    trackEvent("book_trial_success", {
+      service: form.service,
+      level: form.currentLevel,
+      country: form.country,
+    });
     setSuccess(true);
   };
 

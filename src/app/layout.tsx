@@ -89,6 +89,8 @@ export default function RootLayout({
         className="min-h-screen flex flex-col"
         style={{ fontFamily: "var(--font-body, var(--font-sans))" }}
       >
+        <GTMNoscript />
+        <GoogleTagManager />
         {children}
       </body>
     </html>

@@ -12,6 +12,7 @@ import Container from "@/components/shared/Container";
 import { useTranslations } from "next-intl";
 import { useLocale } from "@/hooks/useLocale";
 import { WHATSAPP_LINK, TELEGRAM_LINK } from "@/lib/constants";
+import { trackEvent } from "@/components/shared/GoogleTagManager";
 
 export default function ContactPageContent() {
   const t = useTranslations("contactPage");
@@ -40,6 +41,14 @@ export default function ContactPageContent() {
 
     const waUrl = `${WHATSAPP_LINK}?text=${encodeURIComponent(msg)}`;
     window.open(waUrl, "_blank");
+    trackEvent("generate_lead", {
+      form_name: "contact",
+      currency: "USD",
+      value: 1,
+    });
+    trackEvent("contact_success", {
+      form_name: "contact",
+    });
     setSubmitted(true);
   };
 
