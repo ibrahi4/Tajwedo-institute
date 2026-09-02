@@ -5,27 +5,22 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { DM_Serif_Display } from "next/font/google";
 
-interface LogoProps {
-  className?: string;
-  light?: boolean;
-}
-
 const dmSerif = DM_Serif_Display({
   subsets: ["latin"],
   weight: ["400"],
   display: "swap",
 });
 
-export default function Logo({ className = "", light = false }: LogoProps) {
+export default function Logo({ className = "", light = false }: { className?: string; light?: boolean }) {
   return (
     <Link href="/" className={`flex items-center gap-3 group ${className}`}>
-      <div className="relative w-12 h-12 shrink-0 overflow-hidden transition-transform duration-500 group-hover:scale-105">
+      <div className="relative w-12 h-12 shrink-0">
         <Image
           src="/Tajwedo-Public-Assets/logo.webp"
           alt="Tajwedo Institute"
           width={48}
           height={48}
-          className="object-contain w-12 h-12"
+          className="w-12 h-12 object-contain"
           priority
         />
       </div>
@@ -40,6 +35,7 @@ export default function Logo({ className = "", light = false }: LogoProps) {
           ajwed
           <span className={light ? "text-[#E8C56A]" : "text-[#C8A96E]"}>o</span>
         </h1>
+
         <span
           className={`mt-1.5 pl-0.5 text-[9px] font-medium tracking-[0.45em] uppercase ${
             light ? "text-white/60" : "text-[#0D4F4F]/60"
