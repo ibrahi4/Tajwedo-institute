@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { Play, ArrowRight, ArrowLeft, Sparkles, Star, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -76,11 +77,18 @@ export default function HeroSection() {
           className={`w-full h-full ${isRTL ? "scale-x-[-1]" : ""}`}
           style={{ transformOrigin: "center" }}
         >
-          <img
-            src="/Tajwedo-Public-Assets/herosection.png"
-            alt=""
-            className="w-full h-full object-cover scale-105 animate-slow-zoom"
-            loading="eager"
+          <Image
+            src="/Tajwedo-Public-Assets/herosection.webp"
+            alt="Tajwedo Institute"
+            fill
+            priority
+            sizes="100vw"
+            quality={75}
+            className="object-cover scale-105 animate-slow-zoom"
+            priority
+            sizes="100vw"
+            quality={75}
+            className="object-cover scale-105 animate-slow-zoom"
           />
         </div>
 

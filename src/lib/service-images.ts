@@ -9,12 +9,12 @@
 const BASE_PATH = "/Tajwedo-Public-Assets/Services";
 
 export const SERVICE_IMAGES: Record<string, string> = {
-  "quran-recitation": `${BASE_PATH}/Quran Recitation.jpeg`,
-  "tajweed": `${BASE_PATH}/Tajweed.jpeg`,
-  "arabic-language": `${BASE_PATH}/Arabic Language.jpeg`,
-  "islamic-studies": `${BASE_PATH}/Islamic Studies.jpeg`,
-  "kids-program": `${BASE_PATH}/Kids Program.jpeg`,
-  "new-muslims": `${BASE_PATH}/New Muslims.jpeg`,
+  "quran-recitation": `${BASE_PATH}/Quran Recitation.webp`,
+  "tajweed": `${BASE_PATH}/Tajweed.webp`,
+  "arabic-language": `${BASE_PATH}/Arabic Language.webp`,
+  "islamic-studies": `${BASE_PATH}/Islamic Studies.webp`,
+  "kids-program": `${BASE_PATH}/Kids Program.webp`,
+  "new-muslims": `${BASE_PATH}/New Muslims.webp`,
 };
 
 /**

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   BookOpen,
@@ -111,12 +112,7 @@ export default function ServicesOverview() {
                   >
                     {/* ─────── IMAGE COVER ─────── */}
                     <div className="relative h-48 overflow-hidden">
-                      <img
-                        src={imageUrl}
-                        alt={t(`services.${index}.title`)}
-                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                        loading="lazy"
-                      />
+                      <Image src={imageUrl} alt="" fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" />
 
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
