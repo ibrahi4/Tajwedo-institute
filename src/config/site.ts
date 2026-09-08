@@ -4,11 +4,11 @@ export const siteConfig = {
   description: 'Professional online Quran, Tajweed, Arabic language, and Islamic Studies education for all ages and levels. Certified Al-Azhar teachers.',
   url: 'https://tajwedo.com',
   ogImage: 'https://tajwedo.com/og-image.jpg',
-  author: 'Tajwedo Institute',
+  author: 'Tajwedo InsTituTe',
   contact: {
     email: 'info@tajwedo.com',
-    whatsapp: '+201091857418',
-    whatsappLink: 'https://wa.me/201091857418',
+    whatsapp: '+201043503232',
+    whatsappLink: 'https://wa.me/201043503232',
   },
   social: {
     youtube: 'https://youtube.com/@tajwedoinstitute',
