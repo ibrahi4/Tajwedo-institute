@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
   },
+  other: {
+    "color-scheme": "light only",
+  },
   manifest: "/Tajwedo-Public-Assets/favicon-for-app/manifest.json",
   icons: {
     icon: [
@@ -36,13 +39,6 @@ export const metadata: Metadata = {
         url: "/Tajwedo-Public-Assets/favicon-for-app/apple-icon.png",
         sizes: "180x180",
         type: "image/png",
-      },
-    ],
-    other: [
-      {
-        rel: "mask-icon",
-        url: "/Tajwedo-Public-Assets/favicon-for-app/icon0.svg",
-        color: "#0D4F4F",
       },
     ],
   },
@@ -67,6 +63,7 @@ export default function RootLayout({
     <html
       data-scroll-behavior="smooth"
       suppressHydrationWarning
+      style={{ colorScheme: "light only" }}
       className={cn(
         plusJakarta.variable,
         ibmPlexArabic.variable,
@@ -78,10 +75,18 @@ export default function RootLayout({
         "font-sans"
       )}
     >
+      <head>
+        <meta name="color-scheme" content="light only" />
+        <meta name="supported-color-schemes" content="light" />
+      </head>
       <body
         suppressHydrationWarning
-        className="min-h-screen flex flex-col"
-        style={{ fontFamily: "var(--font-body, var(--font-sans))" }}
+        className="min-h-screen flex flex-col bg-white text-gray-900"
+        style={{
+          fontFamily: "var(--font-body, var(--font-sans))",
+          colorScheme: "light only",
+          backgroundColor: "#ffffff",
+        }}
       >
         <GTMNoscript />
         <GoogleTagManager />
