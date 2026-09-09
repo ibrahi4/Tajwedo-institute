@@ -12,7 +12,7 @@ export default function FloatingContactButtons() {
     ? encodeURIComponent("السلام عليكم، أود الاستفسار عن دروس معهد تجويدو.")
     : encodeURIComponent("Assalamu Alaikum! I would like to inquire about lessons at Tajwedo Institute.");
 
-  const waUrl = `${WHATSAPP_LINK || "https://wa.me/201091857418"}?text=${whatsappText}`;
+  const waUrl = `${WHATSAPP_LINK || "https://wa.me/201043503232"}?text=${whatsappText}`;
   const tgUrl = TELEGRAM_LINK || "https://t.me/TajwedoInstitute";
 
   const pushWhatsAppEvent = () => {
