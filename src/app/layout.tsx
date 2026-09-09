@@ -13,7 +13,6 @@ import "../styles/animations.css";
 import "../styles/islamic-patterns.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
-import GoogleTagManager, { GTMNoscript } from "@/components/shared/GoogleTagManager";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -78,6 +77,22 @@ export default function RootLayout({
       <head>
         <meta name="color-scheme" content="light only" />
         <meta name="supported-color-schemes" content="light" />
+        {/* Synchronous GTM DataLayer Initialization */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              window.dataLayer.push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+              });
+            `,
+          }}
+        />
+        <script
+          async
+          src="https://www.googletagmanager.com/gtm.js?id=GTM-P5JSLSHS"
+        />
       </head>
       <body
         suppressHydrationWarning
@@ -88,8 +103,14 @@ export default function RootLayout({
           backgroundColor: "#ffffff",
         }}
       >
-        <GTMNoscript />
-        <GoogleTagManager />
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-P5JSLSHS"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         {children}
       </body>
     </html>
