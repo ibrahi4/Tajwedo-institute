@@ -1,12 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { MessageCircle, Send } from "lucide-react";
 import { WHATSAPP_LINK, TELEGRAM_LINK } from "@/lib/constants";
 import { useLocale } from "@/hooks/useLocale";
 
 export default function FloatingContactButtons() {
   const { isRTL } = useLocale();
+  const lastWaClick = useRef<number>(0);
+  const lastTgClick = useRef<number>(0);
 
   const whatsappText = isRTL
     ? encodeURIComponent("السلام عليكم، أود الاستفسار عن دروس معهد تجويدو.")
@@ -15,7 +17,12 @@ export default function FloatingContactButtons() {
   const waUrl = `${WHATSAPP_LINK || "https://wa.me/201043503232"}?text=${whatsappText}`;
   const tgUrl = TELEGRAM_LINK || "https://t.me/TajwedoInstitute";
 
-  const pushWhatsAppEvent = () => {
+  const pushWhatsAppEvent = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const now = Date.now();
+    // Prevent double firing within 1 second
+    if (now - lastWaClick.current < 1000) return;
+    lastWaClick.current = now;
+
     if (typeof window !== "undefined") {
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
@@ -28,6 +35,8 @@ export default function FloatingContactButtons() {
         button_location: "floating_bottom_right",
         button_text: "WhatsApp",
         click_url: waUrl,
+        "gtm.elementUrl": waUrl,
+        elementUrl: waUrl,
         link_url: waUrl,
         destination_url: waUrl,
         platform: "whatsapp",
@@ -35,7 +44,11 @@ export default function FloatingContactButtons() {
     }
   };
 
-  const pushTelegramEvent = () => {
+  const pushTelegramEvent = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const now = Date.now();
+    if (now - lastTgClick.current < 1000) return;
+    lastTgClick.current = now;
+
     if (typeof window !== "undefined") {
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
@@ -48,6 +61,8 @@ export default function FloatingContactButtons() {
         button_location: "floating_bottom_left",
         button_text: "Telegram",
         click_url: tgUrl,
+        "gtm.elementUrl": tgUrl,
+        elementUrl: tgUrl,
         link_url: tgUrl,
         destination_url: tgUrl,
         platform: "telegram",
@@ -64,7 +79,6 @@ export default function FloatingContactButtons() {
         target="_blank"
         rel="noopener noreferrer"
         onClick={pushWhatsAppEvent}
-        onMouseDown={pushWhatsAppEvent}
         data-gtm-event="click_whatsapp"
         data-button-id="whatsapp_floating"
         data-button-name="WhatsApp Floating Button"
@@ -87,7 +101,6 @@ export default function FloatingContactButtons() {
         target="_blank"
         rel="noopener noreferrer"
         onClick={pushTelegramEvent}
-        onMouseDown={pushTelegramEvent}
         data-gtm-event="click_telegram"
         data-button-id="telegram_floating"
         data-button-name="Telegram Floating Button"
