@@ -18,12 +18,25 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://tajwedo.com"),
+  title: {
+    default: "Tajwedo Institute | Online Quran & Arabic Education",
+    template: "%s | Tajwedo Institute",
+  },
+  description: "Learn Quran, Tajweed, and Arabic online with certified teachers from Al-Azhar.",
   applicationName: "Tajwedo Institute",
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
   },
   other: {
     "color-scheme": "light only",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Tajwedo Institute",
+    title: "Tajwedo Institute | Online Quran & Arabic Education",
+    description: "Learn Quran, Tajweed, and Arabic online with certified teachers from Al-Azhar.",
+    url: "https://tajwedo.com",
+    images: [{ url: "/Tajwedo-Public-Assets/herosection.png", width: 1200, height: 630 }],
   },
   manifest: "/Tajwedo-Public-Assets/favicon-for-app/manifest.json",
   icons: {
@@ -53,6 +66,25 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
+// Google Site Name Schema
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Tajwedo Institute",
+  "alternateName": ["Tajwedo", "معهد تجويدو"],
+  "url": "https://tajwedo.com/"
+};
+
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "Tajwedo Institute",
+  "alternateName": "معهد تجويدو",
+  "url": "https://tajwedo.com",
+  "logo": "https://tajwedo.com/Tajwedo-Public-Assets/logo.png",
+  "description": "Online Quran, Tajweed, and Arabic Language Institute with certified Al-Azhar scholars."
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -77,7 +109,14 @@ export default function RootLayout({
       <head>
         <meta name="color-scheme" content="light only" />
         <meta name="supported-color-schemes" content="light" />
-        {/* Synchronous GTM DataLayer Initialization */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
