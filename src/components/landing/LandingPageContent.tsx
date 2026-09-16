@@ -5,8 +5,8 @@ import Image from "next/image";
 import {
   CheckCircle2, Sparkles, User, Mail, Globe, Heart, Shield, Star,
   MessageCircle, ArrowRight, ArrowLeft, Check, Phone, Play, Video,
-  X, Quote, Users, Award, Clock, BookOpen, ShieldCheck, ChevronDown,
-  Languages
+  X, Users, Award, Clock, BookOpen, ShieldCheck, ChevronDown,
+  Languages, ExternalLink
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/shared/Container";
@@ -14,6 +14,7 @@ import { WHATSAPP_LINK } from "@/lib/constants";
 import { useLocale } from "@/hooks/useLocale";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
+import { Link } from "@/i18n/navigation";
 import CountrySelect from "@/components/book-trial/CountrySelect";
 import PhoneInput from "@/components/book-trial/PhoneInput";
 import { findCountryByName } from "@/components/book-trial/countries-data";
@@ -30,9 +31,10 @@ export default function LandingPageContent() {
 
   const [form, setForm] = useState({
     name: "",
-    email: "",
     phone: "",
     country: "United States",
+    age: "",
+    gender: "",
     course: "quran-recitation",
     level: "BEGINNER",
     notes: "",
@@ -54,8 +56,12 @@ export default function LandingPageContent() {
   const validate = () => {
     const errs: Record<string, string> = {};
     if (!form.name.trim()) errs.name = isRTL ? "الاسم مطلوب" : "Name is required";
-    if (!form.email.trim() || !form.email.includes("@")) errs.email = isRTL ? "بريد إلكتروني صحيح" : "Valid email required";
     if (!form.phone.trim()) errs.phone = isRTL ? "رقم الواتساب مطلوب" : "WhatsApp phone required";
+    const ageNum = Number(form.age);
+    if (!form.age.trim() || Number.isNaN(ageNum) || ageNum < 3 || ageNum > 100) {
+      errs.age = isRTL ? "أدخل عمراً صحيحاً (3-100)" : "Enter a valid age (3-100)";
+    }
+    if (!form.gender) errs.gender = isRTL ? "اختر الجنس" : "Select gender";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -72,9 +78,10 @@ export default function LandingPageContent() {
     const msgText = `*New Free Trial Booking | Tajwedo Institute*
 ----------------------------------------
 *Name:* ${form.name}
-*Email:* ${form.email}
 *WhatsApp:* ${form.phone}
 *Country:* ${form.country}
+*Age:* ${form.age}
+*Gender:* ${form.gender}
 *Interested Course:* ${form.course}
 *Current Level:* ${form.level}
 ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
@@ -105,6 +112,7 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
 
   const waDirectUrl = `${WHATSAPP_LINK}?text=${encodeURIComponent(isRTL ? "السلام عليكم، أود حجز حصة تجريبية مجانية مع معهد تجويدو." : "Assalamu Alaikum, I would like to book a free trial session.")}`;
 
+  // Sample Class Recordings
   const sampleVideos = [
     {
       id: "v1",
@@ -113,7 +121,7 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
       location: "London, UK",
       duration: "02:15",
       tag: isRTL ? "برنامج الأطفال" : "Kids Program",
-      desc: isRTL ? "شاهد كيف تتفاعل الأستاذة مع الطفلة لتعليم مخارج الحروف بالإنجليزية واللطف." : "Watch how tutor Fatima guides 8yo Aisha in Noor Al-Bayan with patience & fun.",
+      desc: isRTL ? "شاهد كيف تتفاعل الأستاذة مع الطفلة لتعليم مخارج الحروف بالإنجليزية واللطف." : "Watch how tutor Fatima guides 8yo Aisha in Noor Al-Bayan with patience & clarity.",
       poster: "/Tajwedo-Public-Assets/Services/Kids Program.webp",
     },
     {
@@ -123,7 +131,7 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
       location: "Texas, USA",
       duration: "03:40",
       tag: isRTL ? "تصحيح التلاوة" : "Tajweed Mastery",
-      desc: isRTL ? "تصحيح دقيق لأحكام الترتيل والمدود مع شيخ أزهري معتمد." : "Detailed correction of Madd and Pronunciation with certified Al-Azhar Shaykh.",
+      desc: isRTL ? "تصحيح دقيق لأحكام الترتيل والمدود مع شيخ أزهري معتمد." : "Detailed correction of Madd and Pronunciation with a certified Al-Azhar Shaykh.",
       poster: "/Tajwedo-Public-Assets/Services/Tajweed.webp",
     },
     {
@@ -138,40 +146,39 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
     },
   ];
 
+  // Authentic Reviews (Lucide Icons, Zero Emojis)
   const allReviews = [
     {
       id: 1,
       category: "kids",
       name: "Sarah Mitchell",
       role: isRTL ? "ولي أمر طفلين" : "Parent of 2 Students",
-      country: "London, United Kingdom",
-      flag: "🇬🇧",
+      country: "London, UK",
       avatar: "SM",
       rating: 5,
-      date: "3 days ago",
+      date: "Verified Parent",
       course: "Kids Quran & Noor Al-Bayan",
       verified: true,
-      headline: isRTL ? "أفضل قرار اتخذته لطفليّ في الغربة!" : "Best decision for my children in the UK!",
+      headline: isRTL ? "أفضل قرار اتخذته لطفليّ في الغربة" : "Exceptional Progress For My Children",
       text: isRTL
-        ? "ابنتي كان لديها صعوبة شديدة في نطق الحروف العربية. خلال 3 أشهر فقط مع الأستاذة المعلمة بمعهد تجويدو أصبحت تقرأ الجزء الثلاثون بطلاقة. الصبر والأسلوب التفاعلي رائع جداً!"
-        : "My 8yo daughter was struggling with Arabic letters. Within 3 months with Tajwedo Institute, she is now reciting Juz Amma smoothly. The patience & structure are unmatched!",
+        ? "ابنتي كان لديها صعوبة شديدة في نطق الحروف العربية. خلال 3 أشهر فقط مع الأستاذة بمعهد تجويدو أصبحت تقرأ الجزء الثلاثون بطلاقة. الأسلوب التفاعلي رائع جداً."
+        : "My 8yo daughter was struggling with Arabic letters. Within 3 months with Tajwedo Institute, she is now reciting Juz Amma smoothly. Highly recommended!",
     },
     {
       id: 2,
       category: "adults",
       name: "Dr. Bilal Hassan",
       role: isRTL ? "طالب حفظ وتجويد" : "Adult Hifz Student",
-      country: "Texas, United States",
-      flag: "🇺🇸",
+      country: "Texas, USA",
       avatar: "BH",
       rating: 5,
-      date: "1 week ago",
+      date: "Verified Student",
       course: "Tajweed & Hifz Program",
       verified: true,
       headline: isRTL ? "معلمون أزاهرة بطلاقة ممتازة في الإنجليزية" : "True Al-Azhar Scholars Fluent in English",
       text: isRTL
-        ? "البحث عن شيخ أزهري متقن ومجاز ومتقن للغة الإنجليزية في أمريكا كان صعباً جداً. الحمد لله معهد تجويدو وفر لي شيخاً ممتازاً يصحح لي التلاوة بانتظام ومواعيد دقيقة."
-        : "Finding an authentic Al-Azhar tutor with fluent English in the US was hard. My Shaykh at Tajwedo fixes my Tajweed nuances with incredible accuracy and discipline.",
+        ? "البحث عن شيخ أزهري متقن ومجاز ومتقن للغة الإنجليزية في أمريكا كان صعباً جداً. الحمد لله معهد تجويدو وفر لي شيخاً ممتازاً يصحح لي التلاوة بمواعيد دقيقة."
+        : "Finding an authentic Al-Azhar tutor with fluent English in the US was hard. My Shaykh at Tajwedo fixes my Tajweed nuances with incredible accuracy.",
     },
     {
       id: 3,
@@ -179,16 +186,15 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
       name: "Maryam K.",
       role: isRTL ? "مسلمة جديدة" : "Revert Sister",
       country: "Toronto, Canada",
-      flag: "🇨🇦",
       avatar: "MK",
       rating: 5,
-      date: "2 weeks ago",
+      date: "Verified Student",
       course: "New Muslim Quran & Prayer",
       verified: true,
-      headline: isRTL ? "تجربة مريحة ومشجعة جداً" : "Felt completely respected and supported",
+      headline: isRTL ? "تجربة مريحة ومشجعة جداً" : "Felt Completely Respected and Supported",
       text: isRTL
         ? "كنت متخوفة جداً من البدء من الصفر. المعلمة جعلتني أشعر بالراحة التامة وعلمتني الصلاة والتلاوة خطوة بخطوة باللغة الإنجليزية بدون أي تعقيد."
-        : "As a revert, I was nervous about mispronouncing words. My female tutor was so gentle and taught me Al-Fatiha and Salah recitations in plain English step by step.",
+        : "As a revert, I was nervous about mispronouncing words. My female tutor was gentle and taught me Al-Fatiha and Salah recitations in plain English.",
     },
     {
       id: 4,
@@ -196,16 +202,15 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
       name: "Eng. Tariq Al-Mansoor",
       role: isRTL ? "ولي أمر" : "Parent of Zayd (7yo)",
       country: "Dubai, UAE",
-      flag: "🇦🇪",
       avatar: "TM",
       rating: 5,
-      date: "Just updated",
+      date: "Verified Parent",
       course: "Quran Memorization",
       verified: true,
       headline: isRTL ? "تقارير أسبوعية تفصيلية ومتابعة جادة" : "Professional Weekly Progress Tracking",
       text: isRTL
         ? "أهم ما يميز معهد تجويدو هو الالتزام والتقارير الأسبوعية التي تصلني عن حفظ ابني زياد. المعهد مؤسسي واحترافي وليس مجرد دروس عشوائية."
-        : "The weekly report card I receive about my son Zayd's Hifz progress is fantastic. It's a real structured academy, not just random lessons.",
+        : "The weekly report card I receive about my son Zayd's Hifz progress is fantastic. It is a real structured academy, not just random lessons.",
     },
   ];
 
@@ -216,7 +221,7 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
       q: isRTL ? "هل الحصة التجريبية مجانية بالفعل بدون أي دفع؟" : "Is the 30-minute trial session truly 100% free?",
       a: isRTL
         ? "نعم، الحصة التجريبية مجانية 100% وبدون إدخال أي بطاقة ائتمانية. هدفها تقييم مستوى الطالب والتعرف على المعلم وتحديد الخطة المناسبة."
-        : "Yes, 100% free with zero financial commitment or credit card needed. It's a risk-free 30-minute session to assess level & experience the teaching style.",
+        : "Yes, 100% free with zero financial commitment or credit card needed. It is a risk-free 30-minute session to assess level & experience the teaching style.",
     },
     {
       q: isRTL ? "هل توجد معلمات إناث للأخوات والأطفال؟" : "Are qualified female teachers available for sisters & kids?",
@@ -233,118 +238,118 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
   ];
 
   return (
-    <div className="min-h-screen bg-sand-50 font-sans text-gray-900 pb-20 sm:pb-0" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-[#FAFAF7] font-sans text-gray-900 pb-20 sm:pb-0" dir={isRTL ? "rtl" : "ltr"}>
       
-      {/* ── 0. TOP URGENCY BANNER ── */}
-      <div className="bg-gradient-to-r from-[#0D4F4F] via-[#1A6B5A] to-[#0D4F4F] text-white py-2 px-4 text-center text-xs font-bold flex items-center justify-center gap-2 border-b border-white/10">
-        <span className="flex h-2 w-2 relative">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400" />
-        </span>
+      {/* ── 0. SUBTLE TOP BAR ── */}
+      <div className="bg-[#0D4F4F] text-white py-2 px-4 text-center text-xs font-semibold flex items-center justify-center gap-2">
+        <Sparkles className="w-3.5 h-3.5 text-[#C8A96E]" />
         <span>
           {isRTL
-            ? "⚡ متبقي 4 أماكن فقط للحصص التجريبية المجانية لهذا الأسبوع - احجز مكانك الآن"
-            : "⚡ Only 4 Free Trial Class Spots Left For This Week - Reserve Yours Now"}
+            ? "معهد أزهري معتمد • استقبال طلبات تجريبية محدودة لهذا الأسبوع"
+            : "Al-Azhar Certified Academy • Limited Free Trial Spots Available This Week"}
         </span>
       </div>
 
-      {/* ── 1. MINIMAL HEADER ── */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-sand-200 py-3.5 shadow-sm">
+      {/* ── 1. MINIMAL SPACIOUS HEADER ── */}
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-[#EDE6DD] py-3.5">
         <Container>
           <div className="flex items-center justify-between">
+            {/* Logo */}
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 relative shrink-0">
+              <div className="w-9 h-9 relative shrink-0">
                 <Image
                   src="/Tajwedo-Public-Assets/logo.webp"
                   alt="Tajwedo Institute"
-                  width={40}
-                  height={48}
+                  width={36}
+                  height={44}
                   className="object-contain"
                   priority
                 />
               </div>
               <div className="flex flex-col leading-none">
-                <span className="font-extrabold text-lg text-primary tracking-tight">
-                  Tajwedo <span className="text-accent">Institute</span>
+                <span className="font-extrabold text-base text-[#0D4F4F] tracking-tight">
+                  Tajwedo <span className="text-[#C8A96E]">Institute</span>
                 </span>
                 <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">
-                  {isRTL ? "معهد أزهري أونلاين" : "Al-Azhar Online Academy"}
+                  {isRTL ? "معهد تجويدو المعتمد" : "Online Quran Academy"}
                 </span>
               </div>
             </div>
 
+            {/* Header Right Actions */}
             <div className="flex items-center gap-3">
+              {/* LINK TO MAIN WEBSITE */}
+              <Link
+                href="/"
+                className="hidden md:inline-flex items-center gap-1.5 text-xs font-bold text-[#0D4F4F] hover:text-[#1A6B5A] px-3 py-2 rounded-xl bg-sand-100 hover:bg-sand-200 transition-colors"
+              >
+                <span>{isRTL ? "تصفح الموقع الرئيسي" : "Visit Main Website"}</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+
               <a
                 href={waDirectUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => trackWhatsAppClick({ button_id: "lp_header_wa", button_location: "lp_header", click_url: waDirectUrl })}
-                className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200 hover:bg-emerald-100 transition-colors"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 text-emerald-800 font-bold text-xs border border-emerald-200/80 hover:bg-emerald-100 transition-colors"
               >
-                <MessageCircle className="w-4 h-4 text-emerald-600" />
-                <span>{isRTL ? "تواصل واتساب" : "WhatsApp Us"}</span>
+                <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                <span>{isRTL ? "واتساب المعهد" : "WhatsApp"}</span>
               </a>
 
               <a
                 href="#trial-form"
-                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow-md hover:bg-primary/90 transition-all"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0D4F4F] text-white font-bold text-xs shadow-sm hover:bg-[#093737] transition-all"
               >
-                <Sparkles className="w-3.5 h-3.5 text-accent" />
-                <span>{isRTL ? "احجز تجربة مجاناً" : "Book Free Trial"}</span>
+                <Sparkles className="w-3.5 h-3.5 text-[#C8A96E]" />
+                <span>{isRTL ? "احجز التجربة" : "Free Trial"}</span>
               </a>
             </div>
           </div>
         </Container>
       </header>
 
-      {/* ── 2. ELEGANT LIGHT HERO SECTION ── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#FAF8F5] via-[#F5F0E6] to-[#FAF8F5] text-gray-900 pt-10 pb-16 md:pt-14 md:pb-20 border-b border-sand-200">
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-r from-primary/5 via-accent/10 to-primary/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-1/3 -left-20 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 -right-20 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
+      {/* ── 2. WARM SPACIOUS HERO SECTION ── */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#FAF8F5] via-[#F5F0EB] to-[#FAFAF7] text-gray-900 pt-10 pb-16 md:pt-14 md:pb-20 border-b border-[#EDE6DD]">
         <Container className="relative z-10">
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             {/* Left Column: Value Prop */}
-            <div className="lg:col-span-7 text-center lg:text-start">
+            <div className="lg:col-span-7 text-center lg:text-start space-y-6">
               
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-sm border border-emerald-200/80 mb-6">
-                <span className="flex h-2 w-2 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                </span>
-                <Sparkles className="w-4 h-4 text-amber-500" />
-                <span className="text-xs font-bold text-primary">
-                  {isRTL ? "عرض الإعلان: حصة 30 دقيقة مجانية 100% بدون أي دفع" : "Limited Ad Offer: 100% Free 30-Min Live Trial Class"}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-sm border border-[#EDE6DD]">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span className="text-xs font-bold text-[#0D4F4F]">
+                  {isRTL ? "حصة 30 دقيقة مجانية 100% بدون أي التزام مالي" : "100% Free 30-Minute Live Trial Class"}
                 </span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-[52px] font-extrabold text-[#0D4F4F] leading-[1.18] mb-6 tracking-tight">
+              <h1 className="text-3xl sm:text-5xl lg:text-[50px] font-extrabold text-[#0D4F4F] leading-[1.18] tracking-tight">
                 {isRTL ? (
-                  <>تعلّم القرآن والتجويد من بيتك مع <span className="bg-gradient-to-r from-[#C8A96E] to-[#A67B5B] bg-clip-text text-transparent">نخبة المعلمين الأزاهرة</span></>
+                  <>تعلّم القرآن والتجويد أونلاين مع <span className="text-[#C8A96E]">نخبة المعلمين الأزاهرة</span></>
                 ) : (
-                  <>Master Holy Quran & Tajweed Online With <span className="bg-gradient-to-r from-[#C8A96E] to-[#A67B5B] bg-clip-text text-transparent">Certified Al-Azhar Scholars</span></>
+                  <>Master Holy Quran & Tajweed Online With <span className="text-[#C8A96E]">Certified Al-Azhar Scholars</span></>
                 )}
               </h1>
 
-              <p className="text-base sm:text-lg text-gray-600 leading-relaxed mb-8 max-w-2xl mx-auto lg:mx-0 font-medium">
+              <p className="text-base sm:text-lg text-gray-600 leading-relaxed font-normal max-w-2xl mx-auto lg:mx-0">
                 {isRTL
                   ? "دروس فردية مخصصة 1-على-1 للأطفال والكبار. مع معلمين ومعلمات معتمدين متحدثين بالإنجليزي بطلاقة وجدول مرن يناسب مواعيدك."
                   : "Personalized 1-on-1 live classes for kids, adults & reverts. Taught by English-fluent male & female native scholars with 24/7 scheduling flexibility."}
               </p>
 
               {/* Feature Pills */}
-              <div className="grid sm:grid-cols-2 gap-3 text-start mb-8 max-w-xl mx-auto lg:mx-0">
+              <div className="grid sm:grid-cols-2 gap-3 text-start max-w-xl mx-auto lg:mx-0 pt-2">
                 {[
-                  { title: isRTL ? "معلمون ومعلمات معتمدون من الأزهر" : "Al-Azhar Certified Male & Female Tutors", icon: ShieldCheck },
+                  { title: isRTL ? "معلمون ومعلمات معتمدون أزهرياً" : "Al-Azhar Certified Male & Female Tutors", icon: ShieldCheck },
                   { title: isRTL ? "طلاقة كاملة باللغة الإنجليزية" : "Fluent Native English Communication", icon: Languages },
-                  { title: isRTL ? "جدول مرن 24/7 ينسق حسب وقتك" : "24/7 Flexible Global Scheduling", icon: Clock },
-                  { title: isRTL ? "تقارير متابعة أسبوعية لأولياء الأمور" : "Weekly Progress Reports for Parents", icon: Award },
+                  { title: isRTL ? "جدول مرن 24/7 حسب توقيتك" : "24/7 Flexible Global Scheduling", icon: Clock },
+                  { title: isRTL ? "تقارير متابعة أسبوعية للأهالي" : "Weekly Progress Reports for Parents", icon: Award },
                 ].map((feat, idx) => (
-                  <div key={idx} className="flex items-center gap-2.5 bg-white/80 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-sand-200 shadow-sm">
-                    <div className="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                      <feat.icon className="w-4 h-4" />
+                  <div key={idx} className="flex items-center gap-2.5 bg-white px-3.5 py-2.5 rounded-2xl border border-[#EDE6DD] shadow-sm">
+                    <div className="w-7 h-7 rounded-xl bg-[#F5F0EB] text-[#0D4F4F] flex items-center justify-center shrink-0">
+                      <feat.icon className="w-4 h-4 text-[#0D4F4F]" />
                     </div>
                     <span className="text-xs font-bold text-gray-800">{feat.title}</span>
                   </div>
@@ -352,35 +357,35 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
               </div>
 
               {/* Social Proof */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-5 border-t border-sand-300/60">
-                <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-sand-200 shadow-sm">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4 border-t border-[#EDE6DD]">
+                <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-[#EDE6DD]">
                   <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                      <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                     ))}
                   </div>
                   <span className="text-xs font-bold text-gray-900 ms-1">4.9/5</span>
                 </div>
 
                 <div className="text-xs text-gray-600 font-semibold flex items-center gap-2">
-                  <Users className="w-4 h-4 text-primary" />
+                  <Users className="w-4 h-4 text-[#0D4F4F]" />
                   <span>{isRTL ? "أكثر من 500+ عائلة مسلمة في أمريكا وأوروبا والخليج" : "Joined by 500+ Muslim Families in US, UK & Gulf"}</span>
                 </div>
               </div>
 
             </div>
 
-            {/* Right Column: Clean White Form Card */}
+            {/* Right Column: Crisp White Form Card */}
             <div id="trial-form" className="lg:col-span-5 scroll-mt-24">
-              <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(13,79,79,0.09)] text-gray-900 border border-sand-200 relative overflow-hidden">
-                <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-primary via-accent to-emerald-500" />
+              <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm text-gray-900 border border-[#EDE6DD] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-1.5 bg-[#0D4F4F]" />
 
                 {submitted ? (
                   <div className="text-center py-8 space-y-4">
-                    <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto text-emerald-600">
-                      <CheckCircle2 className="w-8 h-8" />
+                    <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center mx-auto text-emerald-600">
+                      <CheckCircle2 className="w-7 h-7" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900">
+                    <h3 className="text-xl font-bold text-gray-900">
                       {isRTL ? "تم تجهيز طلبك بنجاح!" : "Booking Request Ready!"}
                     </h3>
                     <p className="text-xs text-gray-600 leading-relaxed">
@@ -392,27 +397,27 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
                       href={`${WHATSAPP_LINK}?text=${encodeURIComponent(`*Trial Request:* ${form.name} (${form.course})`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg text-sm transition-all"
+                      className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-sm text-sm transition-all"
                     >
-                      <MessageCircle className="w-5 h-5" />
+                      <MessageCircle className="w-4 h-4" />
                       {isRTL ? "تأكيد الحجز عبر الواتساب" : "Confirm via WhatsApp Now"}
                     </a>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="text-center mb-5">
-                      <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-extrabold uppercase tracking-wider">
+                    <div className="text-center mb-4">
+                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold uppercase tracking-wider">
                         {isRTL ? "بدون بطاقة أئتمام • حصة مجانية 100%" : "No Credit Card Required • 100% Free"}
                       </span>
-                      <h3 className="text-2xl font-extrabold text-primary mt-2">
-                        {isRTL ? "احجز حصتك التجريبية الآن" : "Claim Your Free Trial"}
+                      <h3 className="text-xl font-extrabold text-[#0D4F4F] mt-2">
+                        {isRTL ? "احجز حصتك التجريبية الآن" : "Claim Your Free Trial Class"}
                       </h3>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {isRTL ? "استمارة حجز سريعة في 60 ثانية" : "Quick 60-second form to schedule your live session"}
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        {isRTL ? "استمارة حجز سريعة في 60 ثانية" : "Quick 60-second form to schedule your session"}
                       </p>
                     </div>
 
-                    <div>
+                                                            <div>
                       <label className="block text-xs font-bold text-gray-700 mb-1">{isRTL ? "الاسم الكامل *" : "Full Name *"}</label>
                       <input
                         type="text"
@@ -420,22 +425,9 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
                         value={form.name}
                         onChange={(e) => handleInputChange("name", e.target.value)}
                         placeholder="e.g. Sarah Mitchell"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-sand-200 bg-sand-50/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#EDE6DD] bg-[#FAFAF7] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D4F4F]/20 focus:bg-white"
                       />
                       {errors.name && <p className="text-[11px] text-red-500 mt-0.5">{errors.name}</p>}
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">{isRTL ? "البريد الإلكتروني *" : "Email Address *"}</label>
-                      <input
-                        type="email"
-                        required
-                        value={form.email}
-                        onChange={(e) => handleInputChange("email", e.target.value)}
-                        placeholder="sarah@example.com"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-sand-200 bg-sand-50/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white"
-                      />
-                      {errors.email && <p className="text-[11px] text-red-500 mt-0.5">{errors.email}</p>}
                     </div>
 
                     <div>
@@ -469,11 +461,49 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
 
                     <div className="grid grid-cols-2 gap-3">
                       <div>
+                        <label className="block text-xs font-bold text-gray-700 mb-1">{isRTL ? "العمر *" : "Age *"}</label>
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          min={3}
+                          max={100}
+                          required
+                          value={form.age}
+                          onChange={(e) => handleInputChange("age", e.target.value)}
+                          placeholder={isRTL ? "مثال: 12" : "e.g. 12"}
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-[#EDE6DD] bg-[#FAFAF7] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D4F4F]/20 focus:bg-white"
+                        />
+                        {errors.age && <p className="text-[11px] text-red-500 mt-0.5">{errors.age}</p>}
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 mb-1">{isRTL ? "الجنس *" : "Gender *"}</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[{ value: "Male", labelAr: "ذكر", labelEn: "Male" }, { value: "Female", labelAr: "أنثى", labelEn: "Female" }].map((g) => (
+                            <button
+                              key={g.value}
+                              type="button"
+                              onClick={() => handleInputChange("gender", g.value)}
+                              className={`py-2.5 rounded-xl border text-xs font-bold transition-all ${
+                                form.gender === g.value
+                                  ? "border-[#0D4F4F] bg-[#0D4F4F] text-white"
+                                  : "border-[#EDE6DD] bg-[#FAFAF7] text-gray-600 hover:border-[#0D4F4F]/30"
+                              }`}
+                            >
+                              {isRTL ? g.labelAr : g.labelEn}
+                            </button>
+                          ))}
+                        </div>
+                        {errors.gender && <p className="text-[11px] text-red-500 mt-0.5">{errors.gender}</p>}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
                         <label className="block text-xs font-bold text-gray-700 mb-1">{isRTL ? "الدورة" : "Course"}</label>
                         <select
                           value={form.course}
                           onChange={(e) => handleInputChange("course", e.target.value)}
-                          className="w-full px-3 py-2.5 rounded-xl border border-sand-200 bg-sand-50/50 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white"
+                          className="w-full px-3 py-2.5 rounded-xl border border-[#EDE6DD] bg-[#FAFAF7] text-xs focus:outline-none focus:ring-2 focus:ring-[#0D4F4F]/20 focus:bg-white"
                         >
                           <option value="quran-recitation">Quran Recitation</option>
                           <option value="tajweed-course">Tajweed Rules</option>
@@ -488,7 +518,7 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
                         <select
                           value={form.level}
                           onChange={(e) => handleInputChange("level", e.target.value)}
-                          className="w-full px-3 py-2.5 rounded-xl border border-sand-200 bg-sand-50/50 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white"
+                          className="w-full px-3 py-2.5 rounded-xl border border-[#EDE6DD] bg-[#FAFAF7] text-xs focus:outline-none focus:ring-2 focus:ring-[#0D4F4F]/20 focus:bg-white"
                         >
                           <option value="BEGINNER">Beginner (Zero)</option>
                           <option value="INTERMEDIATE">Intermediate</option>
@@ -501,10 +531,10 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
                       type="submit"
                       disabled={loading}
                       size="lg"
-                      className="w-full py-6 rounded-xl bg-gradient-to-r from-primary to-[#1A6B5A] hover:from-[#093737] hover:to-primary text-white font-extrabold text-base shadow-lg shadow-primary/20 mt-2 transition-all hover:scale-[1.01]"
+                      className="w-full py-5 rounded-xl bg-[#0D4F4F] hover:bg-[#093737] text-white font-extrabold text-sm shadow-sm mt-2 transition-all"
                     >
-                      <Sparkles className="w-4 h-4 me-1.5 text-accent" />
-                      {loading ? (isRTL ? "جاري التجهيز..." : "Processing...") : (isRTL ? "احجز الحصة التجريبية الآن" : "Book My Free Trial Session")}
+                      <Sparkles className="w-4 h-4 me-1.5 text-[#C8A96E]" />
+                      {loading ? (isRTL ? "جاري التجهيز..." : "Processing...") : (isRTL ? "احجز الحصة التجريبية الآن" : "Book Free Trial Session")}
                     </Button>
 
                     <p className="text-[10px] text-gray-400 text-center flex items-center justify-center gap-1 pt-1">
@@ -520,17 +550,17 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
         </Container>
       </section>
 
-      {/* ── 3. REAL CLASS VIDEO SHOWCASE ── */}
-      <section className="py-16 bg-white border-b border-sand-200">
+      {/* ── 3. CLASSROOM VIDEO SHOWCASE ── */}
+      <section className="py-16 bg-white border-b border-[#EDE6DD]">
         <Container>
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="px-3 py-1 rounded-full bg-accent/20 text-amber-900 text-xs font-extrabold uppercase tracking-wider">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="px-3 py-1 rounded-full bg-[#F5F0EB] text-[#0D4F4F] text-xs font-bold uppercase tracking-wider">
               {isRTL ? "معاينة حية من الحصص" : "Inside Our Classroom"}
             </span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-gray-900 mt-3">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-3">
               {isRTL ? "شاهد كيف تُدار الحصص التفاعلية في المعهد" : "See Our Interactive Classes in Action"}
             </h2>
-            <p className="text-gray-600 text-sm mt-2">
+            <p className="text-gray-600 text-xs sm:text-sm mt-2">
               {isRTL
                 ? "نماذج واقعية لكيفية تفاعل المعلمين الأزاهرة مع الطلاب والأطفال بسهولة ولطف"
                 : "Real recordings of how our Al-Azhar tutors interact with kids and adult students online."}
@@ -541,9 +571,9 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
             {sampleVideos.map((video) => (
               <div
                 key={video.id}
-                className="bg-sand-50 rounded-3xl overflow-hidden border border-sand-200 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+                className="bg-[#FAFAF7] rounded-2xl overflow-hidden border border-[#EDE6DD] shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
               >
-                <div className="relative h-48 bg-gray-900 overflow-hidden cursor-pointer" onClick={() => setActiveVideo(video.id)}>
+                <div className="relative h-44 bg-gray-900 overflow-hidden cursor-pointer" onClick={() => setActiveVideo(video.id)}>
                   <Image
                     src={video.poster}
                     alt={video.title}
@@ -553,23 +583,23 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-14 h-14 rounded-full bg-primary/90 text-white flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:bg-emerald-600 transition-all border-2 border-white/40">
-                      <Play className="w-6 h-6 fill-white ms-1" />
+                    <div className="w-12 h-12 rounded-full bg-[#0D4F4F] text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-all border border-white/40">
+                      <Play className="w-5 h-5 fill-white ms-0.5" />
                     </div>
                   </div>
 
-                  <span className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-md">
+                  <span className="absolute top-2.5 left-2.5 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded">
                     {video.duration}
                   </span>
 
-                  <span className="absolute top-3 right-3 bg-accent text-gray-900 font-extrabold text-[10px] px-2.5 py-1 rounded-full">
+                  <span className="absolute top-2.5 right-2.5 bg-[#C8A96E] text-gray-900 font-extrabold text-[10px] px-2 py-0.5 rounded-full">
                     {video.tag}
                   </span>
                 </div>
 
-                <div className="p-5 flex-1 flex flex-col justify-between">
+                <div className="p-4 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="font-bold text-base text-gray-900 mb-2 leading-snug">
+                    <h3 className="font-bold text-sm text-gray-900 mb-1.5 leading-snug">
                       {video.title}
                     </h3>
                     <p className="text-xs text-gray-600 leading-relaxed">
@@ -577,12 +607,12 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
                     </p>
                   </div>
 
-                  <div className="pt-4 mt-4 border-t border-sand-200 flex items-center justify-between text-xs">
-                    <span className="font-bold text-primary flex items-center gap-1">
-                      <User className="w-3.5 h-3.5 text-accent" />
+                  <div className="pt-3 mt-3 border-t border-[#EDE6DD] flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#0D4F4F] flex items-center gap-1 text-[11px]">
+                      <User className="w-3.5 h-3.5 text-[#C8A96E]" />
                       {video.student}
                     </span>
-                    <span className="text-gray-400 font-medium">{video.location}</span>
+                    <span className="text-gray-400 text-[11px]">{video.location}</span>
                   </div>
                 </div>
               </div>
@@ -593,25 +623,25 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
 
       {/* VIDEO MODAL PLAYER */}
       {activeVideo && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4" onClick={() => setActiveVideo(null)}>
-          <div className="relative w-full max-w-3xl bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/20" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setActiveVideo(null)}>
+          <div className="relative w-full max-w-2xl bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/20" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setActiveVideo(null)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
-            <div className="p-8 text-center text-white space-y-4">
-              <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto border border-emerald-500/40">
-                <Video className="w-8 h-8" />
+            <div className="p-8 text-center text-white space-y-3">
+              <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto border border-emerald-500/30">
+                <Video className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold">Class Recording Preview</h3>
-              <p className="text-sm text-gray-300 max-w-md mx-auto">
+              <h3 className="text-lg font-bold">Class Recording Preview</h3>
+              <p className="text-xs text-gray-300 max-w-md mx-auto">
                 {isRTL
                   ? "يتم تقديم جميع الحصص عبر القاعات الافتراضية المباشرة (Zoom / Google Meet) مع السبورة التفاعلية والتواصل المباشر."
                   : "All classes are hosted live 1-on-1 via Zoom with interactive whiteboards and screen sharing."}
               </p>
-              <Button onClick={() => setActiveVideo(null)} className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl px-6">
+              <Button onClick={() => setActiveVideo(null)} className="bg-[#0D4F4F] hover:bg-[#093737] text-white font-bold rounded-xl px-5 text-xs">
                 Close Preview
               </Button>
             </div>
@@ -620,16 +650,16 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
       )}
 
       {/* ── 4. AUTHENTIC REVIEWS SECTION ── */}
-      <section className="py-16 bg-sand-50 border-b border-sand-200">
+      <section className="py-16 bg-[#FAFAF7] border-b border-[#EDE6DD]">
         <Container>
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="text-xs font-bold text-primary uppercase tracking-widest">{isRTL ? "تقييمات موثقة" : "Verified Parent & Student Stories"}</span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-gray-900 mt-2">
+          <div className="text-center max-w-2xl mx-auto mb-8">
+            <span className="text-xs font-bold text-[#0D4F4F] uppercase tracking-widest">{isRTL ? "تقييمات موثقة" : "Verified Student Stories"}</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-2">
               {isRTL ? "ماذا يقول أولياء الأمور والطلاب عنا؟" : "Trusted by Muslim Families in US, UK & Canada"}
             </h2>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
             {[
               { id: "all", label: isRTL ? "الكل" : "All Reviews" },
               { id: "kids", label: isRTL ? "أولياء الأمور والأطفال" : "Parents & Kids" },
@@ -639,10 +669,10 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
               <button
                 key={f.id}
                 onClick={() => setReviewFilter(f.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   reviewFilter === f.id
-                    ? "bg-primary text-white shadow-md"
-                    : "bg-white text-gray-600 hover:bg-sand-100 border border-sand-200"
+                    ? "bg-[#0D4F4F] text-white shadow-sm"
+                    : "bg-white text-gray-600 hover:bg-sand-100 border border-[#EDE6DD]"
                 }`}
               >
                 {f.label}
@@ -652,25 +682,25 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
 
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             {filteredReviews.map((rev) => (
-              <div key={rev.id} className="bg-white rounded-3xl p-6 sm:p-7 border border-sand-200 shadow-sm flex flex-col justify-between">
+              <div key={rev.id} className="bg-white rounded-2xl p-6 border border-[#EDE6DD] shadow-sm flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-full bg-hero-gradient text-white font-bold text-sm flex items-center justify-center shadow-sm">
+                      <div className="w-10 h-10 rounded-full bg-[#0D4F4F] text-white font-bold text-xs flex items-center justify-center shadow-sm">
                         {rev.avatar}
                       </div>
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <h4 className="font-bold text-sm text-gray-900">{rev.name}</h4>
-                          <span className="text-sm">{rev.flag}</span>
+                          <h4 className="font-bold text-xs text-gray-900">{rev.name}</h4>
+                          <Globe className="w-3 h-3 text-gray-400" />
                           {rev.verified && (
-                            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100">
                               <ShieldCheck className="w-3 h-3 text-blue-600" />
                               Verified
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-gray-400">{rev.role} &middot; {rev.country}</p>
+                        <p className="text-[10px] text-gray-400">{rev.role} &middot; {rev.country}</p>
                       </div>
                     </div>
 
@@ -681,14 +711,14 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
                     </div>
                   </div>
 
-                  <h5 className="font-bold text-sm text-primary mb-2">&ldquo;{rev.headline}&rdquo;</h5>
-                  <p className="text-xs sm:text-sm text-gray-700 leading-relaxed italic mb-4">
+                  <h5 className="font-bold text-xs text-[#0D4F4F] mb-1.5">&ldquo;{rev.headline}&rdquo;</h5>
+                  <p className="text-xs text-gray-600 leading-relaxed italic mb-3">
                     {rev.text}
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-sand-100 flex items-center justify-between text-[11px]">
-                  <span className="px-2.5 py-1 rounded-md bg-sand-100 text-gray-700 font-bold">
+                <div className="pt-3 border-t border-[#EDE6DD] flex items-center justify-between text-[10px]">
+                  <span className="px-2 py-0.5 rounded bg-sand-100 text-gray-700 font-bold">
                     {rev.course}
                   </span>
                   <span className="text-gray-400">{rev.date}</span>
@@ -699,48 +729,38 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
         </Container>
       </section>
 
-      {/* ── 5. COMPARISON TABLE ── */}
-      <section className="py-16 bg-white border-b border-sand-200">
+      {/* ── 5. LINK BANNER TO MAIN WEBSITE ── */}
+      <section className="py-10 bg-[#F5F0EB] border-b border-[#EDE6DD]">
         <Container>
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="text-xs font-bold text-accent uppercase tracking-widest">{isRTL ? "مقارنة الجودة" : "The Tajwedo Standard"}</span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-gray-900 mt-2">
-              {isRTL ? "كيف نضمن لك ولأطفالك أفضل تجربة تعليمية؟" : "Why Families Choose Tajwedo Over Generic Tutors"}
-            </h2>
-          </div>
-
-          <div className="max-w-4xl mx-auto overflow-hidden rounded-3xl border border-sand-200 shadow-sm bg-white">
-            <div className="grid grid-cols-12 bg-sand-100 p-4 border-b border-sand-200 text-xs sm:text-sm font-bold text-gray-900">
-              <div className="col-span-6">{isRTL ? "الميزة / المعيار" : "Feature / Standard"}</div>
-              <div className="col-span-3 text-center text-primary font-extrabold">{isRTL ? "معهد تجويدو" : "Tajwedo Institute"}</div>
-              <div className="col-span-3 text-center text-gray-400">{isRTL ? "المنصات العشوائية" : "Generic Tutors"}</div>
+          <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#EDE6DD] shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 max-w-5xl mx-auto">
+            <div className="space-y-1.5 text-center md:text-start">
+              <span className="px-2.5 py-0.5 rounded-full bg-accent/20 text-[#0D4F4F] text-[10px] font-extrabold uppercase">
+                {isRTL ? "استكشف المعهد كاملاً" : "Explore Tajwedo Institute"}
+              </span>
+              <h3 className="text-lg md:text-xl font-extrabold text-[#0D4F4F]">
+                {isRTL ? "هل ترغب بتصفح المناهج والألعاب التعليمية للأطفال؟" : "Looking to Explore Our Full Curriculum & Learning Games?"}
+              </h3>
+              <p className="text-xs text-gray-500">
+                {isRTL ? "تعرف على كافة خدماتنا، الأسعار، وفلسفة التعليم في موقعنا الرسمي" : "Visit our main website to see all courses, games hub, blog articles, and tuition details."}
+              </p>
             </div>
 
-            {[
-              { f: isRTL ? "اعتماد الأزهر الشريف" : "Al-Azhar Certification", us: "100% Certified", other: "Unverified" },
-              { f: isRTL ? "الطلاقة والتواصل بالإنجليزي" : "Fluent English Communication", us: "Native & Fluent", other: "Poor" },
-              { f: isRTL ? "معلمات إناث للأخوات والأطفال" : "Dedicated Female Tutors", us: "Available Always", other: "Rare / None" },
-              { f: isRTL ? "تقارير أسبوعية لأولياء الأمور" : "Weekly Parent Progress Reports", us: "Detailed Reports", other: "None" },
-              { f: isRTL ? "حصة تجريبية 30 دقيقة" : "Free 30-Min Trial Class", us: "100% Free", other: "Paid Upfront" },
-            ].map((row, i) => (
-              <div key={i} className={cn("grid grid-cols-12 p-4 text-xs sm:text-sm items-center border-b border-sand-100", i % 2 === 0 ? "bg-white" : "bg-sand-50/50")}>
-                <div className="col-span-6 font-semibold text-gray-800">{row.f}</div>
-                <div className="col-span-3 text-center font-bold text-emerald-700 bg-emerald-50 py-1.5 rounded-xl border border-emerald-100 flex items-center justify-center gap-1">
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>{row.us}</span>
-                </div>
-                <div className="col-span-3 text-center text-gray-400 font-medium">{row.other}</div>
-              </div>
-            ))}
+            <Link
+              href="/"
+              className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#0D4F4F] hover:bg-[#093737] text-white font-bold text-xs transition-all shadow-sm"
+            >
+              <span>{isRTL ? "الذهاب للموقع الرئيسي" : "Visit Official Website"}</span>
+              <ExternalLink className="w-4 h-4 text-[#C8A96E]" />
+            </Link>
           </div>
         </Container>
       </section>
 
       {/* ── 6. FAQ ACCORDION SECTION ── */}
-      <section className="py-16 bg-sand-50">
+      <section className="py-16 bg-white">
         <Container>
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="text-xs font-bold text-primary uppercase tracking-widest">{isRTL ? "أسئلة شائعة" : "Got Questions?"}</span>
+            <span className="text-xs font-bold text-[#0D4F4F] uppercase tracking-widest">{isRTL ? "أسئلة شائعة" : "Got Questions?"}</span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-2">
               {isRTL ? "كل ما تحتاج معرفته قبل البدء" : "Frequently Asked Questions"}
             </h2>
@@ -748,17 +768,17 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
 
           <div className="max-w-3xl mx-auto space-y-3">
             {faqs.map((faq, idx) => (
-              <div key={idx} className="bg-white rounded-2xl border border-sand-200 overflow-hidden shadow-sm">
+              <div key={idx} className="bg-[#FAFAF7] rounded-2xl border border-[#EDE6DD] overflow-hidden shadow-sm">
                 <button
                   type="button"
                   onClick={() => setFaqOpen(faqOpen === idx ? null : idx)}
-                  className="w-full p-4 sm:p-5 text-start font-bold text-sm text-gray-900 flex items-center justify-between gap-4"
+                  className="w-full p-4 sm:p-5 text-start font-bold text-xs sm:text-sm text-gray-900 flex items-center justify-between gap-4"
                 >
                   <span>{faq.q}</span>
-                  <ChevronDown className={cn("w-4 h-4 text-gray-400 transition-transform", faqOpen === idx && "rotate-180 text-primary")} />
+                  <ChevronDown className={cn("w-4 h-4 text-gray-400 transition-transform", faqOpen === idx && "rotate-180 text-[#0D4F4F]")} />
                 </button>
                 {faqOpen === idx && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-gray-600 leading-relaxed border-t border-sand-100 pt-3">
+                  <div className="px-5 pb-5 text-xs text-gray-600 leading-relaxed border-t border-[#EDE6DD] pt-3">
                     {faq.a}
                   </div>
                 )}
@@ -769,22 +789,22 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
       </section>
 
       {/* ── 7. BOTTOM CALL TO ACTION ── */}
-      <section className="py-16 bg-primary text-white text-center relative overflow-hidden">
+      <section className="py-16 bg-[#0D4F4F] text-white text-center relative overflow-hidden">
         <Container>
-          <div className="max-w-2xl mx-auto relative z-10 space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-extrabold">
+          <div className="max-w-2xl mx-auto relative z-10 space-y-5">
+            <h2 className="text-2xl sm:text-4xl font-extrabold">
               {isRTL ? "ابدأ رحلة تعليم القرآن لأسرتك اليوم" : "Give Your Family The Gift of Quran Today"}
             </h2>
-            <p className="text-white/80 text-sm sm:text-base leading-relaxed">
+            <p className="text-white/80 text-xs sm:text-sm leading-relaxed">
               {isRTL
                 ? "احجز حصتك التجريبية المجانية 100% الآن بدون أي مخاطرة أو التزام مالي."
                 : "Book your 100% free 30-minute trial session now. Zero financial risk."}
             </p>
             <a
               href="#trial-form"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-accent hover:bg-accent/90 text-gray-900 font-extrabold text-base shadow-xl transition-all"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-[#C8A96E] hover:bg-[#b8985e] text-gray-900 font-extrabold text-xs sm:text-sm shadow-md transition-all"
             >
-              <Sparkles className="w-5 h-5 text-gray-900" />
+              <Sparkles className="w-4 h-4 text-gray-900" />
               <span>{isRTL ? "احجز الحصة التجريبية الآن" : "Claim Your Free Trial Session"}</span>
             </a>
           </div>
@@ -792,13 +812,13 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
       </section>
 
       {/* ── 8. STICKY MOBILE BOTTOM BAR ── */}
-      <div className="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-sand-200 p-3 flex items-center gap-2 sm:hidden shadow-lg">
+      <div className="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-[#EDE6DD] p-3 flex items-center gap-2 sm:hidden shadow-lg">
         <a
           href={waDirectUrl}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => trackWhatsAppClick({ button_id: "lp_sticky_wa", button_location: "lp_mobile_bar", click_url: waDirectUrl })}
-          className="flex-1 py-3 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-xs flex items-center justify-center gap-1.5"
+          className="flex-1 py-3 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-xs flex items-center justify-center gap-1.5"
         >
           <MessageCircle className="w-4 h-4 text-emerald-600" />
           <span>{isRTL ? "واتساب" : "WhatsApp"}</span>
@@ -806,9 +826,9 @@ ${form.notes ? `*Notes:* ${form.notes}` : ''}`;
 
         <a
           href="#trial-form"
-          className="flex-1 py-3 rounded-xl bg-primary text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md"
+          className="flex-1 py-3 rounded-xl bg-[#0D4F4F] text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md"
         >
-          <Sparkles className="w-3.5 h-3.5 text-accent" />
+          <Sparkles className="w-3.5 h-3.5 text-[#C8A96E]" />
           <span>{isRTL ? "حصة تجريبية مجاناً" : "Book Free Trial"}</span>
         </a>
       </div>
