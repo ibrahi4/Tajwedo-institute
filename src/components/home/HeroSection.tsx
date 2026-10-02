@@ -2,239 +2,159 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Play, ArrowRight, ArrowLeft, Sparkles, Star, CheckCircle2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { useLocale } from "@/hooks/useLocale";
+import { ArrowRight, ArrowLeft, ShieldCheck, Clock, Globe } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false);
-  const [currentWord, setCurrentWord] = useState(0);
   const { isRTL } = useLocale();
-
-  const rotatingWords = isRTL
-    ? ["القرآن الكريم", "اللغة العربية", "قواعد التجويد", "الدراسات الإسلامية"]
-    : ["The Holy Quran", "Arabic Language", "Tajweed Rules", "Islamic Studies"];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentWord((prev) => (prev + 1) % rotatingWords.length);
-    }, 2800);
-    return () => clearInterval(interval);
-  }, [rotatingWords.length]);
-
-  const headingFont = isRTL ? "var(--font-arabic)" : "var(--font-display)";
-  const bodyFont = isRTL ? "var(--font-arabic)" : "var(--font-body)";
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  if (!mounted) return null;
+
+  const t = (en: string, ar: string) => (isRTL ? ar : en);
+
   const content = isRTL
     ? {
-        badge: "نستقبل طلاب جدد لعام 2026",
-        titleLine1: "تعلّم",
-        titleHighlight: rotatingWords[currentWord],
-        titleLine3: "مع معلّم موثوق",
+        badge: "معهد قرآن وتجويد معتمد",
+        h1Part1: "تعلّم القرآن الكريم",
+        h1Part2: "وابنِ مستقبلاً مشرقاً",
         subtitle:
-          "انضم إلى معهد تجويدو لتعليم القرآن واللغة العربية مع معلّمين معتمدين من الأزهر الشريف.",
-        primaryCta: "ابدأ التعلّم",
-        secondaryCta: "حصة تجريبية مجانية",
-        students: "طالب",
-        years: "سنوات",
-        countries: "دولة",
-        feature1: "معلّمون معتمدون",
-        feature2: "جدول مرن",
-        feature3: "حصص مجانية",
+          "ارتقِ بتلاوتك مع معلمين معتمدين من الأزهر الشريف. دروس فردية مباشرة تناسب جميع الأعمار والمستويات.",
+        feat1: "معلمون معتمدون",
+        feat2: "أوقات مرنة",
+        feat3: "للعائلات عالمياً",
+        primaryCta: "احجز حصة تجريبية مجانية",
       }
     : {
-        badge: "Now accepting students for 2026",
-        titleLine1: "Learn",
-        titleHighlight: rotatingWords[currentWord],
-        titleLine3: "with a Trusted Teacher",
+        badge: "Certified Quran & Tajweed Institute",
+        h1Part1: "Learn the Quran",
+        h1Part2: "Build a Brighter Future",
         subtitle:
-          "Join Tajwedo Institute for premium Quran and Arabic education with certified Al-Azhar teachers.",
-        primaryCta: "Start Learning",
-        secondaryCta: "Book Free Trial",
-        students: "Students",
-        years: "Years",
-        countries: "Countries",
-        feature1: "Certified Teachers",
-        feature2: "Flexible Schedule",
-        feature3: "Free Trial",
+          "Elevate your recitation with certified Al-Azhar teachers. Personalized 1-on-1 live lessons for every age and level.",
+        feat1: "Certified Teachers",
+        feat2: "Flexible Schedule",
+        feat3: "Muslim Families Worldwide",
+        primaryCta: "Book Free Trial Lesson",
       };
 
   return (
     <section
-      className="relative min-h-screen w-full flex items-center overflow-hidden bg-[#F8F3EA]"
-      aria-label="Hero"
+      className="relative flex flex-col lg:flex-row min-h-[100svh] bg-[#FDFBF7] overflow-hidden"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      {/* BACKGROUND IMAGE - OPTIMIZED FOR LCP */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className={`relative w-full h-full ${isRTL ? "scale-x-[-1]" : ""}`} style={{ transformOrigin: "center" }}>
-          <Image
-            src="/Tajwedo-Public-Assets/herosection.webp"
-            alt="Tajwedo Institute Quran Education"
-            fill
-            priority
-            sizes="100vw"
-            quality={65}
-            className="object-cover scale-105 animate-slow-zoom"
-          />
-        </div>
-
-        {/* MOBILE OVERLAY */}
-        <div
-          className="absolute inset-0 lg:hidden"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(248,243,234,0.4) 0%, rgba(248,243,234,0.75) 40%, rgba(248,243,234,0.92) 70%, rgba(248,243,234,0.98) 100%)",
-          }}
+      {/* 
+        ════════ 1. IMAGE LAYER ════════ 
+        Mobile: Shows at the top (45vh) and fades into the text background.
+        Desktop: Absolute full screen, fading horizontally.
+      */}
+      <div className="relative w-full h-[45vh] lg:absolute lg:inset-0 lg:h-full z-0">
+        <Image
+          src="/Tajwedo-Public-Assets/herosection.webp"
+          alt="Tajwedo Institute"
+          fill
+          priority
+          quality={85}
+          sizes="(max-width: 1024px) 100vw, 70vw"
+          className="object-cover object-[70%_center] lg:object-[80%_center]"
         />
 
-        {/* DESKTOP OVERLAY */}
-        {isRTL ? (
-          <div
-            className="absolute inset-0 hidden lg:block"
-            style={{
-              background:
-                "linear-gradient(to left, #F8F3EA 0%, #F8F3EA 45%, rgba(248,243,234,0.88) 58%, rgba(248,243,234,0) 80%)",
-            }}
-          />
-        ) : (
-          <div
-            className="absolute inset-0 hidden lg:block"
-            style={{
-              background:
-                "linear-gradient(to right, #F8F3EA 0%, #F8F3EA 45%, rgba(248,243,234,0.88) 58%, rgba(248,243,234,0) 80%)",
-            }}
-          />
-        )}
+        {/* Mobile Gradient Fade (Bottom to Top) */}
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#FDFBF7] to-transparent lg:hidden" />
+
+        {/* Desktop Gradient Fade (Horizontal) */}
+        <div
+          className="hidden lg:block absolute inset-0"
+          style={{
+            background: isRTL
+              ? "linear-gradient(90deg, #FDFBF7 0%, rgba(253,251,247,0.95) 30%, rgba(253,251,247,0.7) 50%, transparent 100%)"
+              : "linear-gradient(90deg, #FDFBF7 0%, rgba(253,251,247,0.95) 30%, rgba(253,251,247,0.7) 50%, transparent 100%)",
+          }}
+        />
       </div>
 
-      {/* Decorative glow */}
-      <div
-        className={`absolute top-1/3 w-[300px] h-[300px] bg-gradient-to-br from-[#0D4F4F]/8 to-transparent rounded-full blur-3xl pointer-events-none ${
-          isRTL ? "right-20" : "left-20"
-        }`}
-      />
-
-      {/* MAIN CONTENT */}
-      <div className="relative z-10 w-full pt-32 pb-12 md:pt-36 lg:pt-32 lg:pb-20 flex justify-start">
+      {/* 
+        ════════ 2. CONTENT LAYER ════════ 
+        Mobile: Pushed below the image using flex layout.
+        Desktop: Floating cleanly over the gradient wash.
+      */}
+      <div className="relative z-10 w-full flex-1 flex flex-col justify-start lg:justify-center px-5 sm:px-10 lg:px-16 xl:px-24 pt-4 pb-12 lg:py-32">
         <div
-          className={`w-full max-w-[620px] px-6 sm:px-10 lg:px-16 xl:px-24 transition-all duration-1000 ${
+          className={`w-full max-w-[540px] transition-all duration-700 ease-out ${
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
-          style={{ fontFamily: bodyFont }}
         >
           {/* Badge */}
-          <div className="inline-flex items-center gap-2.5 ps-2 pe-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#E8DFD0] shadow-[0_2px_12px_rgba(13,79,79,0.1)] mb-7">
-            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-[#C9A567] to-[#A67B5B]">
-              <Sparkles className="w-3 h-3 text-white" />
-            </span>
-            <span className="text-[#0D4F4F] text-xs font-semibold tracking-wide">
+          <div className="inline-flex items-center px-3 py-1.5 mb-6 rounded-full bg-[#0D4F4F]/5 border border-[#0D4F4F]/10">
+            <span className="flex h-2 w-2 rounded-full bg-[#C9A567] me-2" />
+            <span className="text-[11px] sm:text-xs font-bold text-[#0D4F4F] tracking-wide uppercase">
               {content.badge}
-            </span>
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0D4F4F] opacity-60" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0D4F4F]" />
             </span>
           </div>
 
           {/* Headline */}
           <h1
-            className={`font-bold leading-[1.08] tracking-[-0.02em] mb-6 ${
-              isRTL
-                ? "text-[2.5rem] sm:text-5xl md:text-[56px] lg:text-[64px]"
-                : "text-[2.75rem] sm:text-5xl md:text-6xl lg:text-[68px]"
-            }`}
-            style={{ fontFamily: headingFont }}
+            className="text-[2.5rem] sm:text-[3.2rem] lg:text-[4rem] font-bold leading-[1.1] tracking-tight mb-5"
+            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
           >
-            <span className="block text-[#0D4F4F]">{content.titleLine1}</span>
-            <span className="block">
-              <span
-                key={currentWord}
-                className="relative inline-block animate-word-fade"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #C9A567 0%, #A67B5B 50%, #8B6F47 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  color: "transparent",
-                }}
-              >
-                {content.titleHighlight}
-              </span>
-            </span>
-            <span className="block text-[#0D4F4F]">{content.titleLine3}</span>
+            <span className="block text-[#0D4F4F]">{content.h1Part1}</span>
+            <span className="block text-[#C9A567] mt-1 lg:mt-2">{content.h1Part2}</span>
           </h1>
 
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-10 h-px bg-gradient-to-r from-[#B8945F] to-transparent" />
-            <div className="w-1 h-1 rotate-45 bg-[#B8945F]" />
-          </div>
-
-          <p
-            className="text-[#0D4F4F]/75 leading-[1.7] mb-7 text-base md:text-[17px]"
-            style={{ fontFamily: bodyFont }}
-          >
+          {/* Subtitle */}
+          <p className="text-[15px] sm:text-base text-slate-600 leading-relaxed mb-8 max-w-[480px]">
             {content.subtitle}
           </p>
 
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-8">
-            {[content.feature1, content.feature2, content.feature3].map((f, i) => (
-              <div key={i} className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-[#0D4F4F] shrink-0" />
-                <span className="text-sm text-[#0D4F4F] font-medium">{f}</span>
+          {/* Trust Features (Mobile: Stacked, Desktop: Row) */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-10">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#0D4F4F]/5 flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-4 h-4 text-[#0D4F4F]" />
               </div>
-            ))}
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 mb-10">
-            <Link href="/services">
-              <Button
-                size="lg"
-                className="group relative overflow-hidden rounded-xl px-7 h-[54px] text-[15px] font-semibold bg-gradient-to-br from-[#0D4F4F] to-[#093838] text-white shadow-lg w-full sm:w-auto"
-              >
-                <span className="relative z-10 flex items-center justify-center">
-                  {isRTL ? "استكشف الخدمات" : "Explore Services"}
-                  {isRTL ? (
-                    <ArrowLeft className="w-4 h-4 ms-2" />
-                  ) : (
-                    <ArrowRight className="w-4 h-4 ms-2" />
-                  )}
-                </span>
-              </Button>
-            </Link>
-
-            <Link href="/book-trial">
-              <button className="group w-full sm:w-auto flex items-center justify-center gap-2.5 px-6 h-[54px] rounded-xl text-[#0D4F4F] font-semibold text-[15px] bg-white border border-[#E8DFD0]">
-                <span className="flex items-center justify-center w-9 h-9 rounded-full bg-[#F4EBD9]">
-                  <Play className="w-3 h-3 fill-[#0D4F4F] text-[#0D4F4F] ms-0.5" />
-                </span>
-                <span>{content.secondaryCta}</span>
-              </button>
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-5 sm:gap-7 pt-7 border-t border-[#E8DFD0]">
-            <div>
-              <p className="text-2xl sm:text-3xl font-bold text-[#0D4F4F]" style={{ fontFamily: headingFont }}>500+</p>
-              <p className="text-[10px] text-[#0D4F4F]/60 font-semibold uppercase">{content.students}</p>
+              <span className="text-[13px] font-bold text-slate-800 leading-none">
+                {content.feat1}
+              </span>
             </div>
-            <div className="w-px h-9 bg-[#E8DFD0]" />
-            <div>
-              <p className="text-2xl sm:text-3xl font-bold text-[#0D4F4F]" style={{ fontFamily: headingFont }}>10+</p>
-              <p className="text-[10px] text-[#0D4F4F]/60 font-semibold uppercase">{content.years}</p>
+            
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#0D4F4F]/5 flex items-center justify-center shrink-0">
+                <Clock className="w-4 h-4 text-[#0D4F4F]" />
+              </div>
+              <span className="text-[13px] font-bold text-slate-800 leading-none">
+                {content.feat2}
+              </span>
             </div>
-            <div className="w-px h-9 bg-[#E8DFD0]" />
-            <div>
-              <p className="text-2xl sm:text-3xl font-bold text-[#0D4F4F]" style={{ fontFamily: headingFont }}>25+</p>
-              <p className="text-[10px] text-[#0D4F4F]/60 font-semibold uppercase">{content.countries}</p>
+
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#0D4F4F]/5 flex items-center justify-center shrink-0">
+                <Globe className="w-4 h-4 text-[#0D4F4F]" />
+              </div>
+              <span className="text-[13px] font-bold text-slate-800 leading-none">
+                {content.feat3}
+              </span>
             </div>
           </div>
+
+          {/* Call to Action */}
+          <Link href="/book-trial" className="block w-full sm:w-auto">
+            <Button
+              size="lg"
+              className="group w-full sm:w-auto h-14 px-8 rounded-xl bg-[#0D4F4F] hover:bg-[#093D33] text-white text-[15px] font-bold shadow-xl shadow-[#0D4F4F]/20 transition-all"
+            >
+              {content.primaryCta}
+              {isRTL ? (
+                <ArrowLeft className="w-5 h-5 ms-2 group-hover:-translate-x-1 transition-transform" />
+              ) : (
+                <ArrowRight className="w-5 h-5 ms-2 group-hover:translate-x-1 transition-transform" />
+              )}
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

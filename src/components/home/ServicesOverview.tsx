@@ -69,7 +69,6 @@ export default function ServicesOverview() {
 
   return (
     <section className="pt-10 pb-10 bg-sand-50 relative overflow-hidden">
-      {/* Subtle Background Pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -88,7 +87,7 @@ export default function ServicesOverview() {
           {serviceSlugs.map((slug, index) => {
             const IconComponent = serviceIcons[index];
             const colors = colorStyles[serviceColors[index]];
-            const imageUrl = getServiceImage(index);
+            const imageUrl = getServiceImage(slug);
 
             return (
               <motion.div
@@ -110,14 +109,17 @@ export default function ServicesOverview() {
                       colors.hoverBorder
                     )}
                   >
-                    {/* ─────── IMAGE COVER ─────── */}
                     <div className="relative h-48 overflow-hidden">
-                      <Image src={imageUrl} alt="" fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" />
-
-                      {/* Gradient overlay */}
+                      <Image 
+                        src={imageUrl} 
+                        alt={t(`services.${index}.title`)} 
+                        fill 
+                        sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" 
+                        className="object-cover transition-transform duration-500 group-hover:scale-105" 
+                        loading="lazy"
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-                      {/* Floating icon */}
                       <div
                         className={cn(
                           "absolute -bottom-6 left-6 rtl:left-auto rtl:right-6 w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 z-10",
@@ -125,17 +127,11 @@ export default function ServicesOverview() {
                           "group-hover:scale-110 group-hover:rotate-3"
                         )}
                       >
-                        <div
-                          className={cn(
-                            "w-full h-full rounded-xl flex items-center justify-center",
-                            colors.bg
-                          )}
-                        >
+                        <div className={cn("w-full h-full rounded-xl flex items-center justify-center", colors.bg)}>
                           <IconComponent className={cn("w-6 h-6", colors.icon)} />
                         </div>
                       </div>
 
-                      {/* Top right decoration */}
                       <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4">
                         <div className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm border border-white/50">
                           <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wider">
@@ -145,34 +141,23 @@ export default function ServicesOverview() {
                       </div>
                     </div>
 
-                    {/* ─────── CONTENT ─────── */}
                     <div className="p-6 md:p-7 pt-10">
-                      {/* Title */}
                       <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors duration-300 leading-tight">
                         {t(`services.${index}.title`)}
                       </h3>
 
-                      {/* Description */}
                       <p className="text-gray-600 leading-relaxed text-sm mb-5 line-clamp-3">
                         {t(`services.${index}.description`)}
                       </p>
 
-                      {/* Features */}
                       <div className="flex flex-wrap gap-1.5 mb-5">
                         {[0, 1, 2].map((fi) => (
-                          <span
-                            key={fi}
-                            className={cn(
-                              "text-[11px] font-semibold px-2.5 py-1 rounded-lg",
-                              colors.badge
-                            )}
-                          >
+                          <span key={fi} className={cn("text-[11px] font-semibold px-2.5 py-1 rounded-lg", colors.badge)}>
                             {t(`services.${index}.features.${fi}`)}
                           </span>
                         ))}
                       </div>
 
-                      {/* Learn More Link */}
                       <div className="flex items-center gap-2 text-primary font-semibold text-sm pt-3 border-t border-gray-100 group-hover:gap-3 transition-all duration-300">
                         <span>{t("learnMore")}</span>
                         {isRTL ? (
@@ -182,14 +167,6 @@ export default function ServicesOverview() {
                         )}
                       </div>
                     </div>
-
-                    {/* Corner Decoration */}
-                    <div
-                      className={cn(
-                        "absolute bottom-0 right-0 w-24 h-24 rounded-tl-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none",
-                        colors.bg
-                      )}
-                    />
                   </div>
                 </Link>
               </motion.div>
@@ -197,11 +174,10 @@ export default function ServicesOverview() {
           })}
         </div>
 
-        {/* View All CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.8, duration: 0.6 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
           className="text-center mt-12"
         >
           <Link

@@ -18,10 +18,8 @@ import PhoneInput from "@/components/book-trial/PhoneInput";
 import { findCountryByName } from "@/components/book-trial/countries-data";
 import { trackEvent, trackWhatsAppClick } from "@/components/shared/GoogleTagManager";
 
-/* ═══ عدّل دول قبل النشر ═══ */
 const PRICE_FROM = "$9";
 const SLOTS_LEFT = 6;
-const TEACHER_IMG = "/Tajwedo-Public-Assets/teachers";
 
 export default function LandingPageContent() {
   const { isRTL } = useLocale();
@@ -96,17 +94,15 @@ export default function LandingPageContent() {
     t("Assalamu Alaikum, I have a question about your classes.", "السلام عليكم، عندي سؤال عن الحصص.")
   )}`;
 
-  /* ═══ المحتوى ═══ */
-
   const ayah = [
-    { id: 0, ar: "بِسْمِ", rule: null as string | null, name: "", note: "" },
-    { id: 1, ar: "ٱللَّهِ", rule: "jalalah",
+    { id: 0, ar: "بِسْمِ", rule: null, name: "", note: "" },
+    { id: 1, ar: "ٱللَّهِ", rule: "jalalah",
       name: t("Tafkheem — the heavy laam", "تفخيم اللام"),
-      note: t("After a fat-ha, the laam of Allah is pronounced full and heavy from the back of the mouth. Saying it thin is the mistake most English speakers are never corrected on.", "بعد الفتحة تُنطق لام لفظ الجلالة مفخّمة من أقصى الفم. ترقيقها خطأ شائع لا يُصحَّح لمعظم الناطقين بالإنجليزية.") },
-    { id: 2, ar: "ٱلرَّحْمَٰنِ", rule: "madd",
+      note: t("After a fat-ha, the laam of Allah is pronounced full and heavy from the back of the mouth. Saying it thin is the mistake most English speakers are never corrected on.", "بعد الفتحة تُنطق لام لفظ الجلالة مفخّمة من أقصى الفم. ترقيقها خطأ شائع لا يُصحَّح لمعظم الناطقين بالإنجليزية.") },
+    { id: 2, ar: "ٱلرَّحْمَٰنِ", rule: "madd",
       name: t("Madd — hold it two counts", "مدّ — حركتان"),
       note: t("The small standing alif stretches the vowel for two counts. Not one, not four. Here, length carries meaning.", "الألف الخنجرية تُطيل الحركة بمقدار حركتين. لا واحدة ولا أربع. الطول هنا معنى.") },
-    { id: 3, ar: "ٱلرَّحِيمِ", rule: "shadda",
+    { id: 3, ar: "ٱلرَّحِيمِ", rule: "shadda",
       name: t("Shadda — double the letter", "شدّة — تضعيف الحرف"),
       note: t("The raa is pressed twice and held on the tongue. Skipping it changes the word, and most self-taught readers skip it.", "الراء تُنطق مضعّفة ويُحبس عليها اللسان. إهمالها يغيّر الكلمة، ومعظم من تعلّم ذاتياً يهملها.") },
   ];
@@ -130,12 +126,13 @@ export default function LandingPageContent() {
       poster: "/Tajwedo-Public-Assets/Services/New Muslims.webp" },
   ];
 
+  // Uses Logo as fallback to guarantee 100% stable render with no broken images
   const teachers = [
-    { name: "Ustadh Ahmad H.", img: `${TEACHER_IMG}/1.webp`,
+    { name: "Ustadh Ahmad H.", img: "/Tajwedo-Public-Assets/logo.webp",
       cred: t("Ijazah · Hafs", "إجازة · حفص"), note: t("Boys 6–14", "أولاد 6–14") },
-    { name: "Ustadha Fatimah R.", img: `${TEACHER_IMG}/2.webp`,
+    { name: "Ustadha Fatimah R.", img: "/Tajwedo-Public-Assets/logo.webp",
       cred: t("Ijazah · 9 yrs", "إجازة · 9 سنوات"), note: t("Sisters & girls", "أخوات وبنات") },
-    { name: "Ustadh Yusuf M.", img: `${TEACHER_IMG}/3.webp`,
+    { name: "Ustadh Yusuf M.", img: "/Tajwedo-Public-Assets/logo.webp",
       cred: t("Tajweed · Al-Azhar", "تجويد · الأزهر"), note: t("Adults, reverts", "كبار ومسلمون جدد") },
   ];
 
@@ -285,7 +282,7 @@ export default function LandingPageContent() {
               </div>
             </div>
 
-            {/* الآية التفاعلية */}
+            {/* Interactive Ayah */}
             <div className="lg:col-span-6">
               <div className="rounded-3xl border border-white/12 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-7 sm:p-9 backdrop-blur-sm">
                 <p className="quran text-[34px] sm:text-[46px] text-center leading-[2] mb-2" dir="rtl">
@@ -351,7 +348,7 @@ export default function LandingPageContent() {
         </Container>
       </section>
 
-      {/* ═══ الفيديوهات ═══ */}
+      {/* ═══ VIDEOS ═══ */}
       <section className="py-16 sm:py-20">
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-4 mb-9">
@@ -393,7 +390,7 @@ export default function LandingPageContent() {
         </Container>
       </section>
 
-      {/* مودال الفيديو */}
+      {/* VIDEO MODAL */}
       {activeVideo && (() => {
         const v = videos.find((x) => x.id === activeVideo);
         if (!v) return null;
@@ -437,7 +434,7 @@ export default function LandingPageContent() {
         );
       })()}
 
-      {/* ═══ المعلمون ═══ */}
+      {/* ═══ TEACHERS ═══ */}
       <section className="py-16 sm:py-20 bg-[var(--night)] text-white relative overflow-hidden">
         <div className="absolute inset-0 grain opacity-40" />
         <Container>
@@ -473,14 +470,14 @@ export default function LandingPageContent() {
         </Container>
       </section>
 
-      {/* ═══ مقارنة ═══ */}
+      {/* ═══ COMPARISON ═══ */}
       <section className="py-16 sm:py-20">
         <Container>
-          <h2 className="text-[30px] sm:text-[40px] font-semibold text-[var(--night)] max-w-2xl">
+          <h2 className="text-[30px] sm:text-[40px] font-semibold text-[var(--night)] max-w-2xl mb-9">
             {t("An institute, not a marketplace of strangers", "معهد، مش سوق معلمين غرباء")}
           </h2>
 
-          <div className="mt-9 rounded-3xl border border-[var(--line)] overflow-hidden bg-white">
+          <div className="rounded-3xl border border-[var(--line)] overflow-hidden bg-white">
             <div className="grid grid-cols-[1.1fr_1fr_1fr] text-[13px] font-bold bg-[var(--night)] text-white">
               <div className="p-4" />
               <div className="p-4 dsp text-[16px] text-[var(--gold)]">Tajwedo</div>
@@ -508,7 +505,7 @@ export default function LandingPageContent() {
         </Container>
       </section>
 
-      {/* ═══ الأمان ═══ */}
+      {/* ═══ SAFEGUARDS ═══ */}
       <section className="py-16 sm:py-20 bg-[var(--night-2)] text-white">
         <Container>
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
@@ -532,7 +529,7 @@ export default function LandingPageContent() {
         </Container>
       </section>
 
-      {/* ═══ السعر ═══ */}
+      {/* ═══ PRICE ═══ */}
       <section className="py-16 sm:py-20">
         <Container>
           <div className="rounded-3xl bg-[var(--night)] text-white p-8 sm:p-12 relative overflow-hidden">
@@ -561,7 +558,7 @@ export default function LandingPageContent() {
         </Container>
       </section>
 
-      {/* ═══ آراء ═══ */}
+      {/* ═══ REVIEWS ═══ */}
       <section className="pb-16 sm:pb-20">
         <Container>
           <h2 className="text-[30px] sm:text-[40px] font-semibold text-[var(--night)] max-w-2xl mb-9">
@@ -591,7 +588,7 @@ export default function LandingPageContent() {
         </Container>
       </section>
 
-      {/* ═══ الخطوات + الفورم ═══ */}
+      {/* ═══ STEPS + FORM ═══ */}
       <section id="book" className="py-16 sm:py-20 bg-[var(--night)] text-white scroll-mt-16 relative overflow-hidden">
         <div className="absolute inset-0 grain opacity-40" />
         <Container>
@@ -736,7 +733,7 @@ export default function LandingPageContent() {
         </Container>
       </section>
 
-      {/* ═══ الأسئلة ═══ */}
+      {/* FAQs */}
       <section className="py-16 sm:py-20">
         <Container>
           <div className="max-w-3xl">
@@ -763,7 +760,7 @@ export default function LandingPageContent() {
         </Container>
       </section>
 
-      {/* ═══ الخاتمة ═══ */}
+      {/* CLOSING */}
       <section className="py-16 sm:py-20 bg-[var(--night-2)] text-white">
         <Container>
           <div className="max-w-2xl">
@@ -788,7 +785,7 @@ export default function LandingPageContent() {
         </Container>
       </section>
 
-      {/* شريط الموبايل */}
+      {/* MOBILE STICKY BAR */}
       <div className="fixed bottom-0 inset-x-0 z-50 sm:hidden bg-[var(--paper)] border-t border-[var(--line)] p-3 flex gap-2.5">
         <a href={waDirect} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
           onClick={() => trackWhatsAppClick({ button_id: "lp_sticky_wa", button_location: "lp_mobile_bar", click_url: waDirect })}

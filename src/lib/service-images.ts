@@ -1,9 +1,7 @@
 /**
  * Centralized service images (LOCAL)
  * Path: /public/Tajwedo-Public-Assets/Services/
- *
- * To change an image: just replace the file in the public folder
- * with the same name (or update the path here).
+ * Handled with exact space encoding to match physical files on disk
  */
 
 const BASE_PATH = "/Tajwedo-Public-Assets/Services";
@@ -17,9 +15,6 @@ export const SERVICE_IMAGES: Record<string, string> = {
   "new-muslims": `${BASE_PATH}/New Muslims.webp`,
 };
 
-/**
- * Get service image by slug or index
- */
 export function getServiceImage(slugOrIndex: string | number): string {
   const slugs = [
     "quran-recitation",
@@ -36,9 +31,6 @@ export function getServiceImage(slugOrIndex: string | number): string {
   return SERVICE_IMAGES[slug] || SERVICE_IMAGES["quran-recitation"];
 }
 
-/**
- * Get all images as array (ordered)
- */
 export const SERVICE_IMAGES_ARRAY = [
   SERVICE_IMAGES["quran-recitation"],
   SERVICE_IMAGES["tajweed"],

@@ -1,21 +1,11 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
-import {
-  plusJakarta,
-  ibmPlexArabic,
-  amiri,
-  bodyFont,
-  displayFont,
-  arabicFont,
-} from '@/lib/fonts';
 import './globals.css';
 import '../styles/animations.css';
 import '../styles/islamic-patterns.css';
-import { Geist } from 'next/font/google';
 import { cn } from '@/lib/utils';
+import { plusJakarta, ibmPlexArabic, amiri } from '@/lib/fonts';
 import GoogleTagManager, { GTMNoscript } from '@/components/shared/GoogleTagManager';
-
-const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://tajwedo.com'),
@@ -109,16 +99,21 @@ export default function RootLayout({
         plusJakarta.variable,
         ibmPlexArabic.variable,
         amiri.variable,
-        bodyFont.variable,
-        displayFont.variable,
-        arabicFont.variable,
-        geist.variable,
         'font-sans'
       )}
     >
       <head>
         <meta name="color-scheme" content="light only" />
         <meta name="supported-color-schemes" content="light" />
+        
+        {/* Preconnected Google Fonts CDN for zero build failures and maximum speed */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
@@ -133,7 +128,6 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-screen flex flex-col bg-white text-gray-900"
         style={{
-          fontFamily: 'var(--font-body, var(--font-sans))',
           colorScheme: 'light only',
           backgroundColor: '#ffffff',
         }}

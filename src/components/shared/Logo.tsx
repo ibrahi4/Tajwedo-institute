@@ -17,7 +17,7 @@ export default function Logo({ className = "", light = false }: { className?: st
       <div className="relative w-12 h-12 shrink-0">
         <Image
           src="/Tajwedo-Public-Assets/logo.webp"
-          alt="Tajwedo Institute"
+          alt="Tajwedo Institute Logo"
           width={48}
           height={48}
           className="w-12 h-12 object-contain"
