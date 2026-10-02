@@ -1,19 +1,26 @@
-export const plusJakarta = {
+import { Plus_Jakarta_Sans, IBM_Plex_Sans_Arabic, Amiri } from 'next/font/google';
+
+export const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
   variable: '--font-sans',
-  className: 'font-sans',
-};
+  display: 'swap',
+});
 
-export const ibmPlexArabic = {
+export const ibmPlexArabic = IBM_Plex_Sans_Arabic({
+  subsets: ['arabic'],
+  weight: ['400', '600', '700'],
   variable: '--font-ibm-plex-arabic',
-  className: 'font-arabic',
-};
+  display: 'swap',
+});
 
-export const amiri = {
-  variable: '--font-amiri',
-  className: 'font-quran',
-};
+export const amiri = Amiri({
+  subsets: ['arabic'],
+  weight: ['400', '700'],
+  variable: '--font-quran',
+  display: 'swap',
+});
 
-// Aliases for compatibility across components
 export const bodyFont = plusJakarta;
 export const displayFont = plusJakarta;
 export const arabicFont = ibmPlexArabic;

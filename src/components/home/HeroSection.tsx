@@ -48,26 +48,19 @@ export default function HeroSection() {
       className="relative flex flex-col lg:flex-row min-h-[100svh] bg-[#FDFBF7] overflow-hidden"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      {/* 
-        ════════ 1. IMAGE LAYER ════════ 
-        Mobile: Shows at the top (45vh) and fades into the text background.
-        Desktop: Absolute full screen, fading horizontally.
-      */}
       <div className="relative w-full h-[45vh] lg:absolute lg:inset-0 lg:h-full z-0">
         <Image
           src="/Tajwedo-Public-Assets/herosection.webp"
           alt="Tajwedo Institute"
           fill
           priority
-          quality={85}
-          sizes="(max-width: 1024px) 100vw, 70vw"
+          quality={65}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 60vw"
           className="object-cover object-[70%_center] lg:object-[80%_center]"
         />
 
-        {/* Mobile Gradient Fade (Bottom to Top) */}
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#FDFBF7] to-transparent lg:hidden" />
 
-        {/* Desktop Gradient Fade (Horizontal) */}
         <div
           className="hidden lg:block absolute inset-0"
           style={{
@@ -78,18 +71,12 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* 
-        ════════ 2. CONTENT LAYER ════════ 
-        Mobile: Pushed below the image using flex layout.
-        Desktop: Floating cleanly over the gradient wash.
-      */}
       <div className="relative z-10 w-full flex-1 flex flex-col justify-start lg:justify-center px-5 sm:px-10 lg:px-16 xl:px-24 pt-4 pb-12 lg:py-32">
         <div
           className={`w-full max-w-[540px] transition-all duration-700 ease-out ${
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          {/* Badge */}
           <div className="inline-flex items-center px-3 py-1.5 mb-6 rounded-full bg-[#0D4F4F]/5 border border-[#0D4F4F]/10">
             <span className="flex h-2 w-2 rounded-full bg-[#C9A567] me-2" />
             <span className="text-[11px] sm:text-xs font-bold text-[#0D4F4F] tracking-wide uppercase">
@@ -97,7 +84,6 @@ export default function HeroSection() {
             </span>
           </div>
 
-          {/* Headline */}
           <h1
             className="text-[2.5rem] sm:text-[3.2rem] lg:text-[4rem] font-bold leading-[1.1] tracking-tight mb-5"
             style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
@@ -106,12 +92,10 @@ export default function HeroSection() {
             <span className="block text-[#C9A567] mt-1 lg:mt-2">{content.h1Part2}</span>
           </h1>
 
-          {/* Subtitle */}
           <p className="text-[15px] sm:text-base text-slate-600 leading-relaxed mb-8 max-w-[480px]">
             {content.subtitle}
           </p>
 
-          {/* Trust Features (Mobile: Stacked, Desktop: Row) */}
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-10">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-[#0D4F4F]/5 flex items-center justify-center shrink-0">
@@ -141,7 +125,6 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Call to Action */}
           <Link href="/book-trial" className="block w-full sm:w-auto">
             <Button
               size="lg"
