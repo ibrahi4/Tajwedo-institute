@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
 import {
   BookOpen,
   Mic,
@@ -40,7 +39,6 @@ const colorStyles = {
     border: "border-primary/10",
     hoverBorder: "group-hover:border-primary/20",
     badge: "bg-primary/10 text-primary",
-    iconGlow: "shadow-primary/30",
   },
   secondary: {
     bg: "bg-secondary/5",
@@ -49,7 +47,6 @@ const colorStyles = {
     border: "border-secondary/10",
     hoverBorder: "group-hover:border-secondary/20",
     badge: "bg-secondary/10 text-secondary",
-    iconGlow: "shadow-secondary/30",
   },
   accent: {
     bg: "bg-accent/10",
@@ -58,7 +55,6 @@ const colorStyles = {
     border: "border-accent/15",
     hoverBorder: "group-hover:border-accent/30",
     badge: "bg-accent/15 text-accent-400",
-    iconGlow: "shadow-accent/30",
   },
 };
 
@@ -69,17 +65,6 @@ export default function ServicesOverview() {
 
   return (
     <section className="pt-10 pb-10 bg-sand-50 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.02]">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="services-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-              <circle cx="30" cy="30" r="1" fill="#0D4F4F" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#services-pattern)" />
-        </svg>
-      </div>
-
       <Container className="relative z-10">
         <SectionHeader title={t("title")} subtitle={t("subtitle")} />
 
@@ -90,21 +75,19 @@ export default function ServicesOverview() {
             const imageUrl = getServiceImage(slug);
 
             return (
-              <motion.div
+              <div
                 key={slug}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.1,
-                  ease: [0.25, 0.1, 0.25, 1],
-                }}
+                className={cn(
+                  "transition-all duration-700 ease-out",
+                  isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                )}
+                style={{ transitionDelay: `${index * 80}ms` }}
               >
                 <Link href={`/services/${slug}`} className="block h-full">
                   <div
                     className={cn(
-                      "group relative h-full bg-white rounded-3xl overflow-hidden border transition-all duration-500",
-                      "hover:shadow-premium-hover hover:-translate-y-2",
+                      "group relative h-full bg-white rounded-3xl overflow-hidden border transition-all duration-300",
+                      "hover:shadow-lg hover:-translate-y-1",
                       colors.border,
                       colors.hoverBorder
                     )}
@@ -122,9 +105,9 @@ export default function ServicesOverview() {
 
                       <div
                         className={cn(
-                          "absolute -bottom-6 left-6 rtl:left-auto rtl:right-6 w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 z-10",
+                          "absolute -bottom-6 left-6 rtl:left-auto rtl:right-6 w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-300 z-10",
                           "bg-white border-2 border-white",
-                          "group-hover:scale-110 group-hover:rotate-3"
+                          "group-hover:scale-105"
                         )}
                       >
                         <div className={cn("w-full h-full rounded-xl flex items-center justify-center", colors.bg)}>
@@ -169,17 +152,12 @@ export default function ServicesOverview() {
                     </div>
                   </div>
                 </Link>
-              </motion.div>
+              </div>
             );
           })}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="text-center mt-12"
-        >
+        <div className="text-center mt-12">
           <Link
             href="/services"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary/5 text-primary font-semibold hover:bg-primary/10 transition-all duration-300 group"
@@ -191,7 +169,7 @@ export default function ServicesOverview() {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             )}
           </Link>
-        </motion.div>
+        </div>
       </Container>
     </section>
   );
