@@ -1,0 +1,525 @@
+=== [locale]/page.tsx ===
+
+
+=== [locale]/layout.tsx ===
+
+
+=== [locale]/lp/quran-trial/page.tsx ===
+
+
+=== config/site.ts ===
+export const siteConfig = {
+  name: 'Tajwedo Institute',
+  title: 'Tajwedo Institute - Online Quran, Arabic & Islamic Studies',
+  description: 'Professional online Quran, Tajweed, Arabic language, and Islamic Studies education for all ages and levels. Certified Al-Azhar teachers.',
+  url: 'https://tajwedo.com',
+  ogImage: 'https://tajwedo.com/og-image.jpg',
+  author: 'Tajwedo InsTituTe',
+  contact: {
+    email: 'info@tajwedo.com',
+    whatsapp: '+201043503232',
+    whatsappLink: 'https://wa.me/201043503232',
+  },
+  social: {
+    youtube: 'https://youtube.com/@tajwedoinstitute',
+    instagram: 'https://instagram.com/tajwedoinstitute',
+    facebook: 'https://facebook.com/tajwedoinstitute',
+    tiktok: 'https://tiktok.com/@tajwedoinstitute',
+    telegram: 'https://t.me/TajwedoInstitute',
+  },
+  locales: ['en', 'ar'] as const,
+  defaultLocale: 'en' as const,
+  stats: { students: '500+', years: '10+', countries: '25+', rating: '4.9' },
+};
+
+=== hooks/useArabicAudio.ts ===
+"use client";
+
+import { useCallback, useRef, useState, useEffect } from "react";
+
+interface UseArabicAudioReturn {
+  speak: (text: string, slow?: boolean) => void;
+  stop: () => void;
+  isPlaying: boolean;
+}
+
+declare global {
+  interface Window {
+    responsiveVoice?: {
+      speak: (text: string, voice: string, params?: Record<string, unknown>) => void;
+      cancel: () => void;
+      isPlaying: () => boolean;
+      voiceSupport: () => boolean;
+    };
+  }
+}
+
+export default function useArabicAudio(): UseArabicAudioReturn {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [rvLoaded, setRvLoaded] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Load ResponsiveVoice script
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.responsiveVoice) {
+      setRvLoaded(true);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://code.responsivevoice.org/responsivevoice.js?key=pVGMbarG";
+    script.async = true;
+    script.onload = () => {
+      setTimeout(() => setRvLoaded(true), 500);
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
+    };
+  }, []);
+
+  const stop = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    if (window.responsiveVoice) {
+      window.responsiveVoice.cancel();
+    }
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsPlaying(false);
+  }, []);
+
+  const speakWithResponsiveVoice = useCallback(
+    (text: string, slow: boolean): boolean => {
+      if (!window.responsiveVoice || !rvLoaded) return false;
+
+      try {
+        window.responsiveVoice.speak(text, "Arabic Male", {
+          pitch: 1,
+          rate: slow ? 0.4 : 0.7,
+          volume: 1,
+          onstart: () => setIsPlaying(true),
+          onend: () => setIsPlaying(false),
+          onerror: () => setIsPlaying(false),
+        });
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [rvLoaded]
+  );
+
+  const speakWithSpeechSynthesis = useCallback(
+    (text: string, slow: boolean) => {
+      if (!("speechSynthesis" in window)) {
+        setIsPlaying(false);
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "ar-SA";
+      utterance.rate = slow ? 0.35 : 0.6;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+
+      const voices = window.speechSynthesis.getVoices();
+      const arabicVoices = voices.filter((v) => v.lang.startsWith("ar"));
+
+      if (arabicVoices.length > 0) {
+        const googleVoice = arabicVoices.find((v) =>
+          v.name.toLowerCase().includes("google")
+        );
+        const remoteVoice = arabicVoices.find((v) => !v.localService);
+        utterance.voice = googleVoice || remoteVoice || arabicVoices[0];
+      }
+
+      utterance.onend = () => setIsPlaying(false);
+      utterance.onerror = () => setIsPlaying(false);
+
+      window.speechSynthesis.speak(utterance);
+    },
+    []
+  );
+
+  const speak = useCallback(
+    (text: string, slow: boolean = true) => {
+      stop();
+
+      const cleanText = text.trim();
+      if (!cleanText) return;
+
+      setIsPlaying(true);
+
+      // Try ResponsiveVoice first (Arabic Fusha)
+      const rvWorked = speakWithResponsiveVoice(cleanText, slow);
+
+      // Fallback to SpeechSynthesis
+      if (!rvWorked) {
+        speakWithSpeechSynthesis(cleanText, slow);
+      }
+    },
+    [stop, speakWithResponsiveVoice, speakWithSpeechSynthesis]
+  );
+
+  return { speak, stop, isPlaying };
+}
+
+
+=== hooks/useIntersectionObserver.ts ===
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+interface UseIntersectionObserverProps {
+  threshold?: number;
+  rootMargin?: string;
+  triggerOnce?: boolean;
+}
+
+export function useIntersectionObserver({
+  threshold = 0.1,
+  rootMargin = "0px",
+  triggerOnce = true,
+}: UseIntersectionObserverProps = {}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          if (triggerOnce) observer.unobserve(element);
+        } else if (!triggerOnce) {
+          setIsInView(false);
+        }
+      },
+      { threshold, rootMargin }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [threshold, rootMargin, triggerOnce]);
+
+  return { ref, isInView };
+}
+
+
+=== hooks/useLocale.ts ===
+"use client";
+
+import { useLocale as useNextIntlLocale } from "next-intl";
+import { usePathname, useRouter } from "@/i18n/navigation";
+
+export function useLocale() {
+  const locale = useNextIntlLocale() as "en" | "ar";
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const isRTL = locale === "ar";
+
+  const switchLocale = (newLocale: "en" | "ar") => {
+    if (newLocale === locale) return;
+    router.replace(pathname, { locale: newLocale });
+  };
+
+  return {
+    locale,
+    isRTL,
+    switchLocale,
+    isEnglish: locale === "en",
+    isArabic: locale === "ar",
+  };
+}
+
+
+=== hooks/useMediaQuery.ts ===
+"use client";
+
+import { useState, useEffect } from "react";
+
+export function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    setMatches(media.matches);
+    const listener = (event: MediaQueryListEvent) => setMatches(event.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [query]);
+
+  return matches;
+}
+
+export function useIsMobile() {
+  return useMediaQuery("(max-width: 768px)");
+}
+
+export function useIsDesktop() {
+  return useMediaQuery("(min-width: 1025px)");
+}
+
+
+=== hooks/useScrollPosition.ts ===
+"use client";
+
+import { useState, useEffect } from "react";
+
+export function useScrollPosition() {
+  const [scrollY, setScrollY] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return { scrollY, isScrolled };
+}
+
+
+=== hooks/useStableRandom.ts ===
+"use client";
+
+import { useSyncExternalStore } from "react";
+
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed + 1) * 10000;
+  return x - Math.floor(x);
+}
+
+interface StableRandomItem {
+  top: string;
+  left: string;
+  width: number;
+  height: number;
+}
+
+export function useStableRandom(count: number, seed: number = 42): StableRandomItem[] {
+  return Array.from({ length: count }, (_: unknown, i: number): StableRandomItem => ({
+    top: (seededRandom(seed + i * 4 + 1) * 80 + 10).toFixed(4) + "%",
+    left: (seededRandom(seed + i * 4 + 2) * 80 + 10).toFixed(4) + "%",
+    width: 20 + seededRandom(seed + i * 4 + 3) * 60,
+    height: 20 + seededRandom(seed + i * 4 + 4) * 60,
+  }));
+}
+
+export function useHydrationSafe<T>(factory: () => T, fallback: T): T {
+  return useSyncExternalStore(
+    (callback: () => void) => {
+      window.addEventListener("resize", callback);
+      return () => window.removeEventListener("resize", callback);
+    },
+    () => factory(),
+    () => fallback
+  );
+}
+
+function subscribeToNothing(): () => void {
+  return () => {};
+}
+
+function getIsClient(): boolean {
+  return true;
+}
+
+function getIsServer(): boolean {
+  return false;
+}
+
+export function useMounted(): boolean {
+  return useSyncExternalStore(
+    subscribeToNothing,
+    getIsClient,
+    getIsServer
+  );
+}
+
+=== i18n/navigation.ts ===
+import { createNavigation } from "next-intl/navigation";
+import { routing } from "./routing";
+
+export const { Link, redirect, usePathname, useRouter, getPathname } =
+  createNavigation(routing);
+
+
+=== shared/SectionHeader.tsx ===
+import React from "react";
+
+interface SectionHeaderProps {
+  title: string;
+  subtitle?: string;
+  centered?: boolean;
+  className?: string;
+  titleClassName?: string;
+  light?: boolean;
+}
+
+export default function SectionHeader({
+  title,
+  subtitle,
+  centered = true,
+  className = "",
+  titleClassName = "",
+  light = false,
+}: SectionHeaderProps) {
+  return (
+    <div className={`${centered ? "text-center" : ""} mb-12 md:mb-16 ${className}`}>
+      {/* Top Decorative Element */}
+      <div className={`flex items-center gap-3 mb-4 ${centered ? "justify-center" : ""}`}>
+        <span className="h-[2px] w-8 bg-accent rounded-full" />
+        <span className="h-[2px] w-3 bg-accent/50 rounded-full" />
+      </div>
+
+      {/* Title */}
+      <h2
+        className={`text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight ${
+          light ? "text-white" : "text-gray-900"
+        } ${titleClassName}`}
+      >
+        {title}
+      </h2>
+
+      {/* Subtitle */}
+      {subtitle && (
+        <p
+          className={`mt-4 text-lg md:text-xl max-w-2xl ${
+            centered ? "mx-auto" : ""
+          } ${light ? "text-white/80" : "text-gray-600"}`}
+        >
+          {subtitle}
+        </p>
+      )}
+
+      {/* Bottom Decorative Line */}
+      <div className={`flex items-center gap-2 mt-6 ${centered ? "justify-center" : ""}`}>
+        <span className="h-[3px] w-12 bg-accent rounded-full" />
+        <span className="h-[3px] w-3 bg-primary/30 rounded-full" />
+        <span className="h-[3px] w-3 bg-primary/20 rounded-full" />
+      </div>
+    </div>
+  );
+}
+
+
+=== shared/Logo.tsx ===
+"use client";
+
+import React from "react";
+import Image from "next/image";
+import { Link } from "@/i18n/navigation";
+import { DM_Serif_Display } from "next/font/google";
+
+const dmSerif = DM_Serif_Display({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
+export default function Logo({ className = "", light = false }: { className?: string; light?: boolean }) {
+  return (
+    <Link href="/" className={`flex items-center gap-3 group ${className}`}>
+      <div className="relative w-12 h-12 shrink-0">
+        <Image
+          src="/Tajwedo-Public-Assets/logo.webp"
+          alt="Tajwedo Institute"
+          width={48}
+          height={48}
+          className="w-12 h-12 object-contain"
+          priority
+        />
+      </div>
+
+      <div className={`flex flex-col leading-none ${dmSerif.className}`}>
+        <h1
+          className={`text-[24px] font-normal tracking-[-0.01em] leading-[0.95] ${
+            light ? "text-white" : "text-[#0D4F4F]"
+          }`}
+        >
+          <span className={light ? "text-[#E8C56A]" : "text-[#C8A96E]"}>T</span>
+          ajwed
+          <span className={light ? "text-[#E8C56A]" : "text-[#C8A96E]"}>o</span>
+        </h1>
+
+        <span
+          className={`mt-1.5 pl-0.5 text-[9px] font-medium tracking-[0.45em] uppercase ${
+            light ? "text-white/60" : "text-[#0D4F4F]/60"
+          }`}
+          style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+        >
+          Institute
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+=== lib/service-images.ts ===
+/**
+ * Centralized service images (LOCAL)
+ * Path: /public/Tajwedo-Public-Assets/Services/
+ *
+ * To change an image: just replace the file in the public folder
+ * with the same name (or update the path here).
+ */
+
+const BASE_PATH = "/Tajwedo-Public-Assets/Services";
+
+export const SERVICE_IMAGES: Record<string, string> = {
+  "quran-recitation": `${BASE_PATH}/Quran Recitation.webp`,
+  "tajweed": `${BASE_PATH}/Tajweed.webp`,
+  "arabic-language": `${BASE_PATH}/Arabic Language.webp`,
+  "islamic-studies": `${BASE_PATH}/Islamic Studies.webp`,
+  "kids-program": `${BASE_PATH}/Kids Program.webp`,
+  "new-muslims": `${BASE_PATH}/New Muslims.webp`,
+};
+
+/**
+ * Get service image by slug or index
+ */
+export function getServiceImage(slugOrIndex: string | number): string {
+  const slugs = [
+    "quran-recitation",
+    "tajweed",
+    "arabic-language",
+    "islamic-studies",
+    "kids-program",
+    "new-muslims",
+  ];
+
+  const slug =
+    typeof slugOrIndex === "number" ? slugs[slugOrIndex] : slugOrIndex;
+
+  return SERVICE_IMAGES[slug] || SERVICE_IMAGES["quran-recitation"];
+}
+
+/**
+ * Get all images as array (ordered)
+ */
+export const SERVICE_IMAGES_ARRAY = [
+  SERVICE_IMAGES["quran-recitation"],
+  SERVICE_IMAGES["tajweed"],
+  SERVICE_IMAGES["arabic-language"],
+  SERVICE_IMAGES["islamic-studies"],
+  SERVICE_IMAGES["kids-program"],
+  SERVICE_IMAGES["new-muslims"],
+];
+
