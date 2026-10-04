@@ -15,7 +15,6 @@ import toast from "react-hot-toast";
 import { Link } from "@/i18n/navigation";
 import { trackEvent, trackWhatsAppClick } from "@/components/shared/GoogleTagManager";
 import CountrySelect from "./CountrySelect";
-import { OfferArt } from "./OfferArt";
 
 /* ══════════════════════════════════════════════════════════════
    OFFER SETTINGS
@@ -31,6 +30,13 @@ const OFFER_WINDOW_DAYS = 7;     // days after the trial lessons to enrol and ke
 
 /** Public path of the hero photo: frontend/public/Tajwedo-Public-Assets/herosection-booking.webp */
 const HERO_IMAGE = "/Tajwedo-Public-Assets/herosection-booking.webp";
+
+/** Public paths of the three offer photos: frontend/public/Tajwedo-Public-Assets/offer-*.webp */
+const OFFER_IMAGES: Record<"solo" | "pair" | "family", string> = {
+  solo: "/Tajwedo-Public-Assets/offer-solo.webp",
+  pair: "/Tajwedo-Public-Assets/offer-pair.webp",
+  family: "/Tajwedo-Public-Assets/offer-family.webp",
+};
 
 type PlanId = "solo" | "pair" | "family";
 
@@ -566,8 +572,15 @@ ${multi ? `*Learners:* ${current.learners === 3 ? "3 or more" : current.learners
                           />
 
                           {/* Illustration + discount seal */}
-                          <span className="relative block aspect-[16/9] overflow-hidden sm:aspect-auto sm:min-h-[160px]">
-                            <OfferArt id={o.id} />
+                          <span className="relative block aspect-[8/5] overflow-hidden bg-primary/10 sm:aspect-auto sm:min-h-[160px]">
+                            <Image
+                              src={OFFER_IMAGES[o.id]}
+                              alt=""
+                              fill
+                              quality={80}
+                              sizes="(min-width: 640px) 240px, 100vw"
+                              className="object-cover object-center"
+                            />
                             <span className="absolute end-3 top-3 grid h-[68px] w-[68px] -rotate-6 place-items-center rounded-full border-2 border-white/80 bg-accent text-center text-gray-900 shadow-lg rtl:rotate-6">
                               <span className="leading-none">
                                 <span dir="ltr" className="block text-xl font-extrabold">
