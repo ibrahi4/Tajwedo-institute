@@ -974,7 +974,7 @@ ${multi ? `*Learners:* ${current.learners === 3 ? "3 or more" : current.learners
             barHidden && "translate-y-full"
           )}
         >
-          <a
+          {/* <a
             href="#book-form"
             tabIndex={barHidden ? -1 : 0}
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 py-3.5 text-base font-bold text-white"
@@ -984,7 +984,7 @@ ${multi ? `*Learners:* ${current.learners === 3 ? "3 or more" : current.learners
               `Claim my free trial · up to ${FAMILY_DISCOUNT}% off`,
               `احجز حصتي المجانية · خصم حتى ${FAMILY_DISCOUNT}٪`
             )}
-          </a>
+          </a> */}
         </div>
       )}
     </main>
