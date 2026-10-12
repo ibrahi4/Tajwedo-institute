@@ -34,6 +34,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'arabic-language-learning-guide',
     'new-muslim-first-steps',
     'teaching-quran-to-kids',
+    'best-online-quran-teacher-for-kids-uk',
+    'how-to-learn-quran-for-converts-non-arabic-speakers',
+    'online-tajweed-classes-for-adults-usa',
+    'online-quran-classes-for-5-year-old',
+    'noorani-qaida-vs-noor-al-bayan-for-beginners',
   ];
 
   const allPages = [...staticPages, ...blogSlugs.map((s) => `/blog/${s}`)];

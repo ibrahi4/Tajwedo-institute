@@ -1,24 +1,24 @@
-import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
-import { buildPageMetadata } from "@/lib/seo";
-import GamesHubContent from "@/components/games/GamesHubContent";
+import React from 'react';
+import { createMetadata } from '@/lib/metadata';
+import GamesHubContent from '@/components/games/GamesHubContent';
 
-type Props = { params: Promise<{ locale: string }> };
+interface PageProps {
+  params: Promise<{ locale: string }>;
+}
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
-  return buildPageMetadata({
+  return createMetadata({
+    title: locale === 'ar' ? 'ألعاب تعليم القرآن والعربية للأطفال | تجويدو' : 'Interactive Arabic & Quran Games for Kids | Tajwedo',
+    description: locale === 'ar'
+      ? 'ألعاب تفاعلية ممتعة لتعليم الأطفال الحروف العربية، قواعد التجويد، والقراءة الصحيحة.'
+      : 'Fun interactive games designed for children to learn Arabic alphabet, Tajweed rules, and Quran reading.',
+    path: '/games',
     locale,
-    path: "/games",
-    titleEn: "Quran Learning Games for Kids | Tajwedo Institute",
-    titleAr: "ألعاب تعليم القرآن للأطفال | معهد تجويدو",
-    descEn: "Educational Arabic and Tajweed games for kids at Tajwedo Institute.",
-    descAr: "ألعاب تعليمية للعربية والتجويد للأطفال في معهد تجويدو.",
   });
 }
 
-export default async function Page({ params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+export default async function GamesPage({ params }: PageProps) {
+  await params;
   return <GamesHubContent />;
 }

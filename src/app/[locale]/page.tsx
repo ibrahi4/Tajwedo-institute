@@ -1,7 +1,5 @@
 import React from 'react';
 import { createMetadata } from '@/lib/metadata';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import HeroSection from '@/components/home/HeroSection';
 import TrustBar from '@/components/home/TrustBar';
 import QuranVerse from '@/components/home/QuranVerse';
@@ -35,18 +33,14 @@ export default async function HomePage({ params }: PageProps) {
   await params;
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
-      <Navbar />
-      <main className="flex-grow">
-        <HeroSection />
-        <TrustBar />
-        <QuranVerse />
-        <ServicesOverview />
-        <HowItWorks />
-        <WhyChooseMe />
-        <FAQPreview />
-      </main>
-      <Footer />
-    </div>
+    <>
+      <HeroSection />
+      <TrustBar />
+      <QuranVerse />
+      <ServicesOverview />
+      <HowItWorks />
+      <WhyChooseMe />
+      <FAQPreview />
+    </>
   );
 }

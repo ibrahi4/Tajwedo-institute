@@ -2,14 +2,7 @@
 
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
-import {
-  Gamepad2,
-  Trophy,
-  Star,
-  Pencil,
-  BookOpen,
-  Mic,
-} from "lucide-react";
+import { Gamepad2, Trophy, Star, Pencil, BookOpen, Mic } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SectionHeader from "@/components/shared/SectionHeader";
 import GameCard from "./shared/GameCard";
@@ -58,7 +51,7 @@ function ConfettiBackground(): React.ReactElement {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {pieces.map((p: ConfettiPiece, i: number) => (
         <motion.div
           key={i}
@@ -93,27 +86,26 @@ export default function GamesHubContent(): React.ReactElement {
   const t = useTranslations("games");
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-amber-50">
-      <section className="relative overflow-hidden bg-amber-400 text-gray-900 py-20 md:py-28">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-amber-50 pt-16">
+      <section className="relative overflow-hidden bg-amber-400 text-gray-900 py-16 md:py-24">
         <ConfettiBackground />
 
-        <div className="container-custom relative z-10">
+        <div className="container-custom relative z-10 max-w-5xl mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 bg-white/30 backdrop-blur-sm border-2 border-white/40 rounded-full px-6 py-3 mb-8"
+              className="inline-flex items-center gap-2 bg-white/30 backdrop-blur-sm border-2 border-white/40 rounded-full px-6 py-2.5 mb-6"
             >
-              <Gamepad2 className="w-5 h-5" />
-              <span className="text-sm font-bold">{t("hero.badge")}</span>
+              <Gamepad2 className="w-5 h-5 text-gray-900" />
+              <span className="text-sm font-bold text-gray-900">{t("hero.badge")}</span>
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-4xl md:text-6xl lg:text-7xl font-black mb-6"
-              style={{ textShadow: "3px 3px 0px rgba(139, 92, 246, 0.3)" }}
+              className="text-4xl md:text-6xl font-black mb-6 text-gray-900"
             >
               {t("hero.title")}
             </motion.h1>
@@ -157,19 +149,10 @@ export default function GamesHubContent(): React.ReactElement {
             </motion.div>
           </div>
         </div>
-
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M0 120L60 105C120 90 240 60 360 52.5C480 45 600 60 720 67.5C840 75 960 75 1080 67.5C1200 60 1320 45 1380 37.5L1440 30V120H0Z"
-              className="fill-amber-50"
-            />
-          </svg>
-        </div>
       </section>
 
-      <section className="section-padding -mt-4">
-        <div className="container-custom">
+      <section className="py-12 md:py-16">
+        <div className="container-custom max-w-6xl mx-auto px-4">
           <SectionHeader title={t("allGames.title")} subtitle={t("allGames.subtitle")} />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {gamesConfig.map((game, index: number) => (
@@ -179,8 +162,8 @@ export default function GamesHubContent(): React.ReactElement {
         </div>
       </section>
 
-      <section className="section-padding bg-white">
-        <div className="container-custom">
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container-custom max-w-6xl mx-auto px-4">
           <SectionHeader title={t("features.title")} subtitle={t("features.subtitle")} />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[0, 1, 2, 3].map((i: number) => (
@@ -190,7 +173,7 @@ export default function GamesHubContent(): React.ReactElement {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="text-center p-6 rounded-2xl bg-amber-50 hover:shadow-premium transition-all"
+                className="text-center p-6 rounded-2xl bg-amber-50 hover:shadow-md transition-all"
               >
                 <div className="w-14 h-14 mx-auto mb-4 bg-amber-400 rounded-2xl flex items-center justify-center">
                   {i === 0 && <Pencil className="w-7 h-7 text-white" />}

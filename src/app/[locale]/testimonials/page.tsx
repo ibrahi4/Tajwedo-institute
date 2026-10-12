@@ -1,24 +1,143 @@
-import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
-import { buildPageMetadata } from "@/lib/seo";
-import TestimonialsPageContent from "@/components/testimonials/TestimonialsPageContent";
+import React from 'react';
+import { createMetadata } from '@/lib/metadata';
+import Container from '@/components/shared/Container';
+import { Star, Quote, MapPin } from 'lucide-react';
 
-type Props = { params: Promise<{ locale: string }> };
+interface PageProps {
+  params: Promise<{ locale: string }>;
+}
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
-  return buildPageMetadata({
+  return createMetadata({
+    title: locale === 'ar' ? 'آراء وتجارب الطلاب | معهد تجويدو' : 'Student & Parent Reviews | Tajwedo Institute',
+    description: locale === 'ar'
+      ? 'قصص حقيقية وتقييمات عائلات من بريطانيا وأمريكا وكندا وأستراليا يتعلمون القرآن والتجويد مع معهد تجويدو.'
+      : 'Real stories and reviews from Muslim families across UK, USA, Canada, and Australia learning Quran with Tajwedo.',
+    path: '/testimonials',
     locale,
-    path: "/testimonials",
-    titleEn: "Student Reviews | Tajwedo Institute | Tajwedo Institute",
-    titleAr: "آراء الطلاب | معهد تجويدو | معهد تجويدو",
-    descEn: "Read parent and student reviews of online Quran and Arabic classes.",
-    descAr: "اقرأ تقييمات أولياء الأمور والطلاب لدروس القرآن والعربية أونلاين.",
   });
 }
 
-export default async function Page({ params }: Props) {
+export default async function TestimonialsPage({ params }: PageProps) {
   const { locale } = await params;
-  setRequestLocale(locale);
-  return <TestimonialsPageContent />;
+  const isRTL = locale === 'ar';
+
+  const t = (en: string, ar: string) => (isRTL ? ar : en);
+
+  const reviews = [
+    {
+      name: 'Sarah Mitchell',
+      location: 'Birmingham, UK',
+      role: t('Mother of 2', 'أم لطالبين'),
+      text: t(
+        'Two years of weekend madrasa and she still could not read a page alone. Four months with Tajwedo and she reads Juz Amma unaided. The weekly report is what convinced me.',
+        'سنتين مدرسة نهاية أسبوع ومقدرتش تقرأ صفحة لوحدها. أربع شهور هنا وبتقرأ جزء عم بدون مساعدة. التقرير الأسبوعي هو اللي أقنعني.'
+      ),
+    },
+    {
+      name: 'Bilal Hassan',
+      location: 'Houston, USA',
+      role: t('Adult Tajweed Student', 'طالب تجويد بالغ'),
+      text: t(
+        'I am 41 and was embarrassed to recite in jamaa\'ah. My teacher never once made me feel slow. Madd rules finally make perfect sense.',
+        'عندي 41 سنة وكنت محرج أقرأ في الجماعة. المعلم ولا مرة حسسني إني بطيء. قواعد المد أخيراً بقت واضحة ومتقنة.'
+      ),
+    },
+    {
+      name: 'Maryam K.',
+      location: 'Toronto, Canada',
+      role: t('New Muslim / Revert', 'مسلمة جديدة'),
+      text: t(
+        'I took shahadah last year knowing zero Arabic letters. They started at the alphabet in English, assuming nothing. I pray properly now.',
+        'أسلمت السنة الماضية ولم أكن أعرف حرفاً واحداً. بدأوا معي من الألف بالإنجليزي بدون تعقيد. الآن أصلي وأقرأ بثقة.'
+      ),
+    },
+    {
+      name: 'Imran Patel',
+      location: 'Sydney, Australia',
+      role: t('Hifz Parent', 'ولي أمر طالب حفظ'),
+      text: t(
+        'Timezone was my biggest worry. My son is at 5pm Sydney time, same dedicated teacher, same slot every single week since March.',
+        'التوقيت كان أكبر همومي. ابني يدرس الساعة 5 مساءً بتوقيت سيدني، نفس المعلم ونفس الموعد كل أسبوع بحساب ودقة.'
+      ),
+    },
+  ];
+
+  // Schema.org Review Array for Google Rich Results
+  const reviewsSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'EducationalOrganization',
+    name: 'Tajwedo Institute',
+    url: 'https://tajwedo.com',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '500',
+    },
+    review: reviews.map((rev) => ({
+      '@type': 'Review',
+      author: {
+        '@type': 'Person',
+        name: rev.name,
+      },
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: '5',
+        bestRating: '5',
+      },
+      reviewBody: rev.text,
+    })),
+  };
+
+  return (
+    <div className="pt-28 pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewsSchema) }}
+      />
+      <Container>
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#0D4F4F]/10 text-[#0D4F4F] font-bold text-xs uppercase tracking-wider mb-4">
+            {t('Trusted Worldwide', 'ثقة العائلات عالمياً')}
+          </span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight">
+            {t('What Parents & Students Say About Tajwedo', 'ماذا يقول أولياء الأمور والطلاب عن تجويدو')}
+          </h1>
+          <p className="text-slate-600 text-lg leading-relaxed">
+            {t(
+              'Real stories from Muslim families across the UK, USA, Canada, Australia, and Europe.',
+              'قصص وتجارب حقيقية لعائلات مسلمة في المملكة المتحدة، أمريكا، كندا، أستراليا وأوروبا.'
+            )}
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {reviews.map((rev, idx) => (
+            <div key={idx} className="p-8 rounded-3xl bg-white border border-stone-200 shadow-sm relative space-y-4">
+              <Quote className="w-10 h-10 text-amber-500/20 absolute top-6 end-6" />
+              <div className="flex items-center gap-1 text-amber-500">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-amber-500" />
+                ))}
+              </div>
+              <p className="text-slate-700 leading-relaxed text-base italic">
+                &ldquo;{rev.text}&rdquo;
+              </p>
+              <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
+                <div>
+                  <h3 className="font-bold text-slate-900 text-base">{rev.name}</h3>
+                  <p className="text-xs text-[#0D4F4F] font-semibold">{rev.role}</p>
+                </div>
+                <div className="flex items-center gap-1 text-xs text-slate-400">
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>{rev.location}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </div>
+  );
 }

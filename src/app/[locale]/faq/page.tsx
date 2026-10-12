@@ -1,24 +1,50 @@
-import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
-import { buildPageMetadata } from "@/lib/seo";
-import FAQPageContent from "@/components/faq/FAQPageContent";
+import React from 'react';
+import { createMetadata } from '@/lib/metadata';
+import FAQPreview from '@/components/home/FAQPreview';
+import { getMessages } from 'next-intl/server';
 
-type Props = { params: Promise<{ locale: string }> };
+interface FAQPageProps {
+  params: Promise<{ locale: string }>;
+}
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: FAQPageProps) {
   const { locale } = await params;
-  return buildPageMetadata({
+  return createMetadata({
+    title: locale === 'ar' ? 'الأسئلة الشائعة | معهد تجويدو' : 'Frequently Asked Questions | Tajwedo Institute',
+    description: locale === 'ar'
+      ? 'إجابات شاملة لجميع الأسئلة حول باقات تجويدو، الحصص التجريبية، طرق التدريس والمعلمين.'
+      : 'Find detailed answers regarding Tajwedo pricing, 1-on-1 Zoom classes, teacher qualifications, and scheduling.',
+    path: '/faq',
     locale,
-    path: "/faq",
-    titleEn: "FAQ | Online Quran Classes | Tajwedo Institute",
-    titleAr: "الأسئلة الشائعة | دروس قرآن أونلاين | معهد تجويدو",
-    descEn: "Answers about online Quran, Tajweed, scheduling and free trial at Tajwedo Institute.",
-    descAr: "إجابات عن دروس القرآن والتجويد والمواعيد والتجربة المجانية في معهد تجويدو.",
   });
 }
 
-export default async function Page({ params }: Props) {
+export default async function FAQPage({ params }: FAQPageProps) {
   const { locale } = await params;
-  setRequestLocale(locale);
-  return <FAQPageContent />;
+  const messages = (await getMessages()) as any;
+  const rawItems = messages?.faqPreview?.items || {};
+  const faqItems = Array.isArray(rawItems) ? rawItems : Object.values(rawItems);
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item: any) => ({
+      '@type': 'Question',
+      name: item.question || item.q || '',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer || item.a || '',
+      },
+    })),
+  };
+
+  return (
+    <div className="pt-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <FAQPreview />
+    </div>
+  );
 }

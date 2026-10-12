@@ -1,24 +1,29 @@
-import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
-import { buildPageMetadata } from "@/lib/seo";
-import HowItWorksPageContent from "@/components/how-it-works/HowItWorksPageContent";
+import React from 'react';
+import { createMetadata } from '@/lib/metadata';
+import HowItWorks from '@/components/home/HowItWorks';
 
-type Props = { params: Promise<{ locale: string }> };
+interface PageProps {
+  params: Promise<{ locale: string }>;
+}
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
-  return buildPageMetadata({
+  return createMetadata({
+    title: locale === 'ar' ? 'كيف يعمل المعهد | معهد تجويدو' : 'How It Works - 4 Easy Steps | Tajwedo Institute',
+    description: locale === 'ar'
+      ? 'خطوات بسيطة لبدء رحلة التعلم: حجز التجربة المجانية، تقييم المستوى، إعداد الخطة المخصصة، والبدء عبر زووم.'
+      : 'Four simple steps to start learning: Book free trial, level evaluation, custom plan, and 1-on-1 Zoom sessions.',
+    path: '/how-it-works',
     locale,
-    path: "/how-it-works",
-    titleEn: "How Online Quran Classes Work | Tajwedo Institute",
-    titleAr: "كيف تعمل دروس القرآن أونلاين | معهد تجويدو",
-    descEn: "Learn how Tajwedo Institute online classes work from trial to weekly progress.",
-    descAr: "تعرّف كيف تعمل دروس معهد تجويدو أونلاين من التجربة حتى المتابعة الأسبوعية.",
   });
 }
 
-export default async function Page({ params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
-  return <HowItWorksPageContent />;
+export default async function HowItWorksPage({ params }: PageProps) {
+  await params;
+
+  return (
+    <div className="pt-24">
+      <HowItWorks />
+    </div>
+  );
 }
