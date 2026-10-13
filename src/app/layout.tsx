@@ -67,7 +67,7 @@ const websiteSchema = {
   url: 'https://tajwedo.com/',
 };
 
-// Rich EducationalOrganization Schema with Aggregate Rating for SERP Gold Stars
+// Rich International EducationalOrganization Schema with explicit Geo-targeting
 const orgSchema = {
   '@context': 'https://schema.org',
   '@type': 'EducationalOrganization',
@@ -83,6 +83,12 @@ const orgSchema = {
     'https://t.me/TajwedoInstitute',
     'https://youtube.com/@tajwedoinstitute',
     'https://tiktok.com/@tajwedoinstitute',
+  ],
+  areaServed: [
+    { '@type': 'Country', name: 'United Kingdom' },
+    { '@type': 'Country', name: 'United States' },
+    { '@type': 'Country', name: 'Canada' },
+    { '@type': 'Country', name: 'Australia' },
   ],
   aggregateRating: {
     '@type': 'AggregateRating',

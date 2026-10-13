@@ -5,26 +5,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const locales = ['en', 'ar'];
 
   const staticPages = [
-    '',
-    '/about',
-    '/services',
-    '/services/quran-recitation',
-    '/services/tajweed',
-    '/services/arabic-language',
-    '/services/islamic-studies',
-    '/services/kids-program',
-    '/services/new-muslims',
-    '/book-trial',
-    '/blog',
-    '/testimonials',
-    '/contact',
-    '/faq',
-    '/how-it-works',
-    '/games',
-    '/games/arabic-letters',
-    '/games/tajweed',
-    '/games/noor-albayan',
-    '/pricing',
+    '', '/about', '/services', '/services/quran-recitation', '/services/tajweed', 
+    '/services/arabic-language', '/services/islamic-studies', '/services/kids-program', 
+    '/services/new-muslims', '/book-trial', '/blog', '/testimonials', '/contact', 
+    '/faq', '/how-it-works', '/games', '/games/arabic-letters', '/games/tajweed', 
+    '/games/noor-albayan', '/pricing',
   ];
 
   const blogSlugs = [
@@ -39,13 +24,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'online-tajweed-classes-for-adults-usa',
     'online-quran-classes-for-5-year-old',
     'noorani-qaida-vs-noor-al-bayan-for-beginners',
+    'how-long-does-it-take-to-learn-tajweed',
+    'can-i-read-quran-in-english-transliteration',
+    'best-age-to-start-hifz-quran-memorization',
+    'online-quran-classes-for-sisters-female-teachers',
+    'how-much-do-online-quran-classes-cost-uk-usa',
+    'how-to-memorize-quran-while-working-full-time',
+    'quranic-arabic-vs-modern-standard-arabic'
   ];
 
   const allPages = [...staticPages, ...blogSlugs.map((s) => `/blog/${s}`)];
   const lastModified = new Date('2026-10-02T00:00:00.000Z');
 
   const entries: MetadataRoute.Sitemap = [];
-
   for (const locale of locales) {
     for (const page of allPages) {
       const path = page === '' ? '' : page;
@@ -64,6 +55,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       });
     }
   }
-
   return entries;
 }
