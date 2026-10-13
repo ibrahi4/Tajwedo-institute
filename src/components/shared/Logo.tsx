@@ -13,23 +13,23 @@ const dmSerif = DM_Serif_Display({
 
 export default function Logo({ className = "", light = false }: { className?: string; light?: boolean }) {
   return (
-    <Link href="/" className={`flex items-center gap-3 sm:gap-3.5 group ${className}`}>
-      {/* Enlarged Logo Icon */}
-      <div className="relative w-14 h-14 sm:w-16 sm:h-16 shrink-0">
+    <Link href="/" className={`flex items-center gap-2.5 sm:gap-3 group ${className}`}>
+      {/* perfectly balanced logo size */}
+      <div className="relative w-10 h-10 sm:w-11 sm:h-11 shrink-0">
         <Image
           src="/Tajwedo-Public-Assets/logo.webp"
           alt="Tajwedo Institute Logo"
-          width={64}
-          height={64}
-          className="w-full h-full object-contain transition-transform group-hover:scale-105"
+          width={44}
+          height={44}
+          className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
           priority
         />
       </div>
 
-      {/* Enlarged Brand Name */}
-      <div className={`flex flex-col leading-none ${dmSerif.className}`}>
+      {/* Elegant, balanced typography */}
+      <div className={`flex flex-col justify-center leading-none ${dmSerif.className}`}>
         <span
-          className={`text-[28px] sm:text-[32px] font-normal tracking-[-0.01em] leading-[0.9] ${
+          className={`text-[22px] sm:text-[25px] font-normal tracking-[-0.015em] leading-none ${
             light ? "text-white" : "text-[#0D4F4F]"
           }`}
         >
@@ -39,8 +39,8 @@ export default function Logo({ className = "", light = false }: { className?: st
         </span>
 
         <span
-          className={`mt-1.5 pl-0.5 text-[10px] sm:text-[11px] font-semibold tracking-[0.4em] uppercase ${
-            light ? "text-white/70" : "text-[#0D4F4F]/70"
+          className={`mt-[2px] pl-[1px] text-[8px] sm:text-[9px] font-semibold tracking-[0.45em] uppercase opacity-75 ${
+            light ? "text-white" : "text-[#0D4F4F]"
           }`}
           style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
         >

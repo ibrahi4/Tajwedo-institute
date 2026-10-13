@@ -27,7 +27,7 @@ export default function Navbar() {
   const { locale, switchLocale, isRTL } = useLocale();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const onScroll = () => setScrolled(window.scrollY > 15);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -44,44 +44,49 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   const safePathname = pathname || "/";
   const isActive = (href: string) => {
     if (href === "/") return safePathname === "/" || safePathname === "";
     return safePathname.startsWith(href);
   };
 
+  // Always crisp white frosted background to ensure 100% contrast on all hero pages
   const shellCls = scrolled
     ? "bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-sm py-2"
-    : "bg-white/90 backdrop-blur-sm border-b border-stone-100 py-3";
+    : "bg-white/90 backdrop-blur-sm border-b border-stone-100/80 py-2.5";
 
   return (
     <>
-      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${shellCls}`}>
+      <header className={`fixed inset-x-0 top-0 z-[100] transition-all duration-300 ${shellCls}`}>
         <Container>
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex items-center justify-between h-14 md:h-16">
             {/* Logo */}
             <div className="shrink-0 flex items-center">
               <Logo />
             </div>
 
-            {/* Desktop Nav Links */}
-            <nav className="hidden lg:flex items-center gap-1 rounded-2xl px-3 py-1 bg-stone-50/80 border border-stone-200/50">
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-1 rounded-2xl px-3 py-1 bg-stone-50 border border-stone-200/60">
               {NAV_LINKS.map((link) => {
                 const active = isActive(link.href);
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold transition-all duration-200 ${
+                    className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs md:text-sm font-bold transition-all duration-200 ${
                       active
                         ? "bg-[#0D4F4F] text-white shadow-sm"
-                        : "text-slate-700 hover:bg-stone-200/60 hover:text-[#0D4F4F]"
+                        : "text-slate-800 hover:bg-stone-200/60 hover:text-[#0D4F4F]"
                     }`}
                   >
-                    {link.key === "games" && <Gamepad2 className="h-4 w-4 text-amber-500" />}
+                    {link.key === "games" && <Gamepad2 className="w-4 h-4 text-amber-500" />}
                     <span>{t(link.key)}</span>
                     {link.key === "games" && (
-                      <span className="rounded-full bg-amber-500 px-1.5 py-0.5 text-[9px] font-extrabold leading-none text-slate-950">
+                      <span className="rounded-full bg-amber-500 px-1.5 py-0.5 text-[9px] font-black leading-none text-slate-950">
                         NEW
                       </span>
                     )}
@@ -95,27 +100,27 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => switchLocale(locale === "en" ? "ar" : "en")}
-                className="hidden md:inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold text-slate-700 border border-stone-200 bg-stone-50 hover:bg-stone-100 transition-colors"
+                className="hidden md:inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 border border-stone-200 bg-stone-50 hover:bg-stone-100 transition-colors"
                 aria-label="Switch language"
               >
-                <Globe className="h-4 w-4 text-[#0D4F4F]" />
+                <Globe className="w-3.5 h-3.5 text-[#0D4F4F]" />
                 <span>{locale === "en" ? "العربية" : "English"}</span>
               </button>
 
               <Link href="/book-trial" className="hidden sm:block">
-                <Button size="sm" className="rounded-xl px-5 h-10 text-xs font-bold bg-[#0D4F4F] text-white shadow-md hover:bg-[#093D33]">
+                <Button size="sm" className="rounded-xl px-4 h-9 text-xs font-bold bg-[#0D4F4F] text-white shadow-md hover:bg-[#093D33]">
                   {t("bookTrial")}
                 </Button>
               </Link>
 
-              {/* Mobile Hamburger Button */}
+              {/* Mobile Menu Toggle Button */}
               <button
                 type="button"
                 onClick={() => setMobileOpen(true)}
-                className="inline-flex items-center justify-center rounded-xl p-2.5 lg:hidden text-slate-800 bg-stone-100 hover:bg-stone-200 active:scale-95 transition-all ms-1"
-                aria-label="Open Mobile Navigation Menu"
+                className="inline-flex items-center justify-center rounded-xl p-2 lg:hidden text-slate-800 bg-stone-100 hover:bg-stone-200 transition-colors ms-1"
+                aria-label="Open Navigation Menu"
               >
-                <Menu className="h-6 w-6 text-[#0D4F4F]" />
+                <Menu className="w-6 h-6 text-[#0D4F4F]" />
               </button>
             </div>
           </div>
@@ -142,10 +147,10 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-xl p-2 text-slate-500 bg-stone-100 hover:bg-stone-200 active:scale-95 transition-all"
+                  className="rounded-xl p-2 text-slate-500 bg-stone-100 hover:bg-stone-200 transition-colors"
                   aria-label="Close Menu"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
@@ -164,7 +169,7 @@ export default function Navbar() {
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        {link.key === "games" && <Gamepad2 className="h-5 w-5 text-amber-500" />}
+                        {link.key === "games" && <Gamepad2 className="w-5 h-5 text-amber-500" />}
                         <span>{t(link.key)}</span>
                       </div>
                       {link.key === "games" && (
@@ -187,7 +192,7 @@ export default function Navbar() {
                 }}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-stone-100 px-4 py-3.5 text-sm font-bold text-slate-800 hover:bg-stone-200 transition-colors"
               >
-                <Globe className="h-4 w-4 text-[#0D4F4F]" />
+                <Globe className="w-4 h-4 text-[#0D4F4F]" />
                 <span>{locale === "en" ? "التغيير إلى العربية" : "Switch to English"}</span>
               </button>
 
