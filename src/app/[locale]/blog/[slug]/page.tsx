@@ -5,7 +5,7 @@ import Container from '@/components/shared/Container';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, User, ArrowLeft, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Calendar, Clock, User, ArrowLeft, ArrowRight, ShieldCheck, HelpCircle, BookOpen } from 'lucide-react';
 import { getServiceImage } from '@/lib/service-images';
 import { getArticleBySlug, BLOG_ARTICLES } from '@/lib/blog-store';
 
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: BlogSlugProps) {
     title: `${article.title[lang]} | Tajwedo`,
     description: article.introduction[lang],
     path: `/blog/${slug}`,
-    ogImage: getServiceImage('kids-program'),
+    ogImage: getServiceImage(article.serviceSlug || 'kids-program'),
     locale,
   });
 }
@@ -49,12 +49,13 @@ export default async function BlogPostPage({ params }: BlogSlugProps) {
   const isRTL = locale === 'ar';
   const lang = (locale === 'ar' ? 'ar' : 'en') as 'en' | 'ar';
 
+  // 1. Article Schema
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: article.title[lang],
     description: article.introduction[lang],
-    image: `https://tajwedo.com${getServiceImage('kids-program')}`,
+    image: `https://tajwedo.com${getServiceImage(article.serviceSlug || 'kids-program')}`,
     author: {
       '@type': 'EducationalOrganization',
       name: 'Tajwedo Institute',
@@ -76,12 +77,33 @@ export default async function BlogPostPage({ params }: BlogSlugProps) {
     },
   };
 
+  // 2. Optional Article FAQPage Schema for AI Overviews / Google Snippets
+  const faqSchema = article.faqs && article.faqs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: article.faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.question[lang],
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.answer[lang],
+      },
+    })),
+  } : null;
+
   return (
     <div className="pt-28 pb-16 bg-[#FFFDF8]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
+
       <Container>
         <div className="mb-8">
           <Link
@@ -120,7 +142,7 @@ export default async function BlogPostPage({ params }: BlogSlugProps) {
 
           <div className="relative w-full h-64 sm:h-96 rounded-3xl overflow-hidden shadow-md mb-10 border border-stone-200">
             <Image
-              src={getServiceImage('kids-program')}
+              src={getServiceImage(article.serviceSlug || 'kids-program')}
               alt={article.title[lang]}
               fill
               priority
@@ -146,6 +168,24 @@ export default async function BlogPostPage({ params }: BlogSlugProps) {
             ))}
           </div>
 
+          {/* Article FAQs section */}
+          {article.faqs && article.faqs.length > 0 && (
+            <div className="mt-10 p-6 rounded-3xl bg-stone-100/80 border border-stone-200 space-y-4">
+              <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-[#0D4F4F]" />
+                <span>{isRTL ? 'أسئلة حاسمة مع الإجابات المباشرة' : 'Direct Quick Answers'}</span>
+              </h3>
+              <div className="space-y-3">
+                {article.faqs.map((f, fi) => (
+                  <div key={fi} className="p-4 bg-white rounded-2xl border border-stone-200/60">
+                    <p className="font-bold text-slate-900 text-sm mb-1">{f.question[lang]}</p>
+                    <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">{f.answer[lang]}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="mt-10 pt-8 border-t border-stone-200">
             <h3 className="text-xl font-bold text-slate-900 mb-3">
               {article.conclusionTitle[lang]}
@@ -155,17 +195,35 @@ export default async function BlogPostPage({ params }: BlogSlugProps) {
             </p>
           </div>
 
-          <div className="mt-12 p-8 rounded-3xl bg-[#0D4F4F] text-white shadow-xl text-center space-y-4">
+          {/* Contextual Banner Silo Link to Service Page */}
+          <div className="mt-10 p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <BookOpen className="w-5 h-5 text-amber-600 shrink-0" />
+              <span className="text-xs sm:text-sm font-bold text-slate-800">
+                {isRTL ? 'استكشف البرنامج المخصص ذو الصلة بهذا المقال' : 'Explore the Dedicated Program Related to This Guide'}
+              </span>
+            </div>
+            <Link
+              href={`/services/${article.serviceSlug || 'kids-program'}`}
+              className="shrink-0 text-xs font-bold text-[#0D4F4F] hover:underline flex items-center gap-1"
+            >
+              <span>{isRTL ? 'صفحة البرنامج' : 'View Program'}</span>
+              {isRTL ? <ArrowLeft className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
+            </Link>
+          </div>
+
+          {/* CRO CTA Block */}
+          <div className="mt-8 p-8 rounded-3xl bg-[#0D4F4F] text-white shadow-xl text-center space-y-4">
             <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mx-auto text-amber-400">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h3 className="text-2xl font-bold">
-              {isRTL ? 'جرّب حصة فردية مجانية لطفلك الآن' : 'Experience a Free 1-on-1 Lesson for Your Child'}
+              {isRTL ? 'جرّب حصة فردية مجانية الآن' : 'Experience a Free 1-on-1 Lesson'}
             </h3>
             <p className="text-white/80 text-sm max-w-md mx-auto leading-relaxed">
               {isRTL
-                ? 'احصل على تقييم مباشر لمدة 30 دقيقة عبر زووم مع معلم أزهري متخصص في تعليم الأطفال الغربيين.'
-                : 'Get a 30-minute live assessment on Zoom with an Al-Azhar tutor specializing in Western students.'}
+                ? 'احصل على تقييم مباشر لمدة 30 دقيقة عبر زووم مع معلم أزهري متخصص.'
+                : 'Get a 30-minute live assessment on Zoom with an Al-Azhar tutor.'}
             </p>
             <Link href="/book-trial" className="inline-block pt-2">
               <Button size="lg" className="rounded-xl bg-[#C9A567] hover:bg-[#b59255] text-slate-950 font-bold h-13 px-8">

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { BLOG_ARTICLES } from '@/lib/blog-store';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tajwedo.com';
@@ -12,27 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/games/noor-albayan', '/pricing',
   ];
 
-  const blogSlugs = [
-    'how-to-start-learning-quran',
-    'tajweed-tips-for-beginners',
-    'benefits-of-memorizing-quran',
-    'arabic-language-learning-guide',
-    'new-muslim-first-steps',
-    'teaching-quran-to-kids',
-    'best-online-quran-teacher-for-kids-uk',
-    'how-to-learn-quran-for-converts-non-arabic-speakers',
-    'online-tajweed-classes-for-adults-usa',
-    'online-quran-classes-for-5-year-old',
-    'noorani-qaida-vs-noor-al-bayan-for-beginners',
-    'how-long-does-it-take-to-learn-tajweed',
-    'can-i-read-quran-in-english-transliteration',
-    'best-age-to-start-hifz-quran-memorization',
-    'online-quran-classes-for-sisters-female-teachers',
-    'how-much-do-online-quran-classes-cost-uk-usa',
-    'how-to-memorize-quran-while-working-full-time',
-    'quranic-arabic-vs-modern-standard-arabic'
-  ];
-
+  const blogSlugs = Object.keys(BLOG_ARTICLES);
   const allPages = [...staticPages, ...blogSlugs.map((s) => `/blog/${s}`)];
   const lastModified = new Date('2026-10-02T00:00:00.000Z');
 
