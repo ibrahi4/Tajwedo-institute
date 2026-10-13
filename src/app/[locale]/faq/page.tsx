@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMetadata } from '@/lib/metadata';
 import PageHero from '@/components/shared/PageHero';
-import FAQPreview from '@/components/home/FAQPreview';
+import FAQHubContent from '@/components/faq/FAQHubContent';
 import { getMessages } from 'next-intl/server';
 
 interface FAQPageProps {
@@ -11,9 +11,9 @@ interface FAQPageProps {
 export async function generateMetadata({ params }: FAQPageProps) {
   const { locale } = await params;
   return createMetadata({
-    title: locale === 'ar' ? 'الأسئلة الشائعة | معهد تجويدو' : 'Frequently Asked Questions | Tajwedo Institute',
+    title: locale === 'ar' ? 'مركز الأسئلة الشائعة | معهد تجويدو' : 'FAQ Knowledge Hub | Tajwedo Institute',
     description: locale === 'ar'
-      ? 'إجابات شاملة لجميع الأسئلة حول باقات تجويدو، الحصص التجريبية، طرق التدريس والمعلمين.'
+      ? 'إجابات شاملة لجميع الأسئلة حول باقات تجويدو، الحصص التجريبية، طرق التدريس والمعلمين المعتمدين.'
       : 'Find detailed answers regarding Tajwedo pricing, 1-on-1 Zoom classes, teacher qualifications, and scheduling.',
     path: '/faq',
     locale,
@@ -24,21 +24,38 @@ export default async function FAQPage({ params }: FAQPageProps) {
   const { locale } = await params;
   const isRTL = locale === 'ar';
   const t = (en: string, ar: string) => (isRTL ? ar : en);
+  
   const messages = (await getMessages()) as any;
-  const rawItems = messages?.faqPreview?.items || {};
-  const faqItems = Array.isArray(rawItems) ? rawItems : Object.values(rawItems);
+  const faqData = messages?.faq || {};
+  const catKeys = ['general', 'lessons', 'pricing', 'scheduling', 'curriculum', 'technical'];
+  
+  const schemaQuestions: any[] = [];
+  catKeys.forEach((cat) => {
+    try {
+      const count = Number(faqData[cat]?.count || 0);
+      for (let i = 0; i < count; i++) {
+        const q = faqData[cat]?.items?.[i]?.q;
+        const a = faqData[cat]?.items?.[i]?.a;
+        if (q && a) {
+          schemaQuestions.push({
+            '@type': 'Question',
+            name: q,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: a,
+            },
+          });
+        }
+      }
+    } catch {
+      // Safe fallback
+    }
+  });
 
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faqItems.map((item: any) => ({
-      '@type': 'Question',
-      name: item.question || item.q || '',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.answer || item.a || '',
-      },
-    })),
+    mainEntity: schemaQuestions,
   };
 
   return (
@@ -48,16 +65,16 @@ export default async function FAQPage({ params }: FAQPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <PageHero
-        title={t('Frequently Asked Questions', 'الأسئلة الشائعة')}
+        title={t('Frequently Asked Questions', 'مركز الأسئلة الشائعة')}
         subtitle={t(
-          'Clear answers about lessons, pricing, scheduling, and how Tajwedo works for families worldwide.',
-          'إجابات واضحة حول الحصص والأسعار والمواعيد وكيف يعمل معهد تجويدو مع العائلات حول العالم.'
+          'Clear, comprehensive answers about our 1-on-1 Zoom lessons, Al-Azhar tutors, pricing, and schedules.',
+          'إجابات شاملة حول حصص زووم الفردية، معلمي الأزهر المعتمدين، الباقات، والمواعيد.'
         )}
-        badge={t('Help Center', 'مركز المساعدة')}
+        badge={t('Knowledge Base', 'قاعدة المعرفة')}
         iconName="faq"
         breadcrumbs={[{ label: t('FAQ', 'الأسئلة الشائعة') }]}
       />
-      <FAQPreview />
+      <FAQHubContent />
     </div>
   );
 }

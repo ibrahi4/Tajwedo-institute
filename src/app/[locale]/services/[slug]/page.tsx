@@ -2,9 +2,13 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { createMetadata } from '@/lib/metadata';
 import Container from '@/components/shared/Container';
+import PageHero from '@/components/shared/PageHero';
 import { getServiceImage } from '@/lib/service-images';
 import Image from 'next/image';
-import { CheckCircle2, ArrowRight, ArrowLeft, ShieldCheck, GraduationCap, Clock, HelpCircle, BookOpen, Star } from 'lucide-react';
+import { 
+  CheckCircle2, ArrowRight, ArrowLeft, ShieldCheck, GraduationCap, 
+  Clock, BookOpen, Star, Users, Check, Layers, Target, HelpCircle, MessageCircle 
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { getMessages } from 'next-intl/server';
@@ -67,7 +71,7 @@ export async function generateMetadata({ params }: ServicePageProps) {
 
   const descriptions: Record<string, { en: string; ar: string }> = {
     'quran-recitation': {
-      en: 'Master fluent Quran recitation and Hifz from home with 1-on-1 certified Arab scholars holding authentic Ijazah. Free 30-minute trial.',
+      en: 'Master beautiful Quran recitation and Hifz from home with 1-on-1 certified Arab scholars holding authentic Ijazah. Free 30-minute trial.',
       ar: 'تعلم تلاوة القرآن الكريم بطلاقة وابدأ رحلة الحفظ مع معلمين عرب معتمدين من الأزهر الشريف. احجز حصة تجريبية مجانية.',
     },
     'tajweed': {
@@ -109,13 +113,12 @@ export default async function ServiceDetailsPage({ params }: ServicePageProps) {
   if (!validSlugs.includes(slug)) notFound();
 
   const isRTL = locale === 'ar';
+  const t = (en: string, ar: string) => (isRTL ? ar : en);
   const messages = (await getMessages()) as any;
   const serviceData = messages?.serviceDetails?.[slug] || {};
   const imageUrl = getServiceImage(slug);
 
-  const t = (en: string, ar: string) => (isRTL ? ar : en);
-
-  // Cross-linking articles map for Silo PageRank distribution
+  // Related Silo Articles
   const relatedArticles: Record<string, { slug: string; title: string }> = {
     'kids-program': {
       slug: 'best-online-quran-teacher-for-kids-uk',
@@ -182,8 +185,14 @@ export default async function ServiceDetailsPage({ params }: ServicePageProps) {
     ],
   };
 
+  // Extract arrays safely
+  const statsList = serviceData.stats ? Object.values(serviceData.stats) : [];
+  const featuresList = serviceData.features?.items ? Object.values(serviceData.features.items) : [];
+  const curriculumLevels = serviceData.curriculum?.levels ? Object.values(serviceData.curriculum.levels) : [];
+  const audienceList = serviceData.audience?.items ? Object.values(serviceData.audience.items) : [];
+
   return (
-    <div className="pt-28 pb-16">
+    <div className="pb-16 bg-[#FFFDF8]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
@@ -193,31 +202,33 @@ export default async function ServiceDetailsPage({ params }: ServicePageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      <Container>
-        {/* Breadcrumbs View */}
-        <nav className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-8" aria-label="Breadcrumb">
-          <Link href="/" className="hover:text-[#0D4F4F] transition-colors">{t('Home', 'الرئيسية')}</Link>
-          <span>/</span>
-          <Link href="/services" className="hover:text-[#0D4F4F] transition-colors">{t('Services', 'الخدمات')}</Link>
-          <span>/</span>
-          <span className="text-[#0D4F4F] font-bold">{serviceData.title || slug}</span>
-        </nav>
+      {/* Page Hero */}
+      <PageHero
+        title={serviceData.title || slug}
+        subtitle={serviceData.subtitle || ''}
+        badge={serviceData.badge || 'Program'}
+        iconName="course"
+        breadcrumbs={[
+          { label: t('Services', 'الخدمات'), href: '/services' },
+          { label: serviceData.title || slug },
+        ]}
+      />
 
-        {/* Hero Section */}
-        <div className="max-w-3xl mx-auto text-center mb-12">
-          <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#0D4F4F]/10 text-[#0D4F4F] font-bold text-xs uppercase tracking-wider mb-4">
-            {serviceData.badge || 'Program'}
-          </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight">
-            {serviceData.title}
-          </h1>
-          <p className="text-slate-600 text-lg leading-relaxed">
-            {serviceData.subtitle}
-          </p>
-        </div>
+      <Container className="pt-12">
+        {/* Stats Row */}
+        {statsList.length > 0 && (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto mb-16 text-center">
+            {statsList.map((st: any, idx: number) => (
+              <div key={idx} className="p-5 rounded-2xl bg-white border border-stone-200 shadow-sm">
+                <p className="text-2xl sm:text-3xl font-bold text-[#0D4F4F]">{st.value}</p>
+                <p className="text-xs text-slate-500 font-semibold uppercase mt-1">{st.label}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
-        {/* Featured Image */}
-        <div className="relative w-full max-w-4xl mx-auto h-64 sm:h-96 rounded-3xl overflow-hidden shadow-xl mb-12 border border-stone-200">
+        {/* Featured Banner Image */}
+        <div className="relative w-full max-w-4xl mx-auto h-64 sm:h-96 rounded-3xl overflow-hidden shadow-xl mb-16 border border-stone-200">
           <Image
             src={imageUrl}
             alt={serviceData.title || 'Service Image'}
@@ -228,9 +239,9 @@ export default async function ServiceDetailsPage({ params }: ServicePageProps) {
           />
         </div>
 
-        {/* Contextual SEO Cross-Link (Silo PageRank Transfer) */}
+        {/* Contextual SEO Cross-Link */}
         {relatedArticle && (
-          <div className="max-w-3xl mx-auto mb-12 p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-between gap-4">
+          <div className="max-w-4xl mx-auto mb-16 p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <BookOpen className="w-5 h-5 text-amber-600 shrink-0" />
               <span className="text-xs sm:text-sm font-bold text-slate-800">{relatedArticle.title}</span>
@@ -239,36 +250,129 @@ export default async function ServiceDetailsPage({ params }: ServicePageProps) {
               href={`/blog/${relatedArticle.slug}`}
               className="shrink-0 text-xs font-bold text-[#0D4F4F] hover:underline flex items-center gap-1"
             >
-              <span>{t('Read Article', 'اقرأ المقال')}</span>
+              <span>{t('Read Guide', 'اقرأ الدليل')}</span>
               {isRTL ? <ArrowLeft className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
             </Link>
           </div>
         )}
 
-        {/* Conversion Action Box */}
-        <div className="max-w-3xl mx-auto bg-white p-8 sm:p-10 rounded-3xl border border-stone-200 shadow-lg text-center space-y-4">
-          <div className="w-12 h-12 rounded-full bg-[#0D4F4F]/10 text-[#0D4F4F] flex items-center justify-center mx-auto">
-            <GraduationCap className="w-6 h-6" />
+        {/* Program Highlights (What You Will Learn) */}
+        {featuresList.length > 0 && (
+          <div className="max-w-4xl mx-auto mb-16">
+            <div className="text-center mb-10">
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+                {serviceData.features?.title || t('What You Will Learn', 'ماذا ستتعلم في هذا البرنامج')}
+              </h2>
+              <p className="text-slate-600 text-sm">
+                {serviceData.features?.subtitle || ''}
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {featuresList.map((feat: any, idx: number) => (
+                <div key={idx} className="p-6 rounded-2xl bg-white border border-stone-200 shadow-sm flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-[#0D4F4F]/10 text-[#0D4F4F] flex items-center justify-center shrink-0 mt-0.5">
+                    <CheckCircle2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-base mb-1">{feat.title}</h3>
+                    <p className="text-slate-600 text-sm leading-relaxed">{feat.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <h2 className="text-2xl font-bold text-slate-900">
-            {isRTL ? 'جاهز للبدء مع معلم أزهري معتمد؟' : 'Ready to Learn with a Certified Al-Azhar Scholar?'}
+        )}
+
+        {/* Curriculum Levels Breakdown */}
+        {curriculumLevels.length > 0 && (
+          <div className="max-w-4xl mx-auto mb-16">
+            <div className="text-center mb-10">
+              <span className="inline-block px-3 py-1 rounded-full bg-amber-500/10 text-amber-800 font-bold text-xs uppercase tracking-wider mb-2">
+                {serviceData.curriculum?.badge || 'Curriculum'}
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+                {serviceData.curriculum?.title || t('Structured Learning Path', 'مسار التعلم المنظم')}
+              </h2>
+              <p className="text-slate-600 text-sm">
+                {serviceData.curriculum?.subtitle || ''}
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {curriculumLevels.map((lvl: any, idx: number) => {
+                const topics = lvl.topics ? Object.values(lvl.topics) : [];
+                return (
+                  <div key={idx} className="p-6 rounded-3xl bg-white border border-stone-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                      <div className="inline-block px-3 py-1 rounded-lg bg-stone-100 text-slate-700 text-xs font-bold mb-3">
+                        Level 0{idx + 1}
+                      </div>
+                      <h3 className="text-lg font-bold text-slate-900 mb-2">{lvl.title}</h3>
+                      <p className="text-slate-500 text-xs leading-relaxed mb-4">{lvl.description}</p>
+                      
+                      <ul className="space-y-2 border-t border-stone-100 pt-4">
+                        {topics.map((tp: any, tpi: number) => (
+                          <li key={tpi} className="flex items-start gap-2 text-xs text-slate-700">
+                            <Check className="w-3.5 h-3.5 text-[#0D4F4F] shrink-0 mt-0.5" />
+                            <span>{tp}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Target Audience Section */}
+        {audienceList.length > 0 && (
+          <div className="max-w-4xl mx-auto mb-16">
+            <div className="text-center mb-10">
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+                {serviceData.audience?.title || t('Who Is This Course For?', 'لمن صمم هذا البرنامج؟')}
+              </h2>
+            </div>
+
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {audienceList.map((aud: any, idx: number) => (
+                <div key={idx} className="p-6 rounded-2xl bg-amber-500/5 border border-amber-500/15">
+                  <Target className="w-6 h-6 text-[#C9A567] mb-3" />
+                  <h3 className="font-bold text-slate-900 text-base mb-1">{aud.title}</h3>
+                  <p className="text-slate-600 text-xs leading-relaxed">{aud.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Conversion CTA Card */}
+        <div className="max-w-3xl mx-auto bg-[#0D4F4F] text-white p-8 sm:p-12 rounded-3xl shadow-xl text-center space-y-5">
+          <div className="w-14 h-14 rounded-full bg-white/10 text-amber-400 flex items-center justify-center mx-auto">
+            <GraduationCap className="w-7 h-7" />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold leading-tight">
+            {serviceData.serviceCta?.title || (isRTL ? 'جاهز للبدء مع معلم أزهري معتمد؟' : 'Ready to Start Your Journey?')}
           </h2>
-          <p className="text-slate-600 text-sm max-w-md mx-auto leading-relaxed">
-            {isRTL
-              ? 'احجز جلستك التقييمية المجانية لمدة 30 دقيقة عبر زووم لتحديد مستواك وإعداد خطتك المخصصة.'
-              : 'Book a free 30-minute live assessment on Zoom to evaluate your level and custom roadmap.'}
+          <p className="text-white/80 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+            {serviceData.serviceCta?.subtitle || (isRTL ? 'احجز حصتك التجريبية المجانية 30 دقيقة بدون التزام مالي.' : 'Book your free 30-minute introductory lesson on Zoom with zero obligation.')}
           </p>
-          <Link href="/book-trial" className="inline-block pt-2">
-            <Button size="lg" className="rounded-xl bg-[#0D4F4F] hover:bg-[#093D33] text-white font-bold h-13 px-8 shadow-md">
-              {isRTL ? 'احجز الحصة التجريبية المجانية' : 'Book Free Trial Lesson'}
-              {isRTL ? <ArrowLeft className="w-5 h-5 ms-2" /> : <ArrowRight className="w-5 h-5 ms-2" />}
-            </Button>
-          </Link>
-          <div className="flex items-center justify-center gap-2 pt-2 text-xs text-slate-500">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+            <Link href="/book-trial">
+              <Button size="lg" className="w-full sm:w-auto rounded-xl bg-[#C9A567] hover:bg-[#b59255] text-slate-950 font-bold h-13 px-8">
+                {serviceData.serviceCta?.bookTrial || (isRTL ? 'احجز الحصة التجريبية' : 'Book Free Trial')}
+                {isRTL ? <ArrowLeft className="w-5 h-5 ms-2" /> : <ArrowRight className="w-5 h-5 ms-2" />}
+              </Button>
+            </Link>
+          </div>
+          <div className="flex items-center justify-center gap-2 pt-2 text-xs text-white/70">
+            <ShieldCheck className="w-4 h-4 text-amber-400" />
             <span>{t('100% Free — Zero Financial Obligation', 'مجاني 100% — بدون أي التزام مالي')}</span>
           </div>
         </div>
+
       </Container>
     </div>
   );
