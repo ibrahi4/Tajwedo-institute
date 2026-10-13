@@ -1,24 +1,42 @@
-import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
-import { buildPageMetadata } from "@/lib/seo";
-import ServicesPageContent from "@/components/services/ServicesPageContent";
+import React from 'react';
+import { createMetadata } from '@/lib/metadata';
+import PageHero from '@/components/shared/PageHero';
+import ServicesOverview from '@/components/home/ServicesOverview';
 
-type Props = { params: Promise<{ locale: string }> };
+interface PageProps {
+  params: Promise<{ locale: string }>;
+}
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
-  return buildPageMetadata({
+  return createMetadata({
+    title: locale === 'ar' ? 'جميع الخدمات والبرامج | معهد تجويدو' : 'Our Quran & Arabic Learning Programs | Tajwedo Institute',
+    description: locale === 'ar'
+      ? 'استكشف برامج معهد تجويدو: تلاوة القرآن، التجويد، اللغة العربية، الدراسات الإسلامية، برنامج الأطفال، والمسلمين الجدد.'
+      : 'Explore Tajwedo Institute programs: Quran Recitation, Tajweed, Arabic Language, Islamic Studies, Kids Program, and New Muslims.',
+    path: '/services',
     locale,
-    path: "/services",
-    titleEn: "Quran & Arabic Courses Online | Tajwedo Institute",
-    titleAr: "دورات القرآن والعربية أونلاين | معهد تجويدو",
-    descEn: "Explore Quran recitation, Tajweed, Arabic, Islamic studies, kids programs and new Muslim courses.",
-    descAr: "استكشف دورات التلاوة والتجويد والعربية والدراسات الإسلامية وبرامج الأطفال والمسلمين الجدد.",
   });
 }
 
-export default async function ServicesPage({ params }: Props) {
+export default async function ServicesPage({ params }: PageProps) {
   const { locale } = await params;
-  setRequestLocale(locale);
-  return <ServicesPageContent />;
+  const isRTL = locale === 'ar';
+  const t = (en: string, ar: string) => (isRTL ? ar : en);
+
+  return (
+    <div className="pb-16 bg-[#FFFDF8]">
+      <PageHero 
+        title={t('Comprehensive Islamic & Quranic Programs', 'برامج تعليمية شاملة ومصممة لكل متعلم')}
+        subtitle={t(
+          'From complete beginners to advanced students — discover programs designed to help you connect deeply with the Quran and Arabic.',
+          'من المبتدئين إلى المتقدمين — اكتشف برامج مصممة لمساعدتك على التواصل العميق مع كتاب الله واللغة العربية.'
+        )}
+        badge={t('Educational Excellence', 'تميز وإتقان أكاديمي')}
+        iconName="course"
+        breadcrumbs={[{ label: t('Services', 'الخدمات') }]}
+      />
+      <ServicesOverview />
+    </div>
+  );
 }

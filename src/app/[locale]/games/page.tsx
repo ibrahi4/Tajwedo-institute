@@ -20,5 +20,10 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function GamesPage({ params }: PageProps) {
   await params;
-  return <GamesHubContent />;
+
+  return (
+    <div className="bg-[#FFFDF8]">
+      <GamesHubContent />
+    </div>
+  );
 }

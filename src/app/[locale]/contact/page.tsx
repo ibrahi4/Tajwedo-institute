@@ -1,7 +1,8 @@
 import React from 'react';
 import { createMetadata } from '@/lib/metadata';
 import Container from '@/components/shared/Container';
-import { Mail, MessageCircle, Globe, Clock, ShieldCheck } from 'lucide-react';
+import PageHero from '@/components/shared/PageHero';
+import { Mail, MessageCircle } from 'lucide-react';
 import { WHATSAPP_LINK, EMAIL } from '@/lib/constants';
 
 interface PageProps {
@@ -23,7 +24,6 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function ContactPage({ params }: PageProps) {
   const { locale } = await params;
   const isRTL = locale === 'ar';
-
   const t = (en: string, ar: string) => (isRTL ? ar : en);
 
   const whatsappUrl = `${WHATSAPP_LINK}?text=${encodeURIComponent(
@@ -31,25 +31,20 @@ export default async function ContactPage({ params }: PageProps) {
   )}`;
 
   return (
-    <div className="pt-28 pb-16">
-      <Container>
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#0D4F4F]/10 text-[#0D4F4F] font-bold text-xs uppercase tracking-wider mb-4">
-            {t('Get in Touch', 'تواصل معنا')}
-          </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight">
-            {t('We Are Here to Support Your Family', 'نحن هنا لمساعدة وتوجيه عائلتك')}
-          </h1>
-          <p className="text-slate-600 text-lg leading-relaxed">
-            {t(
-              'Have questions about our tutors, curricula, or time zone availability? Our admissions team typically responds within 2 hours.',
-              'هل لديك أي استفسارات عن المعلمين، المناهج، أو التوقيتات؟ يجيب فريق القبول عادة خلال ساعتين.'
-            )}
-          </p>
-        </div>
+    <div className="pb-16 bg-[#FFFDF8]">
+      <PageHero
+        title={t('We Are Here to Support Your Family', 'نحن هنا لمساعدة وتوجيه عائلتك')}
+        subtitle={t(
+          'Have questions about our tutors, curricula, or time zone availability? Our admissions team typically responds within 2 hours.',
+          'هل لديك أي استفسارات عن المعلمين، المناهج، أو التوقيتات؟ يجيب فريق القبول عادة خلال ساعتين.'
+        )}
+        badge={t('Get in Touch', 'تواصل معنا')}
+        iconName="contact"
+        breadcrumbs={[{ label: t('Contact', 'تواصل معنا') }]}
+      />
 
+      <Container className="pt-16">
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* Direct WhatsApp Box */}
           <div className="p-8 rounded-3xl bg-emerald-50 border border-emerald-200 text-center space-y-4">
             <div className="w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center mx-auto shadow-md">
               <MessageCircle className="w-7 h-7" />
@@ -69,7 +64,6 @@ export default async function ContactPage({ params }: PageProps) {
             </a>
           </div>
 
-          {/* Email Support Box */}
           <div className="p-8 rounded-3xl bg-white border border-stone-200 text-center space-y-4 shadow-sm">
             <div className="w-14 h-14 rounded-full bg-[#0D4F4F]/10 text-[#0D4F4F] flex items-center justify-center mx-auto">
               <Mail className="w-7 h-7" />

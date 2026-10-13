@@ -1,5 +1,6 @@
 import React from 'react';
 import { createMetadata } from '@/lib/metadata';
+import PageHero from '@/components/shared/PageHero';
 import HowItWorks from '@/components/home/HowItWorks';
 
 interface PageProps {
@@ -19,10 +20,22 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function HowItWorksPage({ params }: PageProps) {
-  await params;
+  const { locale } = await params;
+  const isRTL = locale === 'ar';
+  const t = (en: string, ar: string) => (isRTL ? ar : en);
 
   return (
-    <div className="pt-24">
+    <div className="pb-16 bg-[#FFFDF8]">
+      <PageHero
+        title={t('How Tajwedo Lessons Work', 'كيف تعمل حصص تجويدو')}
+        subtitle={t(
+          'From your first free assessment to weekly progress reports — a clear path designed for busy Muslim families.',
+          'من أول تقييم مجاني حتى تقارير التقدم الأسبوعية — مسار واضح مصمم للعائلات المسلمة المشغولة.'
+        )}
+        badge={t('Simple Process', 'خطوات بسيطة')}
+        iconName="how"
+        breadcrumbs={[{ label: t('How It Works', 'كيف يعمل') }]}
+      />
       <HowItWorks />
     </div>
   );

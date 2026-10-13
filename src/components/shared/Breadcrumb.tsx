@@ -1,51 +1,75 @@
 "use client";
 
+import React from "react";
 import { Link } from "@/i18n/navigation";
-import { ChevronRight, ChevronLeft, Home } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useLocale } from "@/hooks/useLocale";
+import { ChevronRight, ChevronLeft, Home } from "lucide-react";
 
-interface BreadcrumbItem {
+export interface BreadcrumbItem {
   label: string;
   href?: string;
 }
 
 interface BreadcrumbProps {
   items: BreadcrumbItem[];
-  className?: string;
 }
 
-export default function Breadcrumb({ items, className }: BreadcrumbProps) {
-  const { isRTL } = useLocale();
-  const Chevron = isRTL ? ChevronLeft : ChevronRight;
+export default function Breadcrumb({ items }: BreadcrumbProps) {
+  const { isRTL, locale } = useLocale();
+  const ChevronIcon = isRTL ? ChevronLeft : ChevronRight;
+
+  const fullItems = [
+    { label: isRTL ? "الرئيسية" : "Home", href: "/" },
+    ...items,
+  ];
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: fullItems.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+      item: item.href ? `https://tajwedo.com/${locale}${item.href === "/" ? "" : item.href}` : undefined,
+    })),
+  };
 
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className={cn("flex items-center gap-2 text-sm", className)}
-    >
-      <Link
-        href="/"
-        className="text-gray-400 hover:text-primary transition-colors"
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <nav
+        aria-label="Breadcrumb"
+        className="flex items-center flex-wrap gap-2 text-xs font-semibold text-slate-500 mb-6 select-none"
+        dir={isRTL ? "rtl" : "ltr"}
       >
-        <Home className="w-4 h-4" />
-      </Link>
+        {fullItems.map((item, index) => {
+          const isLast = index === fullItems.length - 1;
 
-      {items.map((item, index) => (
-        <div key={index} className="flex items-center gap-2">
-          <Chevron className="w-3.5 h-3.5 text-gray-300" />
-          {item.href && index < items.length - 1 ? (
-            <Link
-              href={item.href}
-              className="text-gray-400 hover:text-primary transition-colors"
-            >
-              {item.label}
-            </Link>
-          ) : (
-            <span className="text-gray-700 font-medium">{item.label}</span>
-          )}
-        </div>
-      ))}
-    </nav>
+          return (
+            <React.Fragment key={index}>
+              {index > 0 && (
+                <ChevronIcon className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              )}
+              {isLast || !item.href ? (
+                <span className="text-[#0D4F4F] font-bold" aria-current="page">
+                  {item.label}
+                </span>
+              ) : (
+                <Link
+                  href={item.href}
+                  className="hover:text-[#0D4F4F] transition-colors inline-flex items-center gap-1"
+                >
+                  {index === 0 && <Home className="w-3.5 h-3.5 me-0.5 text-[#0D4F4F]" />}
+                  <span>{item.label}</span>
+                </Link>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </nav>
+    </>
   );
 }

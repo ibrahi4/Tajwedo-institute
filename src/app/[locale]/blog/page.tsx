@@ -1,24 +1,83 @@
-import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
-import { buildPageMetadata } from "@/lib/seo";
-import BlogPageContent from "@/components/blog/BlogPageContent";
+import React from 'react';
+import { createMetadata } from '@/lib/metadata';
+import Container from '@/components/shared/Container';
+import PageHero from '@/components/shared/PageHero';
+import { Link } from '@/i18n/navigation';
+import { ArrowRight, ArrowLeft, Calendar, Clock } from 'lucide-react';
+import { getMessages } from 'next-intl/server';
 
-type Props = { params: Promise<{ locale: string }> };
+interface PageProps {
+  params: Promise<{ locale: string }>;
+}
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
-  return buildPageMetadata({
+  return createMetadata({
+    title: locale === 'ar' ? 'المدونة | معهد تجويدو' : 'Blog & Learning Guides | Tajwedo Institute',
+    description: locale === 'ar'
+      ? 'مقالات ونصائح حول تعليم القرآن والتجويد والعربية للأطفال والكبار والمسلمين الجدد.'
+      : 'Guides and articles on Quran, Tajweed, and Arabic learning for kids, adults, and new Muslims.',
+    path: '/blog',
     locale,
-    path: "/blog",
-    titleEn: "Quran & Tajweed Blog | Tajwedo Institute",
-    titleAr: "مدونة القرآن والتجويد | معهد تجويدو",
-    descEn: "Articles on Quran, Tajweed, Arabic learning tips from Tajwedo Institute.",
-    descAr: "مقالات عن القرآن والتجويد ونصائح تعلّم العربية من معهد تجويدو.",
   });
 }
 
-export default async function Page({ params }: Props) {
+export default async function BlogPage({ params }: PageProps) {
   const { locale } = await params;
-  setRequestLocale(locale);
-  return <BlogPageContent />;
+  const isRTL = locale === 'ar';
+  const t = (en: string, ar: string) => (isRTL ? ar : en);
+  const messages = (await getMessages()) as any;
+  const posts = messages?.blog?.posts?.items || {};
+  const postList = Array.isArray(posts) ? posts : Object.values(posts);
+
+  return (
+    <div className="pb-16 bg-[#FFFDF8]">
+      <PageHero
+        title={t('Knowledge & Insights for Your Learning Journey', 'معرفة ونصائح لرحلة تعلمك')}
+        subtitle={t(
+          'Practical guides for parents, adults, and new Muslims — written for English-speaking families worldwide.',
+          'أدلة عملية لأولياء الأمور والكبار والمسلمين الجدد — مكتوبة للعائلات الناطقة بالإنجليزية حول العالم.'
+        )}
+        badge={t('Our Blog', 'مدونتنا')}
+        iconName="blog"
+        breadcrumbs={[{ label: t('Blog', 'المدونة') }]}
+      />
+
+      <Container className="pt-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {postList.map((post: any, idx: number) => (
+            <Link
+              key={post.slug || idx}
+              href={`/blog/${post.slug}`}
+              className="group block rounded-3xl bg-white border border-stone-200 p-6 shadow-sm hover:shadow-md hover:border-[#0D4F4F]/30 transition-all"
+            >
+              <span className="inline-block px-2.5 py-1 rounded-full bg-[#0D4F4F]/10 text-[#0D4F4F] text-[10px] font-bold uppercase tracking-wider mb-3">
+                {post.category || 'Article'}
+              </span>
+              <h2 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-[#0D4F4F] transition-colors leading-snug">
+                {post.title}
+              </h2>
+              <p className="text-sm text-slate-600 leading-relaxed mb-4 line-clamp-3">
+                {post.excerpt}
+              </p>
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span className="inline-flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5" />
+                  {post.date}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  {post.readTime}
+                </span>
+              </div>
+              <div className="mt-4 flex items-center gap-1 text-sm font-bold text-[#0D4F4F]">
+                <span>{t('Read more', 'اقرأ المزيد')}</span>
+                {isRTL ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </Container>
+    </div>
+  );
 }

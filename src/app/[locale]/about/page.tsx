@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMetadata } from '@/lib/metadata';
 import Container from '@/components/shared/Container';
-import Image from 'next/image';
+import PageHero from '@/components/shared/PageHero';
 import { Award, BookOpen, CheckCircle2, Heart, Shield, Users } from 'lucide-react';
 
 interface PageProps {
@@ -23,29 +23,22 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function AboutPage({ params }: PageProps) {
   const { locale } = await params;
   const isRTL = locale === 'ar';
-
   const t = (en: string, ar: string) => (isRTL ? ar : en);
 
   return (
-    <div className="pt-28 pb-16">
-      <Container>
-        {/* Header */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#0D4F4F]/10 text-[#0D4F4F] font-bold text-xs uppercase tracking-wider mb-4">
-            {t('About Tajwedo Institute', 'عن معهد تجويدو')}
-          </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
-            {t('Connecting Global Muslim Families with Authentic Quranic Scholarship', 'نصل العائلات المسلمة حول العالم بالعلم القرآني الأصيل')}
-          </h1>
-          <p className="text-slate-600 text-lg leading-relaxed">
-            {t(
-              'Tajwedo Institute was built to solve a clear problem: providing accessible, high-quality, 1-on-1 Quran and Arabic education taught by verified native Arab scholars holding authentic Ijazah.',
-              'تأسس معهد تجويدو لسد فجوة واضحة: توفير تعليم قرآني وفردي عالي الجودة لغير الناطقين بالعربية، على يد علماء عرب معتمدين ومجازين بأسانيد متصلة.'
-            )}
-          </p>
-        </div>
+    <div className="pb-16 bg-[#FFFDF8]">
+      <PageHero 
+        title={t('Connecting Global Muslim Families with Authentic Quranic Scholarship', 'نصل العائلات المسلمة حول العالم بالعلم القرآني الأصيل')}
+        subtitle={t(
+          'Tajwedo Institute was built to solve a clear problem: providing accessible, high-quality, 1-on-1 Quran and Arabic education taught by verified native Arab scholars holding authentic Ijazah.',
+          'تأسس معهد تجويدو لسد فجوة واضحة: توفير تعليم قرآني وفردي عالي الجودة لغير الناطقين بالعربية، على يد علماء عرب معتمدين ومجازين بأسانيد متصلة.'
+        )}
+        badge={t('About Tajwedo Institute', 'عن معهد تجويدو')}
+        iconName="info"
+        breadcrumbs={[{ label: t('About Us', 'عن المعهد') }]}
+      />
 
-        {/* Stats Grid */}
+      <Container className="pt-16">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto mb-20 text-center">
           <div className="p-6 rounded-2xl bg-white border border-stone-200 shadow-sm">
             <Users className="w-8 h-8 text-[#0D4F4F] mx-auto mb-3" />
@@ -69,7 +62,6 @@ export default async function AboutPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Values Section */}
         <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
           <div className="p-6 rounded-2xl bg-white border border-stone-200">
             <Shield className="w-6 h-6 text-[#0D4F4F] mb-4" />

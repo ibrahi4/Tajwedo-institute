@@ -1,7 +1,8 @@
 import React from 'react';
 import { createMetadata } from '@/lib/metadata';
 import Container from '@/components/shared/Container';
-import { Check, MessageCircle, ShieldCheck } from 'lucide-react';
+import PageHero from '@/components/shared/PageHero';
+import { Check, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 
@@ -24,7 +25,6 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function PricingPage({ params }: PageProps) {
   const { locale } = await params;
   const isRTL = locale === 'ar';
-
   const t = (en: string, ar: string) => (isRTL ? ar : en);
 
   const plans = [
@@ -71,35 +71,31 @@ export default async function PricingPage({ params }: PageProps) {
   ];
 
   return (
-    <div className="pt-28 pb-16">
-      <Container>
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#0D4F4F]/10 text-[#0D4F4F] font-bold text-xs uppercase tracking-wider mb-4">
-            {t('Transparent Investment', 'أسعار واضحة ومحددة')}
-          </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight">
-            {t('Affordable Monthly Plans for Every Family', 'باقات شهرية مناسبة لكل عائلة')}
-          </h1>
-          <p className="text-slate-600 text-lg leading-relaxed">
-            {t(
-              'No registration fees, no long-term contracts. Start with a 30-minute free trial before selecting a plan.',
-              'بدون أي رسوم تسجيل، وبدون عقود طويلة الأمد. ابدأ بحصة تجريبية مجانية قبل اختيار الباقة.'
-            )}
-          </p>
-        </div>
+    <div className="pb-16 bg-[#FFFDF8]">
+      <PageHero 
+        title={t('Affordable Monthly Plans for Every Family', 'باقات شهرية مناسبة لكل عائلة')}
+        subtitle={t(
+          'No registration fees, no long-term contracts. Start with a 30-minute free trial before selecting a plan.',
+          'بدون أي رسوم تسجيل، وبدون عقود طويلة الأمد. ابدأ بحصة تجريبية مجانية قبل اختيار الباقة.'
+        )}
+        badge={t('Transparent Investment', 'أسعار واضحة ومحددة')}
+        iconName="wallet"
+        breadcrumbs={[{ label: t('Pricing', 'الأسعار') }]}
+      />
 
+      <Container className="pt-16">
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
           {plans.map((plan, idx) => (
             <div
               key={idx}
               className={`relative rounded-3xl p-8 border bg-white transition-all ${
                 plan.popular
-                  ? 'border-[#0D4F4F] shadow-xl ring-2 ring-[#0D4F4F]/20 scale-105'
+                  ? 'border-[#0D4F4F] shadow-xl ring-2 ring-[#0D4F4F]/20 md:scale-105'
                   : 'border-stone-200 shadow-sm'
               }`}
             >
               {plan.popular && (
-                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#0D4F4F] text-amber-400 font-bold text-xs uppercase tracking-wider shadow-md">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#0D4F4F] text-[#C8A96E] font-bold text-xs uppercase tracking-wider shadow-md">
                   {t('Most Popular', 'الأكثر طلباً')}
                 </span>
               )}
@@ -120,12 +116,12 @@ export default async function PricingPage({ params }: PageProps) {
                 ))}
               </ul>
 
-              <Link href="/book-trial" className="block">
+              <Link href="/book-trial" className="block mt-auto">
                 <Button
                   size="lg"
-                  className={`w-full rounded-xl font-bold h-12 text-sm ${
+                  className={`w-full rounded-xl font-bold h-12 text-sm transition-colors ${
                     plan.popular
-                      ? 'bg-[#0D4F4F] text-white hover:bg-[#093D33]'
+                      ? 'bg-[#0D4F4F] text-white hover:bg-[#06302f]'
                       : 'bg-stone-100 text-slate-800 hover:bg-stone-200'
                   }`}
                 >
@@ -136,8 +132,8 @@ export default async function PricingPage({ params }: PageProps) {
           ))}
         </div>
 
-        <div className="max-w-2xl mx-auto p-6 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-center flex items-center justify-center gap-3">
-          <ShieldCheck className="w-6 h-6 text-amber-600 shrink-0" />
+        <div className="max-w-2xl mx-auto p-6 rounded-2xl bg-[#C8A96E]/10 border border-[#C8A96E]/30 text-center flex items-center justify-center gap-3">
+          <ShieldCheck className="w-6 h-6 text-[#C8A96E] shrink-0" />
           <p className="text-slate-800 text-sm font-semibold">
             {t('Money-back guarantee within the first week if you are not fully satisfied.', 'ضمان استرداد المبالغ خلال الأسبوع الأول في حال عدم الرضا التام.')}
           </p>

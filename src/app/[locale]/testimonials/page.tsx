@@ -1,6 +1,7 @@
 import React from 'react';
 import { createMetadata } from '@/lib/metadata';
 import Container from '@/components/shared/Container';
+import PageHero from '@/components/shared/PageHero';
 import { Star, Quote, MapPin } from 'lucide-react';
 
 interface PageProps {
@@ -22,7 +23,6 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function TestimonialsPage({ params }: PageProps) {
   const { locale } = await params;
   const isRTL = locale === 'ar';
-
   const t = (en: string, ar: string) => (isRTL ? ar : en);
 
   const reviews = [
@@ -64,7 +64,6 @@ export default async function TestimonialsPage({ params }: PageProps) {
     },
   ];
 
-  // Schema.org Review Array for Google Rich Results
   const reviewsSchema = {
     '@context': 'https://schema.org',
     '@type': 'EducationalOrganization',
@@ -77,41 +76,30 @@ export default async function TestimonialsPage({ params }: PageProps) {
     },
     review: reviews.map((rev) => ({
       '@type': 'Review',
-      author: {
-        '@type': 'Person',
-        name: rev.name,
-      },
-      reviewRating: {
-        '@type': 'Rating',
-        ratingValue: '5',
-        bestRating: '5',
-      },
+      author: { '@type': 'Person', name: rev.name },
+      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
       reviewBody: rev.text,
     })),
   };
 
   return (
-    <div className="pt-28 pb-16">
+    <div className="pb-16 bg-[#FFFDF8]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewsSchema) }}
       />
-      <Container>
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#0D4F4F]/10 text-[#0D4F4F] font-bold text-xs uppercase tracking-wider mb-4">
-            {t('Trusted Worldwide', 'ثقة العائلات عالمياً')}
-          </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight">
-            {t('What Parents & Students Say About Tajwedo', 'ماذا يقول أولياء الأمور والطلاب عن تجويدو')}
-          </h1>
-          <p className="text-slate-600 text-lg leading-relaxed">
-            {t(
-              'Real stories from Muslim families across the UK, USA, Canada, Australia, and Europe.',
-              'قصص وتجارب حقيقية لعائلات مسلمة في المملكة المتحدة، أمريكا، كندا، أستراليا وأوروبا.'
-            )}
-          </p>
-        </div>
+      <PageHero
+        title={t('What Parents & Students Say About Tajwedo', 'ماذا يقول أولياء الأمور والطلاب عن تجويدو')}
+        subtitle={t(
+          'Real stories from Muslim families across the UK, USA, Canada, Australia, and Europe.',
+          'قصص وتجارب حقيقية لعائلات مسلمة في المملكة المتحدة، أمريكا، كندا، أستراليا وأوروبا.'
+        )}
+        badge={t('Trusted Worldwide', 'ثقة العائلات عالمياً')}
+        iconName="reviews"
+        breadcrumbs={[{ label: t('Testimonials', 'آراء الطلاب') }]}
+      />
 
+      <Container className="pt-16">
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {reviews.map((rev, idx) => (
             <div key={idx} className="p-8 rounded-3xl bg-white border border-stone-200 shadow-sm relative space-y-4">
@@ -121,9 +109,7 @@ export default async function TestimonialsPage({ params }: PageProps) {
                   <Star key={i} className="w-4 h-4 fill-amber-500" />
                 ))}
               </div>
-              <p className="text-slate-700 leading-relaxed text-base italic">
-                &ldquo;{rev.text}&rdquo;
-              </p>
+              <p className="text-slate-700 leading-relaxed text-base italic">&ldquo;{rev.text}&rdquo;</p>
               <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
                 <div>
                   <h3 className="font-bold text-slate-900 text-base">{rev.name}</h3>

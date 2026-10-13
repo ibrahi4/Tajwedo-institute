@@ -1,5 +1,6 @@
 import React from 'react';
 import { createMetadata } from '@/lib/metadata';
+import PageHero from '@/components/shared/PageHero';
 import FAQPreview from '@/components/home/FAQPreview';
 import { getMessages } from 'next-intl/server';
 
@@ -21,6 +22,8 @@ export async function generateMetadata({ params }: FAQPageProps) {
 
 export default async function FAQPage({ params }: FAQPageProps) {
   const { locale } = await params;
+  const isRTL = locale === 'ar';
+  const t = (en: string, ar: string) => (isRTL ? ar : en);
   const messages = (await getMessages()) as any;
   const rawItems = messages?.faqPreview?.items || {};
   const faqItems = Array.isArray(rawItems) ? rawItems : Object.values(rawItems);
@@ -39,10 +42,20 @@ export default async function FAQPage({ params }: FAQPageProps) {
   };
 
   return (
-    <div className="pt-24">
+    <div className="pb-16 bg-[#FFFDF8]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <PageHero
+        title={t('Frequently Asked Questions', 'الأسئلة الشائعة')}
+        subtitle={t(
+          'Clear answers about lessons, pricing, scheduling, and how Tajwedo works for families worldwide.',
+          'إجابات واضحة حول الحصص والأسعار والمواعيد وكيف يعمل معهد تجويدو مع العائلات حول العالم.'
+        )}
+        badge={t('Help Center', 'مركز المساعدة')}
+        iconName="faq"
+        breadcrumbs={[{ label: t('FAQ', 'الأسئلة الشائعة') }]}
       />
       <FAQPreview />
     </div>
