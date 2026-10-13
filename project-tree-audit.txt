@@ -1,0 +1,199 @@
+=== FULL PROJECT TREE AUDIT ===
+
+├── public
+├── src
+│   ├── app
+│   │   ├── [locale]
+│   │   ├── api
+│   │   │   ├── contact
+│   │   │   │   ├── route.ts
+│   │   │   ├── newsletter
+│   │   │   │   ├── route.ts
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── robots.ts
+│   │   ├── sitemap.ts
+│   ├── components
+│   │   ├── about
+│   │   │   ├── AboutPageContent.tsx
+│   │   ├── blog
+│   │   │   ├── BlogCard.tsx
+│   │   │   ├── BlogCTA.tsx
+│   │   │   ├── BlogDetailContent.tsx
+│   │   │   ├── BlogPageContent.tsx
+│   │   ├── book-trial
+│   │   │   ├── BookTrialClient.tsx
+│   │   │   ├── BookTrialContent.tsx
+│   │   │   ├── countries-data.ts
+│   │   │   ├── CountrySelect.tsx
+│   │   │   ├── OfferArt.tsx
+│   │   │   ├── PhoneInput.tsx
+│   │   ├── contact
+│   │   │   ├── ContactPageContent.tsx
+│   │   ├── faq
+│   │   │   ├── FAQCategory.tsx
+│   │   │   ├── FAQCTA.tsx
+│   │   │   ├── FAQHubContent.tsx
+│   │   │   ├── FAQPageContent.tsx
+│   │   ├── games
+│   │   │   ├── arabic-letters
+│   │   │   │   ├── ArabicLettersGame.tsx
+│   │   │   │   ├── LetterLearn.tsx
+│   │   │   │   ├── LetterQuiz.tsx
+│   │   │   │   ├── LevelSelector.tsx
+│   │   │   ├── noor-albayan
+│   │   │   │   ├── NoorAlBayanGame.tsx
+│   │   │   │   ├── NoorLearnPhase.tsx
+│   │   │   │   ├── NoorLevelSelector.tsx
+│   │   │   │   ├── NoorQuizPhase.tsx
+│   │   │   ├── shared
+│   │   │   │   ├── Confetti.tsx
+│   │   │   │   ├── GameCard.tsx
+│   │   │   │   ├── GameHeader.tsx
+│   │   │   │   ├── LevelComplete.tsx
+│   │   │   │   ├── ProgressBar.tsx
+│   │   │   │   ├── ScorePopup.tsx
+│   │   │   │   ├── StarsDisplay.tsx
+│   │   │   ├── tajweed
+│   │   │   │   ├── TajweedGame.tsx
+│   │   │   │   ├── TajweedLearnPhase.tsx
+│   │   │   │   ├── TajweedLevelSelector.tsx
+│   │   │   │   ├── TajweedQuizPhase.tsx
+│   │   │   ├── GamesHubContent.tsx
+│   │   ├── home
+│   │   │   ├── FAQPreview.tsx
+│   │   │   ├── HeroSection.tsx
+│   │   │   ├── HowItWorks.tsx
+│   │   │   ├── QuranVerse.tsx
+│   │   │   ├── ServicesOverview.tsx
+│   │   │   ├── TrustBar.tsx
+│   │   │   ├── WhyChooseMe.tsx
+│   │   ├── how-it-works
+│   │   │   ├── HowItWorksCTA.tsx
+│   │   │   ├── HowItWorksPageContent.tsx
+│   │   │   ├── PlatformsSection.tsx
+│   │   │   ├── StepsSection.tsx
+│   │   ├── landing
+│   │   │   ├── LandingPageContent.tsx
+│   │   ├── layout
+│   │   │   ├── Footer.tsx
+│   │   │   ├── LayoutShellClient.tsx
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── ScrollToTop.tsx
+│   │   │   ├── WhatsAppButton.tsx
+│   │   ├── pricing
+│   │   │   ├── PricingContent.tsx
+│   │   ├── services
+│   │   │   ├── ServiceAudience.tsx
+│   │   │   ├── ServiceCTA.tsx
+│   │   │   ├── ServiceCurriculum.tsx
+│   │   │   ├── ServiceDetailContent.tsx
+│   │   │   ├── ServiceFeatures.tsx
+│   │   │   ├── ServicesPageContent.tsx
+│   │   ├── shared
+│   │   │   ├── AnimateOnScroll.tsx
+│   │   │   ├── Breadcrumb.tsx
+│   │   │   ├── Container.tsx
+│   │   │   ├── FloatingActions.tsx
+│   │   │   ├── GeometricDivider.tsx
+│   │   │   ├── GoogleTagManager.tsx
+│   │   │   ├── IslamicPattern.tsx
+│   │   │   ├── JsonLd.tsx
+│   │   │   ├── Logo.tsx
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── PageHero.tsx
+│   │   │   ├── SectionHeader.tsx
+│   │   │   ├── SectionWrapper.tsx
+│   │   │   ├── SetLocaleAttributes.tsx
+│   │   │   ├── StarRating.tsx
+│   │   │   ├── StatsCounter.tsx
+│   │   ├── testimonials
+│   │   │   ├── TestimonialCard.tsx
+│   │   │   ├── TestimonialsCTA.tsx
+│   │   │   ├── TestimonialsPageContent.tsx
+│   │   │   ├── TestimonialsStats.tsx
+│   │   │   ├── VideoTestimonials.tsx
+│   │   ├── ui
+│   │   │   ├── accordion.tsx
+│   │   │   ├── avatar.tsx
+│   │   │   ├── badge.tsx
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── carousel.tsx
+│   │   │   ├── checkbox.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── dropdown-menu.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── label.tsx
+│   │   │   ├── navigation-menu.tsx
+│   │   │   ├── select.tsx
+│   │   │   ├── separator.tsx
+│   │   │   ├── sheet.tsx
+│   │   │   ├── tabs.tsx
+│   │   │   ├── textarea.tsx
+│   ├── config
+│   │   ├── faq.ts
+│   │   ├── games.ts
+│   │   ├── navigation.ts
+│   │   ├── noorAlBayan.ts
+│   │   ├── services.ts
+│   │   ├── site.ts
+│   │   ├── social.ts
+│   │   ├── tajweed.ts
+│   │   ├── testimonials.ts
+│   ├── content
+│   │   ├── blog
+│   ├── hooks
+│   │   ├── useArabicAudio.ts
+│   │   ├── useIntersectionObserver.ts
+│   │   ├── useLocale.ts
+│   │   ├── useMediaQuery.ts
+│   │   ├── useScrollPosition.ts
+│   │   ├── useStableRandom.ts
+│   ├── i18n
+│   │   ├── navigation.ts
+│   │   ├── request.ts
+│   │   ├── routing.ts
+│   ├── lib
+│   │   ├── api
+│   │   │   ├── client.ts
+│   │   ├── api.ts
+│   │   ├── blog-store.ts
+│   │   ├── constants.ts
+│   │   ├── fonts.ts
+│   │   ├── metadata.ts
+│   │   ├── seo.ts
+│   │   ├── service-images.ts
+│   │   ├── utils.ts
+│   │   ├── validators.ts
+│   ├── messages
+│   │   ├── ar.json
+│   │   ├── en.json
+│   ├── styles
+│   │   ├── animations.css
+│   │   ├── islamic-patterns.css
+│   ├── types
+│   │   ├── blog.ts
+│   │   ├── form.ts
+│   │   ├── games.ts
+│   │   ├── index.ts
+│   │   ├── service.ts
+│   │   ├── session.ts
+│   │   ├── testimonial.ts
+│   ├── proxy.ts
+├── .env
+├── .env.local
+├── .gitignore
+├── .prettierrc
+├── AGENTS.md
+├── CLAUDE.md
+├── components.json
+├── eslint.config.mjs
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── README.md
+├── tsconfig.json
