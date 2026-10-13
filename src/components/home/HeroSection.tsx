@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Amiri, Fraunces } from "next/font/google";
 import { Link } from "@/i18n/navigation";
@@ -17,12 +17,6 @@ import {
 import { Button } from "@/components/ui/button";
 import Container from "@/components/shared/Container";
 import { cn } from "@/lib/utils";
-
-/**
- * HOME HERO — Senior mobile-first
- * Full-bleed photo background + strong teal wash for readable type.
- * No frames, arches, or glass cards around the image.
- */
 
 const fraunces = Fraunces({ subsets: ["latin"], display: "swap" });
 const amiri = Amiri({ subsets: ["arabic"], weight: ["700"], display: "swap" });
@@ -70,7 +64,7 @@ const STAR_TILE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.07' stroke-width='1'%3E%3Cpath d='M14 14h36v36H14z'/%3E%3Cpath d='M32 6.5 57.5 32 32 57.5 6.5 32z'/%3E%3C/g%3E%3C/svg%3E\")";
 
 const TATREEZ =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='22' viewBox='0 0 26 22' shape-rendering='crispEdges'%3E%3Crect width='26' height='22' fill='%230D4F4F'/%3E%3Cpath fill='%23C8A96E' d='M0 0h26v2h-26zM12 4h2v2h-2zM10 6h6v2h-6zM8 8h4v2h-4zM14 8h4v2h-4zM6 10h4v2h-4zM16 10h4v2h-4zM8 12h4v2h-4zM14 12h4v2h-4zM10 14h6v2h-6zM12 16h2v2h-2zM0 20h26v2h-26z'/%3E%3Cpath fill='%23FBF6EA' d='M0 10h2v2h-2zM12 10h2v2h-2zM24 10h2v2h-2z'/%3E%3C/svg%3E\")";
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='22' viewBox='0 0 26 22' shape-rendering='crispEdges'%3E%3Crect width='26' height='22' fill='%230D4F4F'/%3E%3Cpath fill='%23C8A96E' d='M0 0h26v2h-26zM12 4h2v2h-2zM10 6h6v2h-6zM8 8h4v2h-4zM14 8h4v2h-4zM6 10h4v2h-4zM16 10h4v2h-4zM8 12h4v2h-4zM10 14h6v2h-6zM12 16h2v2h-2zM0 20h26v2h-26z'/%3E%3Cpath fill='%23FBF6EA' d='M0 10h2v2h-2zM12 10h2v2h-2z24 10h2v2h-2z'/%3E%3C/svg%3E\")";
 
 function Ornament() {
   return (
@@ -96,20 +90,20 @@ export default function HeroSection() {
       aria-labelledby="hero-heading"
       className="relative isolate min-h-[100svh] overflow-hidden bg-[#06302f] text-white"
     >
-      {/* ── Photo background (LCP) ── */}
+      {/* ── Photo background (High-priority LCP) ── */}
       <div className="absolute inset-0 -z-20">
         <Image
           src="/Tajwedo-Public-Assets/herosection-mobile.webp"
           alt={c.alt}
           fill
           priority
-          quality={70}
-          sizes="100vw"
+          quality={60}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px"
           className="object-cover object-[center_30%] sm:object-[center_35%] lg:object-[72%_center]"
         />
       </div>
 
-      {/* ── Readability wash: heavy on mobile, side fade on desktop ── */}
+      {/* ── Readability wash ── */}
       <div
         aria-hidden
         className="absolute inset-0 -z-10 lg:hidden"
@@ -128,7 +122,6 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Stars (subtle) */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 opacity-80"
@@ -151,7 +144,6 @@ export default function HeroSection() {
             "text-center sm:text-start"
           )}
         >
-          {/* Live pill */}
           <div className="mb-5 flex justify-center sm:justify-start">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-[#E6CF9F] backdrop-blur-sm">
               <span className="relative flex h-2 w-2">
@@ -204,7 +196,6 @@ export default function HeroSection() {
             </Link>
           </div>
 
-          {/* CTAs — full width on phone */}
           <div className="mt-6 flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
             <Button
               asChild
@@ -224,7 +215,6 @@ export default function HeroSection() {
             </Link>
           </div>
 
-          {/* Trust row */}
           <ul className="mt-8 flex flex-col gap-2.5 sm:mt-10 sm:flex-row sm:flex-wrap sm:gap-3">
             {c.features.map((label, i) => {
               const Icon = FEATURE_ICONS[i];
@@ -246,7 +236,6 @@ export default function HeroSection() {
         </div>
       </Container>
 
-      {/* Tatreez */}
       <div
         aria-hidden
         className="absolute inset-x-0 bottom-0 z-20 h-[22px]"
