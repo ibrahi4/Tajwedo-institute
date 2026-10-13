@@ -19,7 +19,11 @@ export function createMetadata({
 }: MetadataProps): Metadata {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   const canonicalUrl = `${baseUrl}/${locale}${normalizedPath === '/' ? '' : normalizedPath}`;
-  const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${baseUrl}${ogImage}`;
+  
+  // Ensure absolute URL for WhatsApp/Facebook/X link previews
+  const absoluteOgImage = ogImage.startsWith('http')
+    ? ogImage
+    : `${baseUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`;
 
   return {
     title,
@@ -39,13 +43,20 @@ export function createMetadata({
       siteName: 'Tajwedo Institute',
       locale: locale === 'ar' ? 'ar_EG' : 'en_US',
       type: 'website',
-      images: [{ url: ogImageUrl, width: 1200, height: 630 }],
+      images: [
+        {
+          url: absoluteOgImage,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: [ogImageUrl],
+      images: [absoluteOgImage],
     },
   };
 }
