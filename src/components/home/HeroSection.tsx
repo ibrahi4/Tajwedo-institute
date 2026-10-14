@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Amiri, Fraunces } from "next/font/google";
 import { Link } from "@/i18n/navigation";
 import { useLocale } from "@/hooks/useLocale";
 import {
@@ -17,9 +16,6 @@ import {
 import { Button } from "@/components/ui/button";
 import Container from "@/components/shared/Container";
 import { cn } from "@/lib/utils";
-
-const fraunces = Fraunces({ subsets: ["latin"], display: "swap" });
-const amiri = Amiri({ subsets: ["arabic"], weight: ["700"], display: "swap" });
 
 const COPY = {
   ar: {
@@ -90,20 +86,18 @@ export default function HeroSection() {
       aria-labelledby="hero-heading"
       className="relative isolate min-h-[100svh] overflow-hidden bg-[#06302f] text-white"
     >
-      {/* ── Photo background (High-priority LCP) ── */}
       <div className="absolute inset-0 -z-20">
         <Image
           src="/Tajwedo-Public-Assets/herosection-mobile.webp"
           alt={c.alt}
           fill
           priority
-          quality={60}
+          quality={55}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px"
           className="object-cover object-[center_30%] sm:object-[center_35%] lg:object-[72%_center]"
         />
       </div>
 
-      {/* ── Readability wash ── */}
       <div
         aria-hidden
         className="absolute inset-0 -z-10 lg:hidden"
@@ -168,10 +162,7 @@ export default function HeroSection() {
 
           <h1
             id="hero-heading"
-            className={cn(
-              "text-[1.85rem] font-bold leading-[1.15] [text-wrap:balance] sm:text-[2.4rem] lg:text-[2.75rem]",
-              isRTL ? amiri.className : cn(fraunces.className, "tracking-[-0.02em]")
-            )}
+            className="text-[1.85rem] font-bold leading-[1.15] [text-wrap:balance] sm:text-[2.4rem] lg:text-[2.75rem] font-serif tracking-tight"
           >
             <span className="block text-white">{c.h1Part1}</span>
             <span className="mt-1 block text-[#E3B45F]">{c.h1Part2}</span>
