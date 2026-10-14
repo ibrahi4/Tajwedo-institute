@@ -3,16 +3,16 @@ import { CalendarCheck, Target, BookOpen, TrendingUp, ArrowRight, ArrowLeft } fr
 import { Button } from "@/components/ui/button";
 import Container from "@/components/shared/Container";
 import SectionHeader from "@/components/shared/SectionHeader";
-import { useTranslations } from "next-intl";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { useLocale } from "@/hooks/useLocale";
 
 const stepIcons = [CalendarCheck, Target, BookOpen, TrendingUp];
 const stepNumbers = ["01", "02", "03", "04"];
 
-export default function HowItWorks() {
-  const t = useTranslations("howItWorksHome");
-  const { isRTL } = useLocale();
+export default async function HowItWorks() {
+  const locale = await getLocale();
+  const t = await getTranslations("howItWorksHome");
+  const isRTL = locale === "ar";
 
   return (
     <section className="py-16 md:py-24 bg-white relative overflow-hidden">
