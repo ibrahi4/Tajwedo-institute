@@ -1,3 +1,4 @@
+import SiteNameJsonLd from '@/components/seo/SiteNameJsonLd';
 import React from 'react';
 import { getMessages } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
