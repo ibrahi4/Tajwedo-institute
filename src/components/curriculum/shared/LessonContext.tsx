@@ -9,6 +9,8 @@ export interface LessonContextType {
   setShowTransliteration: React.Dispatch<React.SetStateAction<boolean>>;
   showEnglishMeaning: boolean;
   setShowEnglishMeaning: React.Dispatch<React.SetStateAction<boolean>>;
+  isTeacherMode: boolean;
+  setIsTeacherMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const LessonContext = createContext<LessonContextType | undefined>(undefined);
@@ -17,6 +19,7 @@ export function LessonProvider({ children }: { children: React.ReactNode }) {
   const [darkMode, setDarkModeState] = useState<boolean>(false);
   const [showTransliteration, setShowTransliteration] = useState<boolean>(true);
   const [showEnglishMeaning, setShowEnglishMeaning] = useState<boolean>(true);
+  const [isTeacherMode, setIsTeacherMode] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -62,6 +65,8 @@ export function LessonProvider({ children }: { children: React.ReactNode }) {
         setShowTransliteration,
         showEnglishMeaning,
         setShowEnglishMeaning,
+        isTeacherMode,
+        setIsTeacherMode,
       }}
     >
       {children}
