@@ -11,8 +11,11 @@ export interface LessonContextType {
   setShowEnglishMeaning: React.Dispatch<React.SetStateAction<boolean>>;
   isTeacherMode: boolean;
   setIsTeacherMode: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleTeacherMode: () => void;
   fontSizeMultiplier: number;
   setFontSizeMultiplier: React.Dispatch<React.SetStateAction<number>>;
+  increaseFont: () => void;
+  decreaseFont: () => void;
 }
 
 const LessonContext = createContext<LessonContextType | undefined>(undefined);
@@ -59,6 +62,10 @@ export function LessonProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const toggleTeacherMode = () => setIsTeacherMode((prev) => !prev);
+  const increaseFont = () => setFontSizeMultiplier((prev) => Math.min(prev + 0.1, 1.5));
+  const decreaseFont = () => setFontSizeMultiplier((prev) => Math.max(prev - 0.1, 0.9));
+
   return (
     <LessonContext.Provider
       value={{
@@ -70,8 +77,11 @@ export function LessonProvider({ children }: { children: React.ReactNode }) {
         setShowEnglishMeaning,
         isTeacherMode,
         setIsTeacherMode,
+        toggleTeacherMode,
         fontSizeMultiplier,
         setFontSizeMultiplier,
+        increaseFont,
+        decreaseFont,
       }}
     >
       {children}

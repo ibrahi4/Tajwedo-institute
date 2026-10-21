@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, BookOpen } from 'lucide-react';
@@ -19,7 +19,9 @@ interface Props {
 
 export default function WordCarousel({ words, title = 'Reading Practice' }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { isTeacherMode, fontSizeMultiplier } = useLesson();
+    const lessonCtx = useLesson();
+  const isTeacherMode = lessonCtx?.isTeacherMode ?? false;
+  const fontSizeMultiplier = lessonCtx?.fontSizeMultiplier ?? 1.1;
 
   const handleNext = () => setCurrentIndex((prev) => (prev + 1) % words.length);
   const handlePrev = () => setCurrentIndex((prev) => (prev - 1 + words.length) % words.length);

@@ -17,7 +17,9 @@ interface Props {
 }
 
 export default function SoundTable({ items, columns = 4, baseColor = 'teal' }: Props) {
-  const { isTeacherMode, fontSizeMultiplier } = useLesson();
+  const lesson = useLesson();
+  const isTeacherMode = lesson?.isTeacherMode ?? false;
+  const fontSizeMultiplier = lesson?.fontSizeMultiplier ?? 1;
 
   const gridCols = {
     2: 'grid-cols-2',

@@ -103,7 +103,8 @@ export default function Navbar() {
 
   /* ---- Close the drawer after navigation ---- */
   useEffect(() => {
-    setMobileOpen(false);
+    const frame = requestAnimationFrame(() => setMobileOpen(false));
+    return () => cancelAnimationFrame(frame);
   }, [pathname]);
 
   /* ---- Close the drawer if the viewport grows to desktop (rotate / resize) ---- */

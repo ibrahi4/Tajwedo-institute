@@ -364,6 +364,13 @@ export const NOOR_AL_BAYAN_LESSONS: CurriculumLesson[] = [
 ];
 
 export const NOOR_AL_BAYAN_COURSE: CurriculumCourse = {
+  titleEn: "Noor Al-Bayan: Learn to Read Quran",
+  taglineEn: "12 Interactive Visual Lessons from Arabic Letters to Full Quranic Recitation",
+  taglineAr: "١٢ درساً بصرياً تفاعلياً من الحروف والحركات حتى إتقان التلاوة القرآنية",
+  descriptionEn: "A structured, visual, and interactive 12-lesson Arabic reading curriculum crafted for non-Arabic speaking children (ages 7–14) and live Zoom teachers at Tajwedo Institute.",
+  totalMinutes: 325,
+  available: true,
+  level: "Beginner to Intermediate",
   id: "noor-al-bayan",
   slug: "noor-al-bayan",
   title: "Noor Al-Bayan: Learn to Read Quran",
