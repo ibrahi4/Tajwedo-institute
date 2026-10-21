@@ -1,0 +1,9 @@
+@keyframes glow-amber { 0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); } 50% { box-shadow: 0 0 40px rgba(245, 158, 11, 0.5); } }
+@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+@keyframes letter-pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+.vowel-card-fatha { border: 2px solid #f59e0b; background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.vowel-card-damma { border: 2px solid #10b981; background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.vowel-card-kasra { border: 2px solid #8b5cf6; background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.quran-font { font-family: 'Amiri', serif; line-height: 1.8; }
+.scrolly-section { min-height: 80vh; display: flex; align-items: center; opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+.scrolly-section.visible { opacity: 1; transform: translateY(0); }

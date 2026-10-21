@@ -11,42 +11,70 @@ const dmSerif = DM_Serif_Display({
   display: "swap",
 });
 
-export default function Logo({ className = "", light = false }: { className?: string; light?: boolean }) {
+type LogoProps = {
+  className?: string;
+  /**
+   * Force the on-dark palette regardless of theme (e.g. a footer that is always dark).
+   * Without it, the logo follows light / dark mode automatically.
+   */
+  light?: boolean;
+};
+
+export default function Logo({ className = "", light = false }: LogoProps) {
+  /* Palette
+     - Light mode: deep teal name + a darker gold accent (the brand gold #C8A96E
+       is only ~2.3:1 on white, the deeper gold clears 3:1 at this size).
+     - Dark mode: warm white name + the bright gold, both well above 7:1 on navy. */
+  const name = light ? "text-white" : "text-[#0D4F4F] dark:text-stone-50";
+  const accent = light ? "text-[#E8C56A]" : "text-[#A8832F] dark:text-[#E8C56A]";
+  const tagline = light ? "text-white/80" : "text-[#0D4F4F]/80 dark:text-teal-300";
+  const glow = light ? "opacity-100" : "opacity-0 dark:opacity-100";
+
   return (
-    <Link href="/" className={`flex items-center gap-2.5 sm:gap-3 group ${className}`}>
-      {/* perfectly balanced logo size */}
-      <div className="relative w-10 h-10 sm:w-11 sm:h-11 shrink-0">
+    <Link
+      href="/"
+      className={`group flex items-center gap-2.5 rounded-lg md:gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-600 dark:focus-visible:outline-teal-300 ${className}`}
+    >
+      {/* Mark — fixed 3:2 box so the layout never shifts; object-contain keeps
+          it intact if the real file ratio differs slightly. */}
+      <span className="relative h-10 w-[60px] shrink-0 md:h-11 md:w-[66px] xl:h-12 xl:w-[72px]">
+        {/* Soft gold halo so the thin strokes hold up on dark backgrounds */}
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute -inset-3 rounded-full bg-[radial-gradient(closest-side,rgba(232,197,106,0.22),transparent)] ${glow}`}
+        />
         <Image
           src="/Tajwedo-Public-Assets/logo.webp"
-          alt="Tajwedo Institute Logo"
-          width={44}
-          height={44}
-          className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+          alt=""
+          width={72}
+          height={48}
           priority
+          className="relative h-full w-full object-contain object-left transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
         />
-      </div>
+      </span>
 
-      {/* Elegant, balanced typography */}
-      <div className={`flex flex-col justify-center leading-none ${dmSerif.className}`}>
+      {/* Wordmark + tagline (the text is the link's accessible name) */}
+      <span className="flex flex-col justify-center leading-none">
         <span
-          className={`text-[22px] sm:text-[25px] font-normal tracking-[-0.015em] leading-none ${
-            light ? "text-white" : "text-[#0D4F4F]"
-          }`}
+          className={`${dmSerif.className} text-[24px] leading-none tracking-[-0.01em] antialiased md:text-[27px] xl:text-[30px] ${name}`}
         >
-          <span className={light ? "text-[#E8C56A]" : "text-[#C8A96E]"}>T</span>
-          ajwed
-          <span className={light ? "text-[#E8C56A]" : "text-[#C8A96E]"}>o</span>
+          <span className={accent}>T</span>ajwed<span className={accent}>o</span>
         </span>
 
         <span
-          className={`mt-[2px] pl-[1px] text-[8px] sm:text-[9px] font-semibold tracking-[0.45em] uppercase opacity-75 ${
-            light ? "text-white" : "text-[#0D4F4F]"
-          }`}
-          style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+          className={`mt-1.5 block font-semibold ${tagline}`}
+          style={{ fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif" }}
         >
-          Institute
+          {/* English: tracked caps. Hidden in RTL. */}
+          <span className="text-[10px] uppercase tracking-[0.34em] rtl:hidden xl:text-[11px]">
+            Institute
+          </span>
+          {/* Arabic: never letter-spaced (it would break the joined letters). */}
+          <span lang="ar" className="hidden text-[12px] rtl:inline xl:text-[13px]">
+            معهد
+          </span>
         </span>
-      </div>
+      </span>
     </Link>
   );
 }

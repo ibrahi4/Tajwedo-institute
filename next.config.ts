@@ -1,4 +1,4 @@
-import type { NextConfig } from 'next';
+﻿import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
@@ -31,6 +31,21 @@ const nextConfig: NextConfig = {
         source: '/_next/image',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
+    ];
+  },
+  async redirects() {
+    return [
+      // Legacy /games routes -> /curriculum (SEO-safe 301)
+      { source: '/games', destination: '/curriculum', permanent: true },
+      { source: '/games/:path*', destination: '/curriculum', permanent: true },
+      { source: '/en/games', destination: '/en/curriculum', permanent: true },
+      { source: '/en/games/:path*', destination: '/en/curriculum', permanent: true },
+      { source: '/ar/games', destination: '/ar/curriculum', permanent: true },
+      { source: '/ar/games/:path*', destination: '/ar/curriculum', permanent: true },
+      // Legacy landing page
+      { source: '/lp/quran-trial', destination: '/en', permanent: true },
+      { source: '/en/lp/quran-trial', destination: '/en', permanent: true },
+      { source: '/ar/lp/quran-trial', destination: '/ar', permanent: true },
     ];
   },
 };

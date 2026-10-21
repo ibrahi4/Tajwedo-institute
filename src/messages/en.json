@@ -9,8 +9,9 @@
     "blog": "Blog",
     "contact": "Contact",
     "bookTrial": "Book Free Trial",
-    "games": "Games",
-    "signIn": "Sign In"
+    "games": "Curriculum",
+    "signIn": "Sign In",
+    "curriculum": "Curriculum"
   },
   "hero": {
     "headline": "Learn Quran, Arabic & Islamic Studies with a Trusted Teacher",
@@ -1271,7 +1272,7 @@
       "badge": "Educational Games",
       "title": "Learn Quran & Arabic Through Play!",
       "subtitle": "Fun, interactive educational games designed for kids to learn Arabic letters, Tajweed, and Quran reading.",
-      "games": "Games",
+      "games": "Curriculum",
       "levels": "Levels",
       "stars": "Stars"
     },
