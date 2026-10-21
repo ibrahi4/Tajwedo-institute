@@ -11,6 +11,8 @@ export interface LessonContextType {
   setShowEnglishMeaning: React.Dispatch<React.SetStateAction<boolean>>;
   isTeacherMode: boolean;
   setIsTeacherMode: React.Dispatch<React.SetStateAction<boolean>>;
+  fontSizeMultiplier: number;
+  setFontSizeMultiplier: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const LessonContext = createContext<LessonContextType | undefined>(undefined);
@@ -20,6 +22,7 @@ export function LessonProvider({ children }: { children: React.ReactNode }) {
   const [showTransliteration, setShowTransliteration] = useState<boolean>(true);
   const [showEnglishMeaning, setShowEnglishMeaning] = useState<boolean>(true);
   const [isTeacherMode, setIsTeacherMode] = useState<boolean>(false);
+  const [fontSizeMultiplier, setFontSizeMultiplier] = useState<number>(1.1);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -67,6 +70,8 @@ export function LessonProvider({ children }: { children: React.ReactNode }) {
         setShowEnglishMeaning,
         isTeacherMode,
         setIsTeacherMode,
+        fontSizeMultiplier,
+        setFontSizeMultiplier,
       }}
     >
       {children}

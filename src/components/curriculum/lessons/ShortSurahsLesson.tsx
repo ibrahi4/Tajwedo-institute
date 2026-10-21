@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import AudioButton from '../shared/AudioButton';
@@ -12,7 +12,7 @@ const FATIHAH = [
 ];
 
 export default function ShortSurahsLesson() {
-  const { fontSizeMultiplier, isTeacherMode } = useLesson();
+  const lessonCtx = useLesson();`n  const fontSizeMultiplier = lessonCtx?.fontSizeMultiplier ?? 1.1;`n  const isTeacherMode = lessonCtx?.isTeacherMode ?? false;
 
   return (
     <div className="space-y-12 animate-in fade-in duration-700">

@@ -1,40 +1,26 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import WordCarousel from '../shared/WordCarousel';
-import { useLesson } from '../shared/LessonContext';
-
-const MIXED_WORDS = [
-  { id: 'w1', arabic: 'مَلِكِ', transliteration: 'Ma-li-ki', meaningEn: 'King' },
-  { id: 'w2', arabic: 'عَلِمَ', transliteration: 'A-li-ma', meaningEn: 'He knew' },
-  { id: 'w3', arabic: 'فَهِمَ', transliteration: 'Fa-hi-ma', meaningEn: 'He understood' },
-  { id: 'w4', arabic: 'يَكْتُبُ', transliteration: 'Yak-tu-bu', meaningEn: 'He writes' },
-  { id: 'w5', arabic: 'مُسْلِمُون', transliteration: 'Mus-li-moon', meaningEn: 'Muslims' },
-  { id: 'w6', arabic: 'ٱلْحَمْدُ', transliteration: 'Al-ham-du', meaningEn: 'All praise' },
-];
+import React, { useState } from "react";
+import { useLesson } from "../shared/LessonContext";
+import { Volume2, BookOpen } from "lucide-react";
 
 export default function ReadingPracticeLesson() {
-  const lessonCtx = useLesson();`n  const isTeacherMode = lessonCtx?.isTeacherMode ?? false;
+  const lessonCtx = useLesson();
+  const isTeacherMode = lessonCtx?.isTeacherMode ?? false;
 
   return (
     <div className="space-y-12 animate-in fade-in duration-700">
-      <section className="text-center max-w-3xl mx-auto">
-        <div className="inline-block bg-teal-100 text-teal-800 px-4 py-1.5 rounded-full font-bold text-sm mb-4 tracking-widest uppercase">
-          Mastery Stage
+      <div className="max-w-4xl mx-auto p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center space-y-6">
+        <div className="w-12 h-12 rounded-2xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center mx-auto">
+          <BookOpen className="w-6 h-6" />
         </div>
-        <h1 className="text-4xl sm:text-5xl font-black mb-4 text-slate-900 dark:text-white">
-          Put it all together
-        </h1>
-        <p className="text-xl text-slate-600 dark:text-slate-300">
-          You've learned the alphabet, vowels, sukoon, and mudood. Now it's time to read full Arabic words!
-        </p>
-      </section>
-
-      <section>
-        <div className="bg-gradient-to-b from-slate-100 to-white dark:from-slate-800 dark:to-slate-900 p-4 sm:p-8 rounded-[2.5rem] shadow-inner border border-slate-200 dark:border-slate-700">
-          <WordCarousel words={MIXED_WORDS} title="Mixed Vocabulary Challenge" />
+        <div className="space-y-2">
+          <h2 className="text-2xl font-extrabold">Reading Practice Studio</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
+            Interactive reading lab for practicing vocalized words, syllable separation, and fluency.
+          </p>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
