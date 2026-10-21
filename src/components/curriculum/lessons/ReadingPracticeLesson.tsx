@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import WordCarousel from '../shared/WordCarousel';
@@ -14,7 +14,7 @@ const MIXED_WORDS = [
 ];
 
 export default function ReadingPracticeLesson() {
-  const { isTeacherMode } = useLesson();
+  const lessonCtx = useLesson();`n  const isTeacherMode = lessonCtx?.isTeacherMode ?? false;
 
   return (
     <div className="space-y-12 animate-in fade-in duration-700">
