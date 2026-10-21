@@ -1,112 +1,236 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { Home, BookOpen, Volume2, Eye, EyeOff, Waves, Layers, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLesson } from "../shared/LessonContext";
+import AudioButton from "../shared/AudioButton";
+import QuizEngine, { QuizQuestion } from "../shared/QuizEngine";
+import { Sparkles, Layers, HelpCircle, CheckCircle2, BookOpen } from "lucide-react";
 
-const playSound = (text: string, rate = 0.68) => {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-  try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ar-SA";
-    utterance.rate = rate;
-    window.speechSynthesis.speak(utterance);
-  } catch {}
-};
+const LEEN_AND_DAGGER_WORDS = [
+  {
+    arabic: "خَوْفٍ",
+    stopping: "خَوْفْ",
+    category: "leen",
+    formula: "Fatha + Waw Sakinah (ـَوْ)",
+    translit: "Khawfin → Stop: Khawf",
+    meaning: "Fear (Surah Quraysh)",
+    note: "Soft diphthong glide (like 'ow' in how). Stretched 2, 4, or 6 beats when stopping."
+  },
+  {
+    arabic: "بَيْتٍ",
+    stopping: "بَيْتْ",
+    category: "leen",
+    formula: "Fatha + Ya Sakinah (ـَيْ)",
+    translit: "Baytin → Stop: Bayt",
+    meaning: "House (Ka'bah - Surah Quraysh)",
+    note: "Soft diphthong glide (like 'ay' in day). Smooth and effortless."
+  },
+  {
+    arabic: "قُرَيْشٍ",
+    stopping: "قُرَيْشْ",
+    category: "leen",
+    formula: "Fatha + Ya Sakinah (ـَيْ)",
+    translit: "Qurayshin → Stop: Quraysh",
+    meaning: "Tribe of Quraysh",
+    note: "Famous Madd Al-Leen example in Surah Quraysh verse 1."
+  },
+  {
+    arabic: "ٱلصَّيْفِ",
+    stopping: "ٱلصَّيْفْ",
+    category: "leen",
+    formula: "Fatha + Ya Sakinah (ـَيْ)",
+    translit: "As-Sayfi → Stop: As-Sayf",
+    meaning: "The Summer",
+    note: "Notice Sun Lam + Fatha + Ya Sakinah."
+  },
+  {
+    arabic: "ٱلرَّحْمَٰنِ",
+    stopping: "ٱلرَّحْمَٰنْ",
+    category: "dagger",
+    formula: "Dagger Alif (ـٰ) = 2-Beat Madd",
+    translit: "Ar-Rahmaani",
+    meaning: "The Most Gracious",
+    note: "The miniature vertical Alif above Meem (مَٰ) is pronounced exactly like a full Alif Madd!"
+  },
+  {
+    arabic: "هَٰذَا",
+    stopping: "هَٰذَا",
+    category: "dagger",
+    formula: "Dagger Alif (ـٰ) after Haa",
+    translit: "Haadhaa",
+    meaning: "This",
+    note: "Stretch Haa for 2 full beats even though no tall Alif is written."
+  },
+  {
+    arabic: "إِبْرَٰهِيمَ",
+    stopping: "إِبْرَٰهِيمْ",
+    category: "dagger",
+    formula: "Dagger Alif (ـٰ) after Raa",
+    translit: "Ibraaheema",
+    meaning: "Prophet Ibrahim (AS)",
+    note: "Uthmani Mushaf script uses Dagger Alif in prophetic names."
+  }
+];
 
-const LEEN_CARDS = [
+const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
-    badge: "Waw Leen (ـَوْ)",
-    titleAr: "وَاوُ اللِّين",
-    sampleAr: "خَوْفٌ • قَوْمٌ",
-    audioText: "خَوْفْ",
-    rule: "Fatha (ـَ) + Silent Waw (وْ) = Soft 'aw' Glide!",
-    desc: "When Waw has Sukun and the letter before it has Fatha, glide smoothly from 'a' into 'w' like the English word 'how'!",
-    imageUrl: "/Tajwedo-Public-Assets/curriculum-Imag/offer-pair.webp",
-    color: "from-[#FF5A1F] to-[#F59E0B]",
-    accent: "text-[#FF5A1F]",
+    id: "l1",
+    prompt: "What is the exact formula for a Leen (Soft Diphthong) sound?",
+    options: [
+      "A Fatha followed by Waw Sakinah (ـَوْ) or Ya Sakinah (ـَيْ)",
+      "A Damma followed by Waw",
+      "A Kasra followed by Ya",
+      "Any letter with a Shaddah"
+    ],
+    correctIndex: 0,
+    explanation: "Leen letters occur ONLY when Waw Sakinah or Ya Sakinah are preceded by a Fatha (ـَوْ / ـَيْ)."
   },
   {
-    badge: "Ya Leen (ـَيْ)",
-    titleAr: "يَاءُ اللِّين",
-    sampleAr: "بَيْتٌ • قُرَيْشٍ",
-    audioText: "بَيْتْ",
-    rule: "Fatha (ـَ) + Silent Ya (يْ) = Soft 'ay' Glide!",
-    desc: "When Ya has Sukun and the letter before it has Fatha, glide effortlessly into 'ay' as in بَيْت (House) and صَيْف (Summer)!",
-    imageUrl: "/Tajwedo-Public-Assets/curriculum-Imag/Kids Program.webp",
-    color: "from-[#00A86B] to-[#10B981]",
-    accent: "text-[#00A86B]",
-  },
-  {
-    badge: "Quranic Wave Madd (ٓ)",
-    titleAr: "عَلَامَةُ المَدِّ الفَرْعِيّ (ٓ)",
-    sampleAr: "ٱلسَّمَآءِ • ٱلضَّآلِّينَ",
-    audioText: "السَّمَاءِ",
-    rule: "Wave Sign (ٓ) = Stretch 4–5 Beats (Before ء) or 6 Beats (Before ـّ)!",
-    desc: "Whenever you see the wave mark (ٓ) above a Madd letter in the Quran, stretch your voice longer than 2 beats (4–5 beats before Hamza, 6 beats before Shaddah)!",
-    imageUrl: "/Tajwedo-Public-Assets/Services/Tajweed.webp",
-    color: "from-[#7C3AED] to-[#A855F7]",
-    accent: "text-[#7C3AED]",
-  },
+    id: "l2",
+    prompt: "How many beats do you stretch a Dagger Alif (الأَلِف الخَنْجَرِيَّة ـٰ) like in (هَٰذَا)?",
+    options: [
+      "It is silent",
+      "1 beat like a short Fatha",
+      "2 full beats, exactly like a normal Natural Madd Alif",
+      "6 beats"
+    ],
+    correctIndex: 2,
+    explanation: "A miniature Dagger Alif (ـٰ) is pronounced identically to a full Natural Madd Alif for 2 beats."
+  }
 ];
 
 export default function MaddLeenLesson() {
   const lessonCtx = useLesson();
   const darkMode = lessonCtx?.darkMode ?? false;
-  const [englishHints, setEnglishHints] = useState<boolean>(true);
+  const showTransliteration = lessonCtx?.showTransliteration ?? true;
+  const showEnglishMeaning = lessonCtx?.showEnglishMeaning ?? true;
+  const isTeacherMode = lessonCtx?.isTeacherMode ?? false;
+  const fontSizeMultiplier = lessonCtx?.fontSizeMultiplier ?? 1.1;
+
+  const [activeTab, setActiveTab] = useState<"learn" | "words" | "quiz">("learn");
+  const [filter, setFilter] = useState<"all" | "leen" | "dagger">("all");
+
+  const visibleWords = LEEN_AND_DAGGER_WORDS.filter((w) => filter === "all" || w.category === filter);
 
   return (
-    <div className={`min-h-screen w-full transition-colors duration-300 font-sans ${darkMode ? "bg-[#0B0F19] text-slate-100" : "bg-[#F8FAFC] text-slate-900"}`}>
-      <header className={`sticky top-20 z-30 w-full border-b backdrop-blur-xl ${darkMode ? "bg-[#0B0F19]/90 border-slate-800" : "bg-white/90 border-slate-200"}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/en/curriculum/noor-al-bayan" className="p-2.5 rounded-xl border text-xs font-bold flex items-center gap-1.5">
-              <Home className="w-4 h-4 text-[#0D9488]" /> Course
-            </Link>
-            <h1 className="text-base sm:text-lg font-extrabold">Lesson 9: Soft Leen & Extended Madd (ٓ)</h1>
-          </div>
-          <button
-            type="button"
-            onClick={() => setEnglishHints((p) => !p)}
-            className="px-3.5 py-2 rounded-xl border text-xs font-bold inline-flex items-center gap-1.5 bg-[#FF5A1F]/15 border-[#FF5A1F]/40 text-[#FF5A1F]"
-          >
-            {englishHints ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-            <span>Hints: {englishHints ? "ON" : "OFF"}</span>
-          </button>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
-          {LEEN_CARDS.map((c, i) => (
-            <article
-              key={i}
-              onClick={() => playSound(c.audioText, 0.68)}
-              className={`rounded-3xl border overflow-hidden cursor-pointer transition hover:-translate-y-1.5 ${darkMode ? "bg-[#111827] border-slate-800 shadow-xl" : "bg-white border-slate-200 shadow-lg"}`}
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl border bg-slate-100/80 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 w-fit">
+        {[
+          { id: "learn", label: "1. Leen vs. Dagger Alif Rules", icon: Sparkles },
+          { id: "words", label: "2. Surah Quraysh & Uthmani Lab", icon: BookOpen },
+          { id: "quiz", label: "3. Mastery Quiz", icon: HelpCircle },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id as typeof activeTab)}
+              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold inline-flex items-center gap-2 transition ${
+                activeTab === tab.id
+                  ? "bg-[#0D9488] text-white shadow-md"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-800"
+              }`}
             >
-              <div className={`h-2.5 w-full bg-gradient-to-r ${c.color}`} />
-              <div className="relative h-44 overflow-hidden">
-                <img src={c.imageUrl} alt={c.badge} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent" />
-                <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                  <span className="text-xs font-extrabold px-3 py-1 rounded-full bg-black/50 backdrop-blur-md">{c.badge}</span>
-                  <Volume2 className="w-5 h-5" />
-                </div>
+              <Icon className="w-4 h-4" />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {activeTab === "learn" && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className={`rounded-3xl border p-7 space-y-4 ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"}`}>
+            <span className="px-3 py-1 rounded-full bg-teal-500/15 text-teal-600 dark:text-teal-400 text-xs font-extrabold">
+              Rule 1 • حَرْفَا اللِّين (Soft Glide Letters)
+            </span>
+            <h3 className="text-xl font-extrabold">Fatha + Waw/Ya Sakinah (ـَوْ / ـَيْ)</h3>
+            <p className="text-sm text-slate-500 leading-relaxed">
+              Unlike Natural Madd (where Waw follows Damma and Ya follows Kasra), <strong>Leen</strong> happens when Waw Sakinah or Ya Sakinah comes after a <strong>Fatha</strong>—producing the smooth English glides <em>&ldquo;ow&rdquo;</em> (as in <em>how</em>) and <em>&ldquo;ay&rdquo;</em> (as in <em>day</em>).
+            </p>
+            <div dir="rtl" className="grid grid-cols-2 gap-4 pt-2">
+              <div className="p-4 rounded-2xl bg-teal-500/10 text-center space-y-2">
+                <p className="text-3xl font-serif font-bold text-teal-600 dark:text-teal-400">خَوْفْ</p>
+                <AudioButton text="خَوْفْ" />
               </div>
-              <div className="p-6 space-y-4">
-                <h2 dir="rtl" className={`text-2xl font-serif font-bold ${c.accent}`}>{c.titleAr}</h2>
-                <div dir="rtl" className={`py-5 rounded-2xl border text-center text-4xl font-serif font-bold ${c.accent} border-slate-200 dark:border-slate-800`}>
-                  {c.sampleAr}
-                </div>
-                <p className={`text-sm font-extrabold ${c.accent}`}>{c.rule}</p>
-                {englishHints && <p className="text-xs sm:text-sm leading-relaxed text-slate-500 dark:text-slate-300">{c.desc}</p>}
+              <div className="p-4 rounded-2xl bg-teal-500/10 text-center space-y-2">
+                <p className="text-3xl font-serif font-bold text-teal-600 dark:text-teal-400">بَيْتْ</p>
+                <AudioButton text="بَيْتْ" />
               </div>
-            </article>
-          ))}
+            </div>
+          </div>
+
+          <div className={`rounded-3xl border p-7 space-y-4 ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"}`}>
+            <span className="px-3 py-1 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 text-xs font-extrabold">
+              Rule 2 • الأَلِفُ الخَنْجَرِيَّة (Dagger Alif)
+            </span>
+            <h3 className="text-xl font-extrabold">Miniature Uthmani Alif (ـٰ)</h3>
+            <p className="text-sm text-slate-500 leading-relaxed">
+              In the Uthmani Quran script, many common words use a tiny vertical stroke above the letter (<strong dir="rtl">ـٰ</strong>) instead of a full standing Alif. Always stretch it for <strong>2 full beats</strong>!
+            </p>
+            <div dir="rtl" className="grid grid-cols-2 gap-4 pt-2">
+              <div className="p-4 rounded-2xl bg-amber-500/10 text-center space-y-2">
+                <p className="text-3xl font-serif font-bold text-amber-600 dark:text-amber-400">ٱلرَّحْمَٰنِ</p>
+                <AudioButton text="ٱلرَّحْمَٰنِ" />
+              </div>
+              <div className="p-4 rounded-2xl bg-amber-500/10 text-center space-y-2">
+                <p className="text-3xl font-serif font-bold text-amber-600 dark:text-amber-400">هَٰذَا</p>
+                <AudioButton text="هَٰذَا" />
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
+      )}
+
+      {activeTab === "words" && (
+        <div className="space-y-6">
+          <div className="flex items-center gap-2">
+            {(["all", "leen", "dagger"] as const).map((f) => (
+              <button
+                key={f}
+                type="button"
+                onClick={() => setFilter(f)}
+                className={`px-4 py-2 rounded-xl text-xs font-extrabold uppercase transition ${
+                  filter === f ? "bg-[#0D9488] text-white" : "bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                }`}
+              >
+                {f === "all" ? "All Examples (7)" : f === "leen" ? "Madd Al-Leen (ـَوْ / ـَيْ)" : "Dagger Alif (ـٰ)"}
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {visibleWords.map((item, idx) => (
+              <div key={idx} className={`rounded-3xl border p-6 space-y-4 ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"}`}>
+                <div className="flex items-center justify-between">
+                  <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-teal-500/15 text-teal-600 dark:text-teal-400">
+                    {item.formula}
+                  </span>
+                  <AudioButton text={item.arabic} />
+                </div>
+                <div dir="rtl" className="text-center py-4">
+                  <p style={{ fontSize: `${2.5 * fontSizeMultiplier}rem` }} className="font-serif font-bold">
+                    {item.arabic}
+                  </p>
+                </div>
+                {!isTeacherMode && (
+                  <div className="text-xs space-y-1 border-t pt-3 border-slate-200/60 dark:border-slate-800">
+                    {showTransliteration && <p className="font-bold text-teal-600 dark:text-teal-400">{item.translit}</p>}
+                    {showEnglishMeaning && <p className="text-slate-500">{item.meaning} — {item.note}</p>}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {activeTab === "quiz" && (
+        <QuizEngine
+          questions={QUIZ_QUESTIONS}
+        />
+      )}
     </div>
   );
 }

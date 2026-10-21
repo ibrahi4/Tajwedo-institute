@@ -133,7 +133,7 @@ export default function AlphabetLesson() {
       />
 
       {/* UNIFIED STUDIO DOCK */}
-      <header className={`sticky top-20 z-30 w-full border-b backdrop-blur-xl transition-all ${darkMode ? "bg-[#0B0F19]/90 border-slate-800/80 shadow-lg" : "bg-white/90 border-slate-200/80 shadow-xs"}`}>
+      <header className={`relative md:sticky md:top-20 z-30 w-full border-b backdrop-blur-xl transition-all ${darkMode ? "bg-[#0B0F19]/90 border-slate-800/80 shadow-lg" : "bg-white/90 border-slate-200/80 shadow-xs"}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Link

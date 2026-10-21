@@ -178,3 +178,12 @@ header#tajwedo-main-navbar {
   background-color: rgba(255, 255, 255, 0.98) !important;
   border-bottom: 1px solid #e2e8f0 !important;
 }
+/* Smart Hide Navigation on Scroll */
+.smart-hide-nav {
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+.nav-hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}

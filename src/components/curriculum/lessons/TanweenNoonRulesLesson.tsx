@@ -1,110 +1,164 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { Home, Volume2, Eye, EyeOff } from "lucide-react";
 import { useLesson } from "../shared/LessonContext";
+import AudioButton from "../shared/AudioButton";
+import QuizEngine, { QuizQuestion } from "../shared/QuizEngine";
+import { Sparkles, Layers, HelpCircle } from "lucide-react";
 
-const playSound = (text: string, rate = 0.72) => {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-  try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ar-SA";
-    utterance.rate = rate;
-    window.speechSynthesis.speak(utterance);
-  } catch {}
-};
+const FOUR_TAJWEED_RULES = [
+  {
+    id: "izhar",
+    name: "1. Al-Izhar (الإِظْهَار الحَلْقِي)",
+    subtitle: "Clear Pronunciation — 0 Extra Nasal Stretch",
+    letters: "ء • هـ • ع • ح • غ • خ",
+    color: "emerald",
+    examples: [
+      { arabic: "مِنْ خَوْفٍ", translit: "Min Khawfin", note: "Noon carries a visible Sukun (نْ) before خ." },
+      { arabic: "عَلِيمٌ حَكِيمٌ", translit: "'Aleemun Hakeemun", note: "Crisp Noon sound before throat letter ح." }
+    ]
+  },
+  {
+    id: "idgham",
+    name: "2. Al-Idgham (الإِدْغَام - يَرْمَلُون)",
+    subtitle: "Merging into the Next Letter (With or Without Ghunnah)",
+    letters: "ي • ر • م • ل • و • ن",
+    color: "amber",
+    examples: [
+      { arabic: "مَن يَقُولُ", translit: "May-Yaqoolu", note: "Idgham with 2-beat Ghunnah (ينمو)." },
+      { arabic: "مِن رَّبِّهِمْ", translit: "Mir-Rabbihim", note: "Complete Idgham without Ghunnah (ل / ر)." }
+    ]
+  },
+  {
+    id: "iqlab",
+    name: "3. Al-Iqlab (الإِقْلَاب)",
+    subtitle: "Turning Noon/Tanween into a Hidden Meem (م) before ب",
+    letters: "ب (Marked by tiny مـ in Mushaf)",
+    color: "sky",
+    examples: [
+      { arabic: "مِنۢ بَعْدِ", translit: "Mim-Ba'di", note: "Tiny standing Meem (مـ) tells you to pronounce a soft Meem with 2-beat Ghunnah!" },
+      { arabic: "سَمِيعٌۢ بَصِيرٌ", translit: "Samee'um-Baseer", note: "Tanween turns into Meem before Baa." }
+    ]
+  },
+  {
+    id: "ikhfa",
+    name: "4. Al-Ikhfa (الإِخْفَاء الحَقِيقِي)",
+    subtitle: "Light Nasal Hiding (2 Beats) before the Remaining 15 Letters",
+    letters: "ت ث ج د ذ ز س ش ص ض ط ظ ف ق ك",
+    color: "violet",
+    examples: [
+      { arabic: "مِن شَرِّ", translit: "Min-Sharri", note: "Hover the tongue near ش while holding a 2-beat nasal Ghunnah." },
+      { arabic: "أَنتُمْ", translit: "Antum", note: "Bare Noon (ن) without Sukun before ت = Ikhfa." }
+    ]
+  }
+];
 
-const TAJWEED_4_RULES = [
+const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
-    badge: "1. Izhar (الإِظْهَارُ الحَلْقِيّ)",
-    sampleAr: "مَنْ آمَنَ • عَلِيمٌ حَكِيمٌ",
-    audioText: "مَنْ آمَنَ",
-    rule: "Clear Noon Before 6 Throat Letters (ء هـ ع ح غ خ)",
-    desc: "In the Mushaf, Noon carries the visible Sukun sign (نْ). Pronounce the 'n' crisply without extra nasal stretching!",
-    color: "from-[#0284C7] to-[#38BDF8]",
-    accent: "text-[#0284C7]",
+    id: "n1",
+    prompt: "What does the tiny standing Meem symbol (مـ) above Noon in (مِنۢ بَعْدِ) indicate?",
+    options: [
+      "Iqlab: Turn the Noon sound into a soft Meem with 2-beat Ghunnah before Baa (ب)",
+      "Stop reading immediately",
+      "Stretch for 6 beats",
+      "Pronounce a hard Qalqalah"
+    ],
+    correctIndex: 0,
+    explanation: "Whenever Noon Sakinah or Tanween is followed by Baa (ب), Iqlab converts it into a soft Meem with Ghunnah, marked by a tiny (مـ)."
   },
   {
-    badge: "2. Idgham (الإِدْغَام — يَرْمَلُون)",
-    sampleAr: "مَن يَقُولُ • غَفُورٌ رَّحِيمٌ",
-    audioText: "مَنْ يَقُولُ",
-    rule: "Merge Noon Into the Next Letter (ي ر م ل و ن)",
-    desc: "The Noon has NO Sukun on it! Merge straight into the following letter (with 2 beats of Ghunnah on ي ن م و, and without Ghunnah on ل ر).",
-    color: "from-[#00A86B] to-[#10B981]",
-    accent: "text-[#00A86B]",
-  },
-  {
-    badge: "3. Iqlab (الإِقْلَاب — م)",
-    sampleAr: "مِنۢ بَعْدِ • سَمِيعٌۢ بَصِيرٌ",
-    audioText: "مِنْ بَعْدِ",
-    rule: "Tiny Floating Meem (م) Before Letter Ba (ب)!",
-    desc: "Whenever Noon Sakinah or Tanween comes before Ba (ب), the Mushaf places a tiny standing Meem (م) above it—turn the 'n' into a gentle 2-beat 'm'!",
-    color: "from-[#FF5A1F] to-[#F59E0B]",
-    accent: "text-[#FF5A1F]",
-  },
-  {
-    badge: "4. Ikhfa (الإِخْفَاءُ الحَقِيقِيّ)",
-    sampleAr: "مِن قَبْلُ • أَنفُسِهِمْ",
-    audioText: "مِنْ قَبْلُ",
-    rule: "Soft 2-Beat Nasal Hiding Before the Remaining 15 Letters!",
-    desc: "Noon is bare (without Sukun) and the next letter has no Shaddah. Hide the Noon softly with a 2-beat nasal Ghunnah!",
-    color: "from-[#7C3AED] to-[#A855F7]",
-    accent: "text-[#7C3AED]",
-  },
+    id: "n2",
+    prompt: "Which 6 throat letters trigger clear Izhar (الإظهار الحلقي)?",
+    options: [
+      "ء هـ ع ح غ خ",
+      "ي ر م ل و ن",
+      "ق ط ب ج د",
+      "ص ض ط ظ"
+    ],
+    correctIndex: 0,
+    explanation: "The 6 throat (Halqi) letters (ء هـ ع ح غ خ) always cause Noon Sakinah and Tanween to be pronounced clearly (Izhar)."
+  }
 ];
 
 export default function TanweenNoonRulesLesson() {
   const lessonCtx = useLesson();
   const darkMode = lessonCtx?.darkMode ?? false;
-  const [englishHints, setEnglishHints] = useState<boolean>(true);
+  const showTransliteration = lessonCtx?.showTransliteration ?? true;
+  const isTeacherMode = lessonCtx?.isTeacherMode ?? false;
+  const fontSizeMultiplier = lessonCtx?.fontSizeMultiplier ?? 1.1;
+
+  const [activeTab, setActiveTab] = useState<"rules" | "quiz">("rules");
 
   return (
-    <div className={`min-h-screen w-full transition-colors duration-300 font-sans ${darkMode ? "bg-[#0B0F19] text-slate-100" : "bg-[#F8FAFC] text-slate-900"}`}>
-      <header className={`sticky top-20 z-30 w-full border-b backdrop-blur-xl ${darkMode ? "bg-[#0B0F19]/90 border-slate-800" : "bg-white/90 border-slate-200"}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/en/curriculum/noor-al-bayan" className="p-2.5 rounded-xl border text-xs font-bold flex items-center gap-1.5">
-              <Home className="w-4 h-4 text-[#0D9488]" /> Course
-            </Link>
-            <h1 className="text-base sm:text-lg font-extrabold">Lesson 11: 4 Rules of Noon Sakinah & Tanween</h1>
-          </div>
-          <button
-            type="button"
-            onClick={() => setEnglishHints((p) => !p)}
-            className="px-3.5 py-2 rounded-xl border text-xs font-bold inline-flex items-center gap-1.5 bg-[#7C3AED]/15 border-[#7C3AED]/40 text-[#7C3AED]"
-          >
-            {englishHints ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-            <span>Hints: {englishHints ? "ON" : "OFF"}</span>
-          </button>
-        </div>
-      </header>
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl border bg-slate-100/80 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 w-fit">
+        <button
+          type="button"
+          onClick={() => setActiveTab("rules")}
+          className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold inline-flex items-center gap-2 ${
+            activeTab === "rules" ? "bg-[#0D9488] text-white shadow-md" : ""
+          }`}
+        >
+          <Layers className="w-4 h-4" />
+          <span>1. The 4 Color-Coded Tajweed Rules</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("quiz")}
+          className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold inline-flex items-center gap-2 ${
+            activeTab === "quiz" ? "bg-[#0D9488] text-white shadow-md" : ""
+          }`}
+        >
+          <HelpCircle className="w-4 h-4" />
+          <span>2. Mastery Quiz</span>
+        </button>
+      </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-8 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
-          {TAJWEED_4_RULES.map((c, i) => (
-            <article
-              key={i}
-              onClick={() => playSound(c.audioText, 0.72)}
-              className={`rounded-3xl border overflow-hidden cursor-pointer transition hover:-translate-y-1.5 ${darkMode ? "bg-[#111827] border-slate-800 shadow-xl" : "bg-white border-slate-200 shadow-lg"}`}
+      {activeTab === "rules" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {FOUR_TAJWEED_RULES.map((rule) => (
+            <div
+              key={rule.id}
+              className={`rounded-3xl border p-6 sm:p-7 space-y-5 ${
+                darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200 shadow-xs"
+              }`}
             >
-              <div className={`h-2.5 w-full bg-gradient-to-r ${c.color}`} />
-              <div className="p-7 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className={`text-sm font-extrabold ${c.accent}`}>{c.badge}</span>
-                  <Volume2 className={`w-5 h-5 ${c.accent}`} />
-                </div>
-                <div dir="rtl" className={`py-6 rounded-2xl border text-center text-4xl sm:text-5xl font-serif font-bold ${c.accent} border-slate-200 dark:border-slate-800`}>
-                  {c.sampleAr}
-                </div>
-                <p className="text-base font-extrabold">{c.rule}</p>
-                {englishHints && <p className="text-xs sm:text-sm leading-relaxed text-slate-500 dark:text-slate-300">{c.desc}</p>}
+              <div>
+                <h3 className="text-xl font-extrabold">{rule.name}</h3>
+                <p className="text-xs text-slate-500 mt-0.5">{rule.subtitle}</p>
               </div>
-            </article>
+
+              <div dir="rtl" className="p-3 rounded-2xl bg-teal-500/10 text-center font-serif font-bold text-lg text-teal-600 dark:text-teal-300">
+                Letters: {rule.letters}
+              </div>
+
+              <div className="space-y-3">
+                {rule.examples.map((ex, idx) => (
+                  <div key={idx} className="p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <AudioButton text={ex.arabic} />
+                      <span dir="rtl" style={{ fontSize: `${2 * fontSizeMultiplier}rem` }} className="font-serif font-bold">
+                        {ex.arabic}
+                      </span>
+                    </div>
+                    {!isTeacherMode && showTransliteration && (
+                      <p className="text-xs font-bold text-teal-600 dark:text-teal-400">
+                        {ex.translit} — <span className="font-normal text-slate-500">{ex.note}</span>
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
-      </main>
+      )}
+
+      {activeTab === "quiz" && (
+        <QuizEngine
+          questions={QUIZ_QUESTIONS}
+        />
+      )}
     </div>
   );
 }

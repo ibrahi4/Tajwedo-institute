@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Amiri, DM_Serif_Display } from "next/font/google";
 import {
   ArrowRight,
   BookOpen,
@@ -16,33 +15,10 @@ import {
   Volume2,
 } from "lucide-react";
 import { NOOR_AL_BAYAN_COURSE } from "@/lib/curriculum/noor-al-bayan";
-
-const dmSerif = DM_Serif_Display({ subsets: ["latin"], weight: ["400"], display: "swap" });
-const amiri = Amiri({ subsets: ["arabic", "latin"], weight: ["400", "700"], display: "swap", preload: false });
-
-/* ---------------------------- Design tokens ---------------------------- */
-
-const WRAP = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8";
-const INK = "text-[#0D4F4F] dark:text-white";
-const MUTED = "text-slate-600 dark:text-slate-400";
-const GOLD_TEXT = "text-[#A8832F] dark:text-[#E8C56A]";
-const CARD = "border border-stone-200 bg-white dark:border-white/10 dark:bg-[#111827]";
-const FOCUS =
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 dark:focus-visible:outline-teal-300";
-const BTN =
-  "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-6 text-base font-bold transition motion-reduce:transition-none";
-const BTN_PRIMARY = `${BTN} bg-[#0D4F4F] text-white shadow-lg shadow-[#0D4F4F]/20 hover:bg-[#093D33] dark:bg-teal-400 dark:text-slate-950 dark:shadow-none dark:hover:bg-teal-300 ${FOCUS}`;
-const BTN_SECONDARY = `${BTN} border border-[#0D4F4F]/25 bg-white/60 text-[#0D4F4F] hover:bg-white dark:border-white/20 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 ${FOCUS}`;
-const BTN_GOLD = `${BTN} bg-[#E8C56A] text-[#072B28] hover:bg-[#F0D184] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white`;
-const BTN_GHOST = `${BTN} border border-white/30 text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white`;
-
-const STAR_TILE =
-  "<svg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72' fill='none' stroke='#C8A96E' stroke-width='1' stroke-opacity='0.6'>" +
-  "<path d='M18 18h36v36H18zM36 10.5 61.5 36 36 61.5 10.5 36z'/>" +
-  "<path d='M36 0v10.5M36 61.5V72M0 36h10.5M61.5 36H72'/></svg>";
-const PATTERN_URL = `url("data:image/svg+xml,${encodeURIComponent(STAR_TILE)}")`;
-const PATTERN_MASK =
-  "[mask-image:radial-gradient(ellipse_at_top,black,transparent_72%)] [-webkit-mask-image:radial-gradient(ellipse_at_top,black,transparent_72%)]";
+import {
+  amiri, dmSerif, BTN_GHOST, BTN_GOLD, BTN_PRIMARY, BTN_SECONDARY, CARD, FOCUS, HeroShell, INK, MUTED,
+  Ornament, PATTERN_MASK, PATTERN_URL, WRAP,
+} from "@/lib/ui/brand";
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
@@ -233,26 +209,23 @@ export default function CurriculumHub({ locale = "en" }: { locale?: string }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
 
       <main id="main-content">
-        {/* ================================ HERO (unchanged) ================================ */}
-        <section aria-labelledby="hub-title" className="relative isolate overflow-hidden border-b border-stone-200 pt-28 dark:border-white/10 sm:pt-32">
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-            <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_85%_0%,rgba(200,169,110,0.24),transparent)] dark:bg-[radial-gradient(60%_55%_at_85%_0%,rgba(13,148,136,0.24),transparent)]" />
-            <div className={`absolute inset-0 opacity-40 dark:opacity-25 ${PATTERN_MASK}`} style={{ backgroundImage: PATTERN_URL }} />
-          </div>
-
-          <div className={`${WRAP} grid items-center gap-14 pb-16 lg:grid-cols-[1.05fr_0.95fr] lg:pb-20`}>
+        {/* ================================ HERO ================================ */}
+        <HeroShell labelledBy="hub-title" className="pt-28 sm:pt-32">
+          <div className={`${WRAP} grid items-center gap-14 pb-10 lg:grid-cols-[1.05fr_0.95fr]`}>
             <div>
-              <p className="inline-flex items-center gap-2 rounded-full border border-[#C8A96E]/50 bg-white/60 px-4 py-1.5 text-sm font-semibold text-[#0D4F4F] dark:bg-white/5 dark:text-[#E8C56A]">
-                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-[13px] font-semibold text-[#E6CF9F] backdrop-blur-sm">
+                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-emerald-400" />
                 {tx("Tajwedo Interactive Learning Studio", "استوديو تجويدو للتعلّم التفاعلي")}
-              </p>
+              </span>
 
-              <h1 id="hub-title" className={`mt-6 text-[2.5rem] sm:text-6xl ${headingCls} ${INK}`}>
-                {tx("Interactive Quran & Arabic ", "منهج تفاعلي لتعليم القرآن واللغة العربية ")}
-                <span className={GOLD_TEXT}>{tx("Curriculum for Kids", "للأطفال")}</span>
+              <h1 id="hub-title" className={`mt-6 text-[2.25rem] text-white [text-wrap:balance] sm:text-5xl lg:text-6xl ${headingCls}`}>
+                <span className="block">{tx("Interactive Quran & Arabic Curriculum", "منهج تفاعلي لتعليم القرآن واللغة العربية")}</span>
+                <span className="mt-1 block text-[#E3B45F]">{tx("for Kids", "للأطفال")}</span>
               </h1>
 
-              <p className={`mt-6 max-w-xl text-lg leading-relaxed ${MUTED}`}>
+              <Ornament className="my-5" />
+
+              <p className="max-w-xl text-lg leading-relaxed text-white/80">
                 {tx(
                   "Built for non-Arabic-speaking children (ages 7–14) to practice at home, and used live by our certified teachers in 1-on-1 Zoom classes.",
                   "مصمَّم للأطفال غير الناطقين بالعربية (من 7 إلى 14 سنة) ليتدرّبوا في البيت، ويستخدمه معلمونا المعتمدون مباشرةً في حصص Zoom الفردية."
@@ -260,19 +233,19 @@ export default function CurriculumHub({ locale = "en" }: { locale?: string }) {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href={flagship.href} className={BTN_PRIMARY}>
+                <Link href={flagship.href} className={BTN_GOLD}>
                   <span>{tx(`Start the free course (${total} lessons)`, `ابدأ الدورة المجانية (${total} درسًا)`)}</span>
                   <ArrowRight aria-hidden="true" className={ARROW} />
                 </Link>
-                <Link href={`${base}/book-trial`} className={BTN_SECONDARY}>
+                <Link href={`${base}/book-trial`} className={BTN_GHOST}>
                   {tx("Book a free 1-on-1 trial", "احجز حصة تجريبية فردية مجانية")}
                 </Link>
               </div>
 
-              <ul className={`mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold ${MUTED}`}>
+              <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-white/85">
                 {[tx("Ages 7–14", "من 7 إلى 14 سنة"), tx(`${total} free lessons`, `${total} درسًا مجانيًا`), tx("Certified teachers", "معلمون معتمدون")].map((item) => (
                   <li key={item} className="inline-flex items-center gap-2">
-                    <CheckCircle2 aria-hidden="true" className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                    <CheckCircle2 aria-hidden="true" className="h-4 w-4 text-[#E3B45F]" />
                     {item}
                   </li>
                 ))}
@@ -280,15 +253,15 @@ export default function CurriculumHub({ locale = "en" }: { locale?: string }) {
             </div>
 
             <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:justify-self-end">
-              <div aria-hidden="true" className="absolute inset-0 translate-x-3 translate-y-3 rounded-3xl border border-[#C8A96E]/50 rtl:-translate-x-3" />
-              <div className={`relative rounded-3xl p-5 shadow-[0_24px_60px_-24px_rgba(13,79,79,0.35)] sm:p-6 ${CARD}`}>
+              <div aria-hidden="true" className="absolute inset-0 translate-x-3 translate-y-3 rounded-3xl border border-[#C8A96E]/40 rtl:-translate-x-3" />
+              <div className="relative rounded-3xl border border-white/15 bg-white/[0.07] p-5 shadow-2xl backdrop-blur-sm sm:p-6">
                 <div aria-hidden="true">
                   <div className="flex items-center justify-between text-sm font-semibold">
-                    <span className={INK}>{tx("Lesson 1 · Short Vowels", "الدرس 1 · الحركات القصيرة")}</span>
-                    <span className={MUTED}>{tx(`1 of ${total}`, `1 من ${total}`)}</span>
+                    <span className="text-white">{tx("Lesson 1 · Short Vowels", "الدرس 1 · الحركات القصيرة")}</span>
+                    <span className="text-white/60">{tx(`1 of ${total}`, `1 من ${total}`)}</span>
                   </div>
-                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-stone-200 dark:bg-white/10">
-                    <div className="h-full w-[8%] rounded-full bg-[#0D9488]" />
+                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+                    <div className="h-full w-[8%] rounded-full bg-[#C8A96E]" />
                   </div>
                   <div dir="rtl" lang="ar" className="mt-6 grid grid-cols-3 gap-3">
                     {[
@@ -299,14 +272,12 @@ export default function CurriculumHub({ locale = "en" }: { locale?: string }) {
                       <div
                         key={tile.rom}
                         className={`relative flex aspect-[4/5] flex-col items-center justify-center rounded-2xl border ${
-                          tile.active
-                            ? "border-transparent bg-[#0D4F4F] text-white dark:bg-teal-400 dark:text-slate-950"
-                            : "border-stone-200 bg-stone-50 text-[#0D4F4F] dark:border-white/10 dark:bg-white/5 dark:text-white"
+                          tile.active ? "border-transparent bg-[#C8A96E] text-[#06302f]" : "border-white/15 bg-white/5 text-white"
                         }`}
                       >
                         {tile.active && (
                           <>
-                            <span className="absolute inset-0 rounded-2xl ring-2 ring-[#E8C56A]/70 motion-safe:animate-pulse" />
+                            <span className="absolute inset-0 rounded-2xl ring-2 ring-[#E3B45F]/70 motion-safe:animate-pulse" />
                             <Volume2 className="absolute end-2 top-2 h-4 w-4 opacity-80" />
                           </>
                         )}
@@ -315,16 +286,16 @@ export default function CurriculumHub({ locale = "en" }: { locale?: string }) {
                       </div>
                     ))}
                   </div>
-                  <div className="mt-5 flex items-center gap-1 text-[#C8A96E]">
+                  <div className="mt-5 flex items-center gap-1 text-[#E3B45F]">
                     <Star className="h-5 w-5 fill-current" />
                     <Star className="h-5 w-5 fill-current" />
-                    <Star className="h-5 w-5 text-stone-300 dark:text-white/20" />
-                    <span className={`ms-2 text-sm font-semibold ${MUTED}`}>{tx("Earn stars & badges", "اكسب النجوم والشارات")}</span>
+                    <Star className="h-5 w-5 text-white/20" />
+                    <span className="ms-2 text-sm font-semibold text-white/70">{tx("Earn stars & badges", "اكسب النجوم والشارات")}</span>
                   </div>
                 </div>
                 <Link
                   href={firstLessonHref}
-                  className={`mt-5 flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#0D4F4F]/20 text-sm font-bold ${INK} transition hover:bg-[#0D4F4F]/5 dark:border-white/15 dark:hover:bg-white/5 ${FOCUS}`}
+                  className="mt-5 flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/20 text-sm font-bold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   <span>{tx("Try this lesson free", "جرّب هذا الدرس مجانًا")}</span>
                   <ArrowRight aria-hidden="true" className={ARROW} />
@@ -333,15 +304,15 @@ export default function CurriculumHub({ locale = "en" }: { locale?: string }) {
             </div>
           </div>
 
-          <dl className={`${WRAP} grid grid-cols-2 gap-x-6 gap-y-8 pb-14 lg:grid-cols-4 lg:gap-x-10`}>
+          <dl className={`${WRAP} grid grid-cols-2 gap-x-6 gap-y-8 pb-20 lg:grid-cols-4 lg:gap-x-10`}>
             {stats.map((s) => (
-              <div key={s.l} className="flex flex-col-reverse gap-1 border-t border-[#C8A96E]/50 pt-4">
-                <dt className={`text-sm font-medium leading-snug ${MUTED}`}>{s.l}</dt>
-                <dd className={`text-4xl ${display} ${isAr ? "font-bold" : "font-normal"} ${INK}`}>{s.v}</dd>
+              <div key={s.l} className="flex flex-col-reverse gap-1 border-t border-[#C8A96E]/40 pt-4">
+                <dt className="text-sm font-medium leading-snug text-white/70">{s.l}</dt>
+                <dd className={`text-4xl text-[#E3B45F] ${display} ${isAr ? "font-bold" : "font-normal"}`}>{s.v}</dd>
               </div>
             ))}
           </dl>
-        </section>
+        </HeroShell>
 
         {/* ================================ COURSES ================================ */}
         <section id="courses" aria-labelledby="courses-title" className={`${WRAP} scroll-mt-24 py-20 sm:py-28`}>
@@ -479,7 +450,7 @@ export default function CurriculumHub({ locale = "en" }: { locale?: string }) {
               <details key={f.q} className="group py-5">
                 <summary className={`flex cursor-pointer list-none items-center justify-between gap-4 rounded-lg text-start text-lg font-bold ${INK} [&::-webkit-details-marker]:hidden ${FOCUS}`}>
                   {f.q}
-                  <Plus aria-hidden="true" className="h-5 w-5 shrink-0 text-[#A8832F] transition-transform group-open:rotate-45 motion-reduce:transition-none dark:text-[#E8C56A]" />
+                  <Plus aria-hidden="true" className="h-5 w-5 shrink-0 text-[#A8832F] transition-transform group-open:rotate-45 motion-reduce:transition-none dark:text-[#E3B45F]" />
                 </summary>
                 <p className={`mt-3 max-w-2xl text-base leading-relaxed ${MUTED}`}>{f.a}</p>
               </details>
@@ -488,7 +459,7 @@ export default function CurriculumHub({ locale = "en" }: { locale?: string }) {
         </section>
 
         {/* =============================== FINAL CTA =============================== */}
-        <section aria-labelledby="cta-title" className="relative isolate overflow-hidden bg-[#0D4F4F] text-white dark:bg-[#0A3333]">
+        <section aria-labelledby="cta-title" className="relative isolate overflow-hidden bg-[#06302f] text-white">
           <div aria-hidden="true" className={`pointer-events-none absolute inset-0 -z-10 opacity-25 ${PATTERN_MASK}`} style={{ backgroundImage: PATTERN_URL }} />
           <div className={`${WRAP} grid gap-12 py-20 sm:py-24 lg:grid-cols-[1.1fr_0.9fr] lg:items-center`}>
             <div>
@@ -509,7 +480,7 @@ export default function CurriculumHub({ locale = "en" }: { locale?: string }) {
             <ol className="space-y-5">
               {steps.map((s, i) => (
                 <li key={s.t} className="flex items-start gap-4">
-                  <span aria-hidden="true" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E8C56A] text-base font-bold text-[#072B28]">{i + 1}</span>
+                  <span aria-hidden="true" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#C8A96E] text-base font-bold text-[#06302f]">{i + 1}</span>
                   <div>
                     <h3 className="text-lg font-bold">{s.t}</h3>
                     <p className="mt-0.5 text-[15px] leading-relaxed text-teal-100">{s.d}</p>

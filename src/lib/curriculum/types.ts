@@ -8,6 +8,7 @@ export type LessonComponentKey =
   | "LamLesson"
   | "TaaMarbutaLesson"
   | "MaddLeenLesson"
+  | "ReadingPracticeLesson"
   | "HamzatulWaslLesson"
   | "TanweenNoonRulesLesson"
   | "QuranicMasteryLesson";

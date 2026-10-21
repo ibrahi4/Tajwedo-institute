@@ -331,12 +331,92 @@ export const NOOR_AL_BAYAN_LESSONS: CurriculumLesson[] = [
       keywords: ["Noon Sakinah and Tanween rules", "Izhar Idgham Iqlab Ikhfa for kids", "Tajweed rules interactive"],
     },
   },
+
+
+
   {
-    id: "lesson-12-quranic-mastery",
+    id: "lesson-12-reading-practice",
     number: 12,
     order: 12,
+    slug: "reading-practice-fluency",
+    aliases: ["reading-practice", "fluency", "word-to-line", "lesson-12-practice"],
+    componentKey: "ReadingPracticeLesson",
+    isPublished: true,
+    isFree: true,
+    duration: "30 mins",
+    estimatedMinutes: 30,
+    difficulty: "Intermediate",
+    arabicBadge: "كَلِمَة • عِبَارَة • سَطْر",
+    iconName: "Compass",
+    accentColor: "#0D9488",
+    coverImage: "/Tajwedo-Public-Assets/curriculum-Imag/Kids Program.webp",
+    title: "Reading Practice: From Words to Fluent Lines",
+    titleAr: "التَّدْرِيبُ عَلَى القِرَاءَةِ: مِنَ الكَلِمَةِ إِلَى السَّطْر",
+    subtitle: "Graded Word, Phrase & Line Drills That Combine Every Rule You Have Learned",
+    subtitleAr: "تدريبات متدرجة على الكلمات والعبارات والأسطر تجمع كل ما تعلمته من أحكام",
+    description: "Turn knowledge into fluency. Practice reading vocalized words, then short phrases, then full lines that mix Harakat, Sukun, Tanween, Madd, Shaddah, and Lam rules, with instant audio feedback.",
+    descriptionAr: "حوّل ما تعلمته إلى طلاقة في القراءة: تدريبات متدرجة تبدأ بالكلمة ثم العبارة ثم السطر الكامل، وتجمع الحركات والسكون والتنوين والمدود والشدة واللام.",
+    objectives: [
+      "Read vocalized words, phrases, and full lines smoothly from right to left",
+      "Apply Harakat, Sukun, Madd, Shaddah, and Lam rules together without stopping to decode",
+      "Build reading speed and accuracy with graded practice sets",
+    ],
+    objectivesAr: [
+      "قراءة الكلمات والعبارات والأسطر المشكولة بطلاقة من اليمين إلى اليسار",
+      "تطبيق أحكام الحركات والسكون والمدود والشدة واللام معًا دون توقف للتهجي",
+      "رفع سرعة القراءة ودقتها بتدريبات متدرجة",
+    ],
+    seo: {
+      metaTitle: "Arabic Reading Practice for Kids: Words to Fluent Lines | Noor Al-Bayan Lesson 12",
+      metaDescription: "Graded Arabic reading practice for children: vocalized words, phrases, and full lines combining every Noor Al-Bayan rule, with interactive audio.",
+      keywords: ["Arabic reading practice for kids", "Read Arabic fluently", "Quran reading drills", "Noor Al-Bayan practice"],
+    },
+  },
+  {
+    id: "lesson-13-short-surahs",
+    number: 13,
+    order: 13,
+    slug: "short-surahs-juz-amma",
+    aliases: ["short-surahs", "juz-amma", "surahs", "lesson-13"],
+    componentKey: "shortSurahsLesson",
+    isPublished: true,
+    isFree: true,
+    duration: "35 mins",
+    estimatedMinutes: 35,
+    difficulty: "Intermediate",
+    arabicBadge: "الفَاتِحَة • الإِخْلَاص",
+    iconName: "Sparkles",
+    accentColor: "#7C3AED",
+    coverImage: "/Tajwedo-Public-Assets/curriculum-Imag/Quran Recitation.webp",
+    title: "Reciting Short Surahs (Juz Amma)",
+    titleAr: "تِلَاوَةُ السُّوَرِ القَصِيرَةِ مِنْ جُزْءِ عَمَّ",
+    subtitle: "Word-by-Word Practice on Al-Fatihah and Short Surahs of Juz Amma",
+    subtitleAr: "تطبيق عملي كلمةً كلمةً على الفاتحة وقصار السور من جزء عمّ",
+    description: "Apply what you learned to real Quranic text. Read short surahs word by word, spot each rule in the Mushaf, and recite with correct timing and clear articulation.",
+    descriptionAr: "طبّق ما تعلمته على النص القرآني: اقرأ قصار السور كلمةً كلمةً، وتعرّف على كل حكم في المصحف، وتلُ بزمن صحيح ونطق واضح.",
+    objectives: [
+      "Read short surahs word by word with correct Harakat and Madd timing",
+      "Spot Sukun, Shaddah, Tanween, and Lam rules directly in the Mushaf",
+      "Recite a full short surah smoothly and confidently",
+    ],
+    objectivesAr: [
+      "قراءة قصار السور كلمةً كلمةً بضبط الحركات وزمن المد",
+      "تمييز السكون والشدة والتنوين واللام في المصحف مباشرة",
+      "تلاوة سورة قصيرة كاملة بسلاسة وثقة",
+    ],
+    seo: {
+      metaTitle: "Short Surahs of Juz Amma for Kids: Word-by-Word Recitation | Noor Al-Bayan Lesson 13",
+      metaDescription: "Learn to recite Al-Fatihah and short surahs of Juz Amma word by word with interactive audio and visual Tajweed cues, made for children.",
+      keywords: ["Short surahs for kids", "Juz Amma for beginners", "Learn to recite Quran word by word", "Noor Al-Bayan surahs"],
+    },
+  },
+
+  {
+    id: "lesson-14-quranic-mastery",
+    number: 14,
+    order: 14,
     slug: "quranic-recitation-mastery",
-    aliases: ["quran-reading", "stopping-rules", "waqf", "final-lesson", "lesson-12"],
+    aliases: ["quran-reading", "stopping-rules", "waqf", "final-lesson", "lesson-14"],
     componentKey: "QuranicMasteryLesson",
     isPublished: true,
     isFree: true,
@@ -363,29 +443,32 @@ export const NOOR_AL_BAYAN_LESSONS: CurriculumLesson[] = [
   },
 ];
 
+const TOTAL_LESSONS = NOOR_AL_BAYAN_LESSONS.length;
+const TOTAL_MINUTES = NOOR_AL_BAYAN_LESSONS.reduce((sum, l) => sum + l.estimatedMinutes, 0);
+const toArabicDigits = (n: number) => String(n).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[Number(d)]);
+ 
 export const NOOR_AL_BAYAN_COURSE: CurriculumCourse = {
   titleEn: "Noor Al-Bayan: Learn to Read Quran",
-  taglineEn: "12 Interactive Visual Lessons from Arabic Letters to Full Quranic Recitation",
-  taglineAr: "١٢ درساً بصرياً تفاعلياً من الحروف والحركات حتى إتقان التلاوة القرآنية",
-  descriptionEn: "A structured, visual, and interactive 12-lesson Arabic reading curriculum crafted for non-Arabic speaking children (ages 7–14) and live Zoom teachers at Tajwedo Institute.",
-  totalMinutes: 325,
+  taglineEn: `${TOTAL_LESSONS} Interactive Visual Lessons from Arabic Letters to Full Quranic Recitation`,
+  taglineAr: `${toArabicDigits(TOTAL_LESSONS)} درساً بصرياً تفاعلياً من الحروف والحركات حتى إتقان التلاوة القرآنية`,
+  descriptionEn: `A structured, visual, and interactive ${TOTAL_LESSONS}-lesson Arabic reading curriculum crafted for non-Arabic speaking children (ages 7–14) and live Zoom teachers at Tajwedo Institute.`,
+  totalMinutes: TOTAL_MINUTES,
   available: true,
   level: "Beginner to Intermediate",
   id: "noor-al-bayan",
   slug: "noor-al-bayan",
   title: "Noor Al-Bayan: Learn to Read Quran",
   titleAr: "مَنْهَجُ نُورِ البَيَانِ لِتَعْلِيمِ قِرَاءَةِ القُرْآن",
-  subtitle: "12 Interactive Visual Lessons from Arabic Letters to Full Quranic Recitation",
-  subtitleAr: "١٢ درساً بصرياً تفاعلياً من الحروف والحركات حتى إتقان التلاوة القرآنية",
-  description: "A structured, visual, and interactive 12-lesson Arabic reading curriculum crafted for non-Arabic speaking children (ages 7–14) and live Zoom teachers at Tajwedo Institute.",
-  descriptionAr: "منهج تفاعلي مصوّر مكون من ١٢ درساً متدرجاً لتعليم القراءة العربية وتلاوة القرآن الكريم للأطفال الناطقين بغير العربية ولمعلمي الحلقات المباشرة.",
+  subtitle: `${TOTAL_LESSONS} Interactive Visual Lessons from Arabic Letters to Full Quranic Recitation`,
+  subtitleAr: `${toArabicDigits(TOTAL_LESSONS)} درساً بصرياً تفاعلياً من الحروف والحركات حتى إتقان التلاوة القرآنية`,
+  description: `A structured, visual, and interactive ${TOTAL_LESSONS}-lesson Arabic reading curriculum crafted for non-Arabic speaking children (ages 7–14) and live Zoom teachers at Tajwedo Institute.`,
+  descriptionAr: `منهج تفاعلي مصوّر مكون من ${toArabicDigits(TOTAL_LESSONS)} درساً متدرجاً لتعليم القراءة العربية وتلاوة القرآن الكريم للأطفال الناطقين بغير العربية ولمعلمي الحلقات المباشرة.`,
   ageRange: "Ages 7–14",
-  totalLessons: 12,
+  totalLessons: TOTAL_LESSONS,
   isPublished: true,
   badgeText: "FREE INTERACTIVE CURRICULUM",
   lessons: NOOR_AL_BAYAN_LESSONS,
 };
-
 // EXPORT ALL REQUIRED ALIASES FOR COMPATIBILITY
 export const NOOR_AL_BAYAN = NOOR_AL_BAYAN_COURSE;
 

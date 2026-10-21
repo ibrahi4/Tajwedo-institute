@@ -1,109 +1,284 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { Home, BookOpen, Volume2, Eye, EyeOff } from "lucide-react";
 import { useLesson } from "../shared/LessonContext";
+import AudioButton from "../shared/AudioButton";
+import QuizEngine, { QuizQuestion } from "../shared/QuizEngine";
+import { Sparkles, Play, PauseCircle, Layers, HelpCircle, CheckCircle2 } from "lucide-react";
 
-const playSound = (text: string, rate = 0.72) => {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-  try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ar-SA";
-    utterance.rate = rate;
-    window.speechSynthesis.speak(utterance);
-  } catch {}
-};
+interface TaaWordItem {
+  wordContinuing: string;
+  wordStopping: string;
+  kind: "marbuta" | "maftuha" | "haa";
+  translitContinue: string;
+  translitStop: string;
+  meaning: string;
+  note: string;
+}
 
-const TAA_CARDS = [
+const TAA_WORDS: TaaWordItem[] = [
   {
-    badge: "Taa Marbuta (ة / ـة)",
-    titleAr: "التَّاءُ المَرْبُوطَة",
-    sampleAr: "شَجَرَةٌ ⬅ شَجَرَهْ",
-    rule: "'T' when continuing • 'H' when stopping!",
-    desc: "Taa Marbuta is the chameleon letter! When vocalized (شَجَرَةٌ), it sounds like 't' (shajaratun). When you stop on it at the end of a breath, it turns into a soft 'h' sound (shajarah)!",
-    imageUrl: "/Tajwedo-Public-Assets/Services/Kids Program.webp",
-    color: "from-[#00A86B] to-[#10B981]",
-    accent: "text-[#00A86B]",
+    wordContinuing: "جَنَّةٌ",
+    wordStopping: "جَنَّهْ",
+    kind: "marbuta",
+    translitContinue: "Jannatun (T sound when continuing)",
+    translitStop: "Jannah (Soft H sound when stopping!)",
+    meaning: "A Garden / Paradise",
+    note: "Taa Marbuta (ة / ـة) transforms into a soft Haa Sakinah (هْ) whenever you pause at the end of a verse."
   },
   {
-    badge: "Taa Maftooha (ت)",
-    titleAr: "التَّاءُ المَفْتُوحَة",
-    sampleAr: "بَيْتٌ ⬅ بَيْتْ",
-    rule: "Always 'T' when continuing AND stopping!",
-    desc: "Open Taa (ت) never changes its identity. Whether you read it with a vowel (baytun) or stop on it with Sukun (bayt), it always makes a crisp 't' sound!",
-    imageUrl: "/Tajwedo-Public-Assets/curriculum-Imag/Kids Program.webp",
-    color: "from-[#FF5A1F] to-[#F59E0B]",
-    accent: "text-[#FF5A1F]",
+    wordContinuing: "رَحْمَةٌ",
+    wordStopping: "رَحْمَهْ",
+    kind: "marbuta",
+    translitContinue: "Rahmatun",
+    translitStop: "Rahmah",
+    meaning: "Mercy",
+    note: "Two dots on top = T when connected, H when paused."
   },
   {
-    badge: "Haa Marbuta (ه / ـه)",
-    titleAr: "الهَاءُ المَرْبُوطَة",
-    sampleAr: "وَجْهٌ ⬅ وَجْهْ",
-    rule: "No dots! Always 'H' in every situation!",
-    desc: "Final Haa (ـه) has NO dots on top, and it sounds like 'h' both when continuing (wajhun) and when stopping (wajh)!",
-    imageUrl: "/Tajwedo-Public-Assets/Services/Islamic Studies.webp",
-    color: "from-[#7C3AED] to-[#A855F7]",
-    accent: "text-[#7C3AED]",
+    wordContinuing: "ٱلصَّلَوٰةَ",
+    wordStopping: "ٱلصَّلَوٰهْ",
+    kind: "marbuta",
+    translitContinue: "As-Salaata",
+    translitStop: "As-Salaah",
+    meaning: "The Prayer",
+    note: "Pause on Taa Marbuta with a gentle breath of Haa (هْ)."
   },
+  {
+    wordContinuing: "بَيْتٌ",
+    wordStopping: "بَيْتْ",
+    kind: "maftuha",
+    translitContinue: "Baytun",
+    translitStop: "Bayt (Remains T even when stopping!)",
+    meaning: "A House",
+    note: "Open Taa (ت) NEVER turns into H! It stays a crisp T whether you continue or stop."
+  },
+  {
+    wordContinuing: "بِنْتٌ",
+    wordStopping: "بِنْتْ",
+    kind: "maftuha",
+    translitContinue: "Bintun",
+    translitStop: "Bint",
+    meaning: "A Daughter / Girl",
+    note: "Notice the gentle Hams (breath release) on Open Taa when stopping."
+  },
+  {
+    wordContinuing: "وَجْهُهُ",
+    wordStopping: "وَجْهُهْ",
+    kind: "haa",
+    translitContinue: "Wajhuhu (Always H, no dots)",
+    translitStop: "Wajhuh (Always H)",
+    meaning: "His Face",
+    note: "Haa (ه / ـه) has ZERO dots and is pronounced H both when continuing and when stopping."
+  }
+];
+
+const QUIZ_QUESTIONS: QuizQuestion[] = [
+  {
+    id: "t1",
+    prompt: "How do you pronounce (جَنَّةٌ) when you STOP at the end of a verse?",
+    options: [
+      "Jannah (with a soft H sound)",
+      "Jannat (with a T sound)",
+      "Jannatun",
+      "Janna"
+    ],
+    correctIndex: 0,
+    explanation: "When stopping on Taa Marbuta (ة), its vowel and T sound turn into a soft, unvoweled Haa (هْ): Jannah."
+  },
+  {
+    id: "t2",
+    prompt: "What happens when you stop on an Open Taa (ت) like in (بَيْتٌ)?",
+    options: [
+      "It turns into H (Bayh)",
+      "It stays a clear T sound with Sukun (Bayt)",
+      "It becomes silent",
+      "It stretches for 2 beats"
+    ],
+    correctIndex: 1,
+    explanation: "Open Taa (التاء المفتوحة) never changes into Haa; it remains a T sound both in continuation and stopping."
+  },
+  {
+    id: "t3",
+    prompt: "How do you tell the difference between Taa Marbuta (ـة) and Haa (ـه)?",
+    options: [
+      "Taa Marbuta has 2 dots above it; Haa has no dots",
+      "They are identical",
+      "Haa has 3 dots",
+      "Taa Marbuta only comes at the beginning of a word"
+    ],
+    correctIndex: 0,
+    explanation: "Taa Marbuta always carries two dots on top (ة / ـة), whereas final Haa (ه / ـه) has no dots at all."
+  }
 ];
 
 export default function TaaMarbutaLesson() {
   const lessonCtx = useLesson();
   const darkMode = lessonCtx?.darkMode ?? false;
-  const [englishHints, setEnglishHints] = useState<boolean>(true);
+  const showTransliteration = lessonCtx?.showTransliteration ?? true;
+  const showEnglishMeaning = lessonCtx?.showEnglishMeaning ?? true;
+  const isTeacherMode = lessonCtx?.isTeacherMode ?? false;
+  const fontSizeMultiplier = lessonCtx?.fontSizeMultiplier ?? 1.1;
+
+  const [activeTab, setActiveTab] = useState<"simulator" | "compare" | "quiz">("simulator");
+  const [stopMode, setStopMode] = useState<boolean>(false);
 
   return (
-    <div className={`min-h-screen w-full transition-colors duration-300 font-sans ${darkMode ? "bg-[#0B0F19] text-slate-100" : "bg-[#F8FAFC] text-slate-900"}`}>
-      <header className={`sticky top-20 z-30 w-full border-b backdrop-blur-xl ${darkMode ? "bg-[#0B0F19]/90 border-slate-800" : "bg-white/90 border-slate-200"}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/en/curriculum/noor-al-bayan" className="p-2.5 rounded-xl border text-xs font-bold flex items-center gap-1.5">
-              <Home className="w-4 h-4 text-[#0D9488]" /> Course
-            </Link>
-            <h1 className="text-base sm:text-lg font-extrabold">Taa Marbuta, Open Taa & Haa (ة • ت • هـ)</h1>
-          </div>
-          <button
-            type="button"
-            onClick={() => setEnglishHints((p) => !p)}
-            className="px-3.5 py-2 rounded-xl border text-xs font-bold inline-flex items-center gap-1.5 bg-[#00A86B]/15 border-[#00A86B]/40 text-[#00A86B]"
-          >
-            {englishHints ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-            <span>Hints: {englishHints ? "ON" : "OFF"}</span>
-          </button>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
-          {TAA_CARDS.map((c, i) => (
-            <article
-              key={i}
-              onClick={() => playSound(c.sampleAr, 0.72)}
-              className={`rounded-3xl border overflow-hidden cursor-pointer transition hover:-translate-y-1.5 ${darkMode ? "bg-[#111827] border-slate-800 shadow-xl" : "bg-white border-slate-200 shadow-lg"}`}
+    <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Studio Tabs */}
+      <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl border bg-slate-100/80 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 w-fit">
+        {[
+          { id: "simulator", label: "1. Live Stop vs. Continue Simulator", icon: Play },
+          { id: "compare", label: "2. ة vs. ت vs. ه Comparison", icon: Layers },
+          { id: "quiz", label: "3. Mastery Quiz", icon: HelpCircle },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id as typeof activeTab)}
+              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold inline-flex items-center gap-2 transition ${
+                activeTab === tab.id
+                  ? "bg-[#0D9488] text-white shadow-md"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-800"
+              }`}
             >
-              <div className={`h-2.5 w-full bg-gradient-to-r ${c.color}`} />
-              <div className="relative h-40 overflow-hidden">
-                <img src={c.imageUrl} alt={c.badge} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent" />
-                <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                  <span className="text-xs font-extrabold px-3 py-1 rounded-full bg-black/50 backdrop-blur-md">{c.badge}</span>
-                  <Volume2 className="w-5 h-5" />
+              <Icon className="w-4 h-4" />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* TAB 1: INTERACTIVE WAQF (STOP) VS WASL (CONTINUE) SIMULATOR */}
+      {activeTab === "simulator" && (
+        <div className="space-y-6">
+          <div className={`rounded-3xl border p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200 shadow-xs"}`}>
+            <div className="space-y-1">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-teal-600 dark:text-teal-400">
+                Interactive Chameleon Letter Lab
+              </span>
+              <h3 className="text-xl font-extrabold">
+                Toggle between Continuing (وَصْل) and Stopping (وَقْف)
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500">
+                Watch how Taa Marbuta (ة) transforms into Haa (هْ) when stopping, while Open Taa (ت) stays T!
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl shrink-0">
+              <button
+                type="button"
+                onClick={() => setStopMode(false)}
+                className={`px-4 py-2.5 rounded-xl text-xs font-extrabold transition ${
+                  !stopMode ? "bg-emerald-600 text-white shadow-xs" : "text-slate-600 dark:text-slate-300"
+                }`}
+              >
+                ▶ Continue Reading (Wasl)
+              </button>
+              <button
+                type="button"
+                onClick={() => setStopMode(true)}
+                className={`px-4 py-2.5 rounded-xl text-xs font-extrabold transition ${
+                  stopMode ? "bg-amber-600 text-white shadow-xs" : "text-slate-600 dark:text-slate-300"
+                }`}
+              >
+                ⏸ Stop at Verse End (Waqf)
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {TAA_WORDS.map((item, idx) => {
+              const displayedArabic = stopMode ? item.wordStopping : item.wordContinuing;
+              const displayedTranslit = stopMode ? item.translitStop : item.translitContinue;
+              return (
+                <div
+                  key={idx}
+                  className={`rounded-3xl border p-6 space-y-4 transition ${
+                    darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200 shadow-xs"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-teal-500/15 text-teal-600 dark:text-teal-400">
+                      {item.kind === "marbuta" ? "Taa Marbuta (ة)" : item.kind === "maftuha" ? "Open Taa (ت)" : "Pure Haa (ه)"}
+                    </span>
+                    <AudioButton text={displayedArabic} />
+                  </div>
+
+                  <div dir="rtl" className="text-center py-5 rounded-2xl bg-slate-500/5">
+                    <p style={{ fontSize: `${2.5 * fontSizeMultiplier}rem` }} className="font-serif font-bold">
+                      {displayedArabic}
+                    </p>
+                  </div>
+
+                  {!isTeacherMode && (
+                    <div className="space-y-1 text-xs">
+                      {showTransliteration && (
+                        <p className="font-extrabold text-teal-600 dark:text-teal-400">{displayedTranslit}</p>
+                      )}
+                      {showEnglishMeaning && (
+                        <p className="text-slate-500 leading-relaxed">{item.meaning} — {item.note}</p>
+                      )}
+                    </div>
+                  )}
                 </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: 3-COLUMN COMPARISON */}
+      {activeTab === "compare" && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              badge: "ة / ـة",
+              title: "Taa Marbuta (التاء المربوطة)",
+              continueSound: "Pronounced T (ت) with its vowel",
+              stopSound: "Transforms into soft H (هْ)",
+              example: "رَحْمَةٌ ⬅ رَحْمَهْ"
+            },
+            {
+              badge: "ت / ـت",
+              title: "Open Taa (التاء المفتوحة)",
+              continueSound: "Pronounced T (ت) with its vowel",
+              stopSound: "Stays crisp T with breath (تْ)",
+              example: "بَيْتٌ ⬅ بَيْتْ"
+            },
+            {
+              badge: "ه / ـه",
+              title: "Final Haa (الهاء المربوطة)",
+              continueSound: "Pronounced H (ه) — zero dots",
+              stopSound: "Stays soft H (هْ)",
+              example: "كِتَابُهُ ⬅ كِتَابُهْ"
+            }
+          ].map((col, i) => (
+            <div key={i} className={`rounded-3xl border p-6 space-y-4 ${darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"}`}>
+              <div dir="rtl" className="text-3xl font-serif font-bold text-teal-600 dark:text-teal-400">
+                {col.badge}
               </div>
-              <div className="p-6 space-y-4">
-                <h2 dir="rtl" className={`text-2xl font-serif font-bold ${c.accent}`}>{c.titleAr}</h2>
-                <div dir="rtl" className={`py-4 rounded-2xl border text-center text-4xl font-serif font-bold ${c.accent} border-slate-200 dark:border-slate-800`}>
-                  {c.sampleAr}
-                </div>
-                <p className={`text-sm font-extrabold ${c.accent}`}>{c.rule}</p>
-                {englishHints && <p className="text-xs sm:text-sm leading-relaxed text-slate-500 dark:text-slate-300">{c.desc}</p>}
+              <h3 className="text-lg font-extrabold">{col.title}</h3>
+              <div className="space-y-2 text-xs sm:text-sm">
+                <p><strong>When Continuing:</strong> {col.continueSound}</p>
+                <p><strong>When Stopping:</strong> {col.stopSound}</p>
               </div>
-            </article>
+              <div dir="rtl" className="p-3 rounded-xl bg-teal-500/10 text-center font-serif font-bold text-xl">
+                {col.example}
+              </div>
+            </div>
           ))}
         </div>
-      </main>
+      )}
+
+      {/* TAB 3: QUIZ */}
+      {activeTab === "quiz" && (
+        <QuizEngine
+          questions={QUIZ_QUESTIONS}
+        />
+      )}
     </div>
   );
 }

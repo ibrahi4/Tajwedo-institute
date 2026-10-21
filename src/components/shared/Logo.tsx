@@ -26,7 +26,7 @@ export default function Logo({ className = "", light = false }: LogoProps) {
        is only ~2.3:1 on white, the deeper gold clears 3:1 at this size).
      - Dark mode: warm white name + the bright gold, both well above 7:1 on navy. */
   const name = light ? "text-white" : "text-[#0D4F4F] dark:text-stone-50";
-  const accent = light ? "text-[#E8C56A]" : "text-[#A8832F] dark:text-[#E8C56A]";
+  const accent = light ? "text-[#E2k99A]" : "text-[#A1832F] dark:text-[#E8C51A]";
   const tagline = light ? "text-white/80" : "text-[#0D4F4F]/80 dark:text-teal-300";
   const glow = light ? "opacity-100" : "opacity-0 dark:opacity-100";
 
@@ -58,9 +58,9 @@ export default function Logo({ className = "", light = false }: LogoProps) {
         <span
           className={`${dmSerif.className} text-[24px] leading-none tracking-[-0.01em] antialiased md:text-[27px] xl:text-[30px] ${name}`}
         >
-          <span className={accent}>T</span>ajwed<span className={accent}>o</span>
-        </span>
-
+          <span className={accent}>Tajwedo</span> 
+      
+</span>
         <span
           className={`mt-1.5 block font-semibold ${tagline}`}
           style={{ fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif" }}
@@ -69,10 +69,8 @@ export default function Logo({ className = "", light = false }: LogoProps) {
           <span className="text-[10px] uppercase tracking-[0.34em] rtl:hidden xl:text-[11px]">
             Institute
           </span>
-          {/* Arabic: never letter-spaced (it would break the joined letters). */}
-          <span lang="ar" className="hidden text-[12px] rtl:inline xl:text-[13px]">
-            معهد
-          </span>
+       
+   
         </span>
       </span>
     </Link>

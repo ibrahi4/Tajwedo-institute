@@ -549,7 +549,7 @@ export default function SukunLesson() {
           UNIFIED SINGLE STUDIO DOCK (CONSISTENT ACROSS ALL 12 LESSONS)
          =================================================================== */}
       <div
-        className={`sticky top-20 z-30 w-full border-b backdrop-blur-xl transition-all ${
+        className={`relative md:sticky md:top-20 z-30 w-full border-b backdrop-blur-xl transition-all ${
           darkMode
             ? "bg-[#0B0F19]/90 border-slate-800/80 shadow-lg shadow-black/20"
             : "bg-white/90 border-slate-200/80 shadow-xs"
