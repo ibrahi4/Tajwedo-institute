@@ -41,7 +41,6 @@ const CARD = "border border-stone-200 bg-white dark:border-white/10 dark:bg-[#11
 const MUTED = "text-slate-600 dark:text-slate-300";
 const BTN_PRIMARY = `inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#0D4F4F] px-5 text-sm font-bold text-white hover:bg-[#093D33] dark:bg-teal-400 dark:text-slate-950 dark:hover:bg-teal-300 ${FOCUS}`;
 const BTN_OUTLINE = `inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#0D4F4F]/30 px-5 text-sm font-bold text-[#0D4F4F] hover:bg-[#0D4F4F]/5 dark:border-white/20 dark:text-teal-200 dark:hover:bg-white/5 ${FOCUS}`;
-
 const TONES = {
   sukun: {
     text: "text-cyan-700 dark:text-cyan-300",
@@ -54,6 +53,15 @@ const TONES = {
   },
 };
 
+const BEAT_PAIRS: BeatPair[] = [
+  { 
+    id: "moving", 
+    name: "Moving vs. Still", 
+    short: { ar: "بَ", tr: "ba (Moving 1 beat)" }, 
+    long: { ar: "أَبْ", tr: "ab (Stopped instantly)" }, 
+    tone: TONES.sukun 
+  },
+];
 /* -------------------------------------------------------------------------- */
 /*  Content                                                                   */
 /* -------------------------------------------------------------------------- */
@@ -101,15 +109,7 @@ const SUKOON_CARDS = [
   },
 ];
 
-const BEAT_PAIRS: BeatPair[] = [
-  {
-    id: "moving",
-    name: "Moving vs. Still",
-    short: { ar: "بَ", tr: "ba (Moving 1 beat)" },
-    long: { ar: "أَبْ", tr: "ab (Stopped instantly)" },
-    tone: { text: "text-cyan-700", chip: "bg-cyan-600", bar: "bg-cyan-500", border: "border-cyan-200", tint: "bg-cyan-50", grad: "", tile: "" },
-  },
-];
+
 
 const LETTERS: [string, string, string, boolean?][] = [
   ["ب", "Ba", "b"],
