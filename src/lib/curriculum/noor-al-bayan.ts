@@ -1,5 +1,31 @@
-import { CurriculumCourse, CurriculumLesson } from "./types";
+import type { CurriculumCourse, CurriculumLesson } from "./types";
 
+/**
+ * Every lesson component that exists in components/curriculum/lessons.
+ * Keep in sync with the component registry: the integrity check below fails fast
+ * in development if a lesson points at a key that is not listed here (typos, renames).
+ */
+export const LESSON_COMPONENT_KEYS = [
+  "HarakatLesson",
+  "AlphabetLesson",
+  "SukunLesson",
+  "TanweenLesson",
+  "MaddLesson",
+  "ShaddahLesson",
+  "LamLesson",
+  "TaaMarbutaLesson",
+  "MaddLeenLesson",
+  "HamzatulWaslLesson",
+  "TanweenNoonRulesLesson",
+  "ReadingPracticeLesson",
+  "ShortSurahsLesson",
+  "QuranicMasteryLesson",
+] as const;
+
+/**
+ * Lessons MUST stay in teaching order: array position drives prev/next navigation,
+ * and number === order === position + 1 is enforced by validateCurriculum().
+ */
 export const NOOR_AL_BAYAN_LESSONS: CurriculumLesson[] = [
   {
     id: "lesson-1-harakat",
@@ -50,11 +76,11 @@ export const NOOR_AL_BAYAN_LESSONS: CurriculumLesson[] = [
     title: "Arabic Alphabet & Connecting Forms",
     titleAr: "الحُرُوفُ الهِجَائِيَّةُ وَأَشْكَالُهَا فِي الكَلِمَة",
     subtitle: "Beginning, Middle & End Letter Shapes + Heavy & Non-Connecting Letters",
-    subtitleAr: "أشكال الحروف الـ 28 في أول ووسط وآخر الكلمة مع الحروف الرفّاسة والمفخمة",
+    subtitleAr: "أشكال الحروف الـ 28 في أول ووسط وآخر الكلمة مع الحروف غير المتصلة وحروف التفخيم",
     description: "Explore all 28 Arabic letters in their isolated, beginning, middle, and final joined forms. Master the 6 one-way non-connecting letters and the 7 heavy (Tafkheem) letters.",
-    descriptionAr: "استكشف الحروف العربية الـ 28 وأشكال اتصالها في أول ووسط وآخر الكلمة، مع إتقان الحروف الستة الرفّاسة وحروف التفخيم السبعة (خص ضغط قظ).",
+    descriptionAr: "استكشف الحروف العربية الـ 28 وأشكال اتصالها في أول ووسط وآخر الكلمة، مع إتقان الحروف الستة التي لا تتصل بما بعدها وحروف التفخيم السبعة (خص ضغط قظ).",
     objectives: ["Recognize all 28 Arabic letters in beginning, middle, and final positions", "Identify the 6 non-connecting letters (أ د ذ ر ز و)", "Pronounce the 7 heavy letters (خص ضغط قظ) with proper Tafkheem"],
-    objectivesAr: ["التعرف على أشكال الحروف في أول ووسط وآخر الكلمة", "تمييز الحروف الرفاسة الستة التي لا تتصل بما بعدها", "نطق حروف التفخيم السبعة بملء الفم"],
+    objectivesAr: ["التعرف على أشكال الحروف في أول ووسط وآخر الكلمة", "تمييز الحروف الستة التي لا تتصل بما بعدها", "نطق حروف التفخيم السبعة بملء الفم"],
     seo: {
       metaTitle: "Arabic Alphabet Connecting Shapes (Start, Middle, End) | Noor Al-Bayan Lesson 2",
       metaDescription: "Interactive guide to all 28 Arabic letters, joined cursive shapes, 6 non-connecting letters, and 7 heavy Tafkheem letters with visual flashcards.",
@@ -138,7 +164,7 @@ export const NOOR_AL_BAYAN_LESSONS: CurriculumLesson[] = [
     accentColor: "#00A86B",
     coverImage: "/Tajwedo-Public-Assets/Services/Quran Recitation.webp",
     title: "Natural Long Vowels (Al-Madd)",
-    titleAr: "المُدُودُ الثَّلَاثَة (المَدُّ الطَّبِيعِيّ بِالأَلِفِ وَالوَاوِ وَاليَاء)",
+    titleAr: "المَدُّ الطَّبِيعِيُّ: الأَلِفُ وَالوَاوُ وَاليَاء",
     subtitle: "Stretching Sounds for 2 Beats with Alif (ا), Waw (و), and Ya (ي)",
     subtitleAr: "إطالة الصوت بمقدار حركتين مع حروف المد الثلاثة (ا و ي)",
     description: "Master the 3 Arabic long vowels (Madd bil-Alif, Madd bil-Waw, and Madd bil-Ya). Compare 1-beat short vowels against 2-beat long vowels so you never mix up meanings in the Quran.",
@@ -331,15 +357,12 @@ export const NOOR_AL_BAYAN_LESSONS: CurriculumLesson[] = [
       keywords: ["Noon Sakinah and Tanween rules", "Izhar Idgham Iqlab Ikhfa for kids", "Tajweed rules interactive"],
     },
   },
-
-
-
   {
     id: "lesson-12-reading-practice",
     number: 12,
     order: 12,
     slug: "reading-practice-fluency",
-    aliases: ["reading-practice", "fluency", "word-to-line", "lesson-12-practice"],
+    aliases: ["reading-practice", "fluency", "word-to-line", "lesson-12"],
     componentKey: "ReadingPracticeLesson",
     isPublished: true,
     isFree: true,
@@ -378,7 +401,7 @@ export const NOOR_AL_BAYAN_LESSONS: CurriculumLesson[] = [
     order: 13,
     slug: "short-surahs-juz-amma",
     aliases: ["short-surahs", "juz-amma", "surahs", "lesson-13"],
-    componentKey: "shortSurahsLesson",
+    componentKey: "ShortSurahsLesson",
     isPublished: true,
     isFree: true,
     duration: "35 mins",
@@ -410,7 +433,6 @@ export const NOOR_AL_BAYAN_LESSONS: CurriculumLesson[] = [
       keywords: ["Short surahs for kids", "Juz Amma for beginners", "Learn to recite Quran word by word", "Noor Al-Bayan surahs"],
     },
   },
-
   {
     id: "lesson-14-quranic-mastery",
     number: 14,
@@ -433,20 +455,60 @@ export const NOOR_AL_BAYAN_LESSONS: CurriculumLesson[] = [
     subtitleAr: "تطبيق عملي شامل لجميع قواعد نور البيان على آيات وسور قصيرة من القرآن الكريم",
     description: "Celebrate your Noor Al-Bayan graduation! Apply every rule you learned—Harakat, Sukun, Qalqalah, Tanween, Madd, Shaddah, Sun/Moon Lam, and Waqf stopping rules—on full Quranic verses.",
     descriptionAr: "مسك ختام منهج نور البيان! تطبيق عملي متكامل لجميع المهارات (الحركات، السكون، القلقلة، التنوين، المدود، الشدة، اللام الشمسية والقمرية، والوقف) على سور وآيات قرآنية.",
-    objectives: ["Apply proper Waqf (stopping rules) at the end of any Quranic verse", "Decode full Quranic verses word-by-word with accurate Tajweed timing", "Recite Surah Al-Fatihah and Surah Al-Ikhlas with confidence and clarity"],
-    objectivesAr: ["إتقان قواعد الوقف على أواخر الكلم (الوقف بالسكون، مد العوض، التاء المربوطة)", "تحليل الآيات القرآنية كلمةً كلمةً مع مراعاة أزمنة الحركات والمدود والغنن", "تلاوة سورة الفاتحة وسورة الإخلاص تلاوة صحيحة متقنة"],
+    objectives: ["Apply proper Waqf (stopping rules) at the end of any Quranic verse", "Decode full Quranic verses word-by-word with accurate Tajweed timing", "Read a full short surah from start to finish, applying every rule with confidence"],
+    objectivesAr: ["إتقان قواعد الوقف على أواخر الكلم (الوقف بالسكون، مد العوض، التاء المربوطة)", "تحليل الآيات القرآنية كلمةً كلمةً مع مراعاة أزمنة الحركات والمدود والغنن", "قراءة سورة قصيرة كاملة من أولها إلى آخرها مع تطبيق جميع الأحكام بثقة"],
     seo: {
-      metaTitle: "Quranic Recitation Mastery & Waqf Stopping Rules | Noor Al-Bayan Lesson 12",
-      metaDescription: "Complete Noor Al-Bayan graduation lesson: practice word-by-word Quranic recitation, Waqf stopping rules, Surah Al-Fatihah, and Surah Al-Ikhlas.",
+      metaTitle: "Quranic Recitation Mastery & Waqf Stopping Rules | Noor Al-Bayan Lesson 14",
+      metaDescription: "Complete Noor Al-Bayan graduation lesson: practice word-by-word Quranic recitation and Waqf stopping rules on full verses.",
       keywords: ["Quranic recitation practice", "Waqf stopping rules Tajweed", "Noor Al-Bayan graduation", "Read Quran word by word"],
     },
   },
 ];
 
+/* ------------------------------------------------------------------ */
+/*  Integrity check (development only): fails fast on data mistakes   */
+/* ------------------------------------------------------------------ */
+
+function validateCurriculum(lessons: CurriculumLesson[]): string[] {
+  const errors: string[] = [];
+  const owners = new Map<string, string>();
+  const claim = (value: string, owner: string, kind: string) => {
+    const key = value.toLowerCase();
+    const prev = owners.get(key);
+    if (prev && prev !== owner) errors.push(`${kind} "${value}" is used by both ${prev} and ${owner}`);
+    else owners.set(key, owner);
+  };
+  const known = LESSON_COMPONENT_KEYS as readonly string[];
+
+  lessons.forEach((l, i) => {
+    claim(l.id, l.id, "id");
+    claim(l.slug, l.id, "slug");
+    l.aliases?.forEach((a) => claim(a, l.id, "alias"));
+    if (l.number !== i + 1 || l.order !== i + 1) {
+      errors.push(`${l.id}: number and order must both be ${i + 1} (array position)`);
+    }
+    if (!known.includes(String(l.componentKey))) {
+      errors.push(`${l.id}: unknown componentKey "${String(l.componentKey)}"`);
+    }
+  });
+  return errors;
+}
+
+if (process.env.NODE_ENV !== "production") {
+  const errors = validateCurriculum(NOOR_AL_BAYAN_LESSONS);
+  if (errors.length) {
+    throw new Error(`[noor-al-bayan] curriculum data errors:\n- ${errors.join("\n- ")}`);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Course                                                             */
+/* ------------------------------------------------------------------ */
+
 const TOTAL_LESSONS = NOOR_AL_BAYAN_LESSONS.length;
 const TOTAL_MINUTES = NOOR_AL_BAYAN_LESSONS.reduce((sum, l) => sum + l.estimatedMinutes, 0);
 const toArabicDigits = (n: number) => String(n).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[Number(d)]);
- 
+
 export const NOOR_AL_BAYAN_COURSE: CurriculumCourse = {
   titleEn: "Noor Al-Bayan: Learn to Read Quran",
   taglineEn: `${TOTAL_LESSONS} Interactive Visual Lessons from Arabic Letters to Full Quranic Recitation`,
@@ -469,11 +531,25 @@ export const NOOR_AL_BAYAN_COURSE: CurriculumCourse = {
   badgeText: "FREE INTERACTIVE CURRICULUM",
   lessons: NOOR_AL_BAYAN_LESSONS,
 };
-// EXPORT ALL REQUIRED ALIASES FOR COMPATIBILITY
+
+// Compatibility alias
 export const NOOR_AL_BAYAN = NOOR_AL_BAYAN_COURSE;
 
+/* ------------------------------------------------------------------ */
+/*  Lookups                                                            */
+/* ------------------------------------------------------------------ */
+
+// decodeURIComponent throws on malformed input (e.g. "%E0%A4%A"), which would 500 the route.
+const safeDecode = (value: string) => {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+};
+
 export function getNoorAlBayanLessonBySlug(slug: string): CurriculumLesson | undefined {
-  const normalized = decodeURIComponent(slug).toLowerCase().trim();
+  const normalized = safeDecode(slug).toLowerCase().trim();
   return NOOR_AL_BAYAN_LESSONS.find(
     (l) =>
       l.slug.toLowerCase() === normalized ||

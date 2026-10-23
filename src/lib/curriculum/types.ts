@@ -1,17 +1,18 @@
 export type LessonComponentKey =
   | "AlphabetLesson"
-  | "HarakatLesson"
-  | "SukunLesson"
-  | "TanweenLesson"
-  | "MaddLesson"
-  | "ShaddahLesson"
-  | "LamLesson"
-  | "TaaMarbutaLesson"
-  | "MaddLeenLesson"
-  | "ReadingPracticeLesson"
   | "HamzatulWaslLesson"
-  | "TanweenNoonRulesLesson"
-  | "QuranicMasteryLesson";
+  | "HarakatLesson"
+  | "LamLesson"
+  | "MaddLeenLesson"
+  | "MaddLesson"
+  | "QuranicMasteryLesson"
+  | "ReadingPracticeLesson"
+  | "ShaddahLesson"
+  | "ShortSurahsLesson"
+  | "SukunLesson"
+  | "TaaMarbutaLesson"
+  | "TanweenLesson"
+  | "TanweenNoonRulesLesson";
 
 export interface CurriculumLesson {
   id: string;
