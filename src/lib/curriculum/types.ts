@@ -9,7 +9,7 @@ export type LessonComponentKey =
   | "ReadingPracticeLesson"
   | "ShaddahLesson"
   | "ShortSurahsLesson"
-  | "SukunLesson"
+  | "SukoonLesson"
   | "TaaMarbutaLesson"
   | "TanweenLesson"
   | "TanweenNoonRulesLesson";

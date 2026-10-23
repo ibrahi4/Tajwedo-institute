@@ -8,7 +8,7 @@ import type { CurriculumCourse, CurriculumLesson } from "./types";
 export const LESSON_COMPONENT_KEYS = [
   "HarakatLesson",
   "AlphabetLesson",
-  "SukunLesson",
+  "SukoonLesson",
   "TanweenLesson",
   "MaddLesson",
   "ShaddahLesson",
@@ -93,7 +93,7 @@ export const NOOR_AL_BAYAN_LESSONS: CurriculumLesson[] = [
     order: 3,
     slug: "sukun-and-qalqalah",
     aliases: ["sukun", "sukoon", "qalqalah", "lesson-3"],
-    componentKey: "SukunLesson",
+    componentKey: "SukoonLesson",
     isPublished: true,
     isFree: true,
     duration: "25 mins",

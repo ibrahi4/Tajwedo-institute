@@ -10,7 +10,7 @@ import {
 
 import HarakatLesson from "@/components/curriculum/lessons/HarakatLesson";
 import AlphabetLesson from "@/components/curriculum/lessons/AlphabetLesson";
-import SukunLesson from "@/components/curriculum/lessons/SukunLesson";
+import SukoonLesson from "@/components/curriculum/lessons/SukoonLesson";
 import TanweenLesson from "@/components/curriculum/lessons/TanweenLesson";
 import MaddLesson from "@/components/curriculum/lessons/MaddLesson";
 import ShaddahLesson from "@/components/curriculum/lessons/ShaddahLesson";
@@ -81,8 +81,8 @@ export default async function NoorAlBayanLessonPage({ params }: PageProps) {
         return <HarakatLesson />;
       case "AlphabetLesson":
         return <AlphabetLesson />;
-      case "SukunLesson":
-        return <SukunLesson />;
+      case "SukoonLesson":
+        return <SukoonLesson />;
       case "TanweenLesson":
         return <TanweenLesson />;
       case "MaddLesson":
