@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { useLesson } from "../shared/LessonContext";
 import { BeatMeter, SlideDeck, TeacherCorner, VoiceNotice, speakArabic } from "../shared/Lessontoolkit";
-import type { BeatPair, Slide } from "../shared/LessonToolkit";
+import type { BeatPair, Slide } from "../shared/Lessontoolkit";
 
 /* -------------------------------------------------------------------------- */
 /*  Types and styling                                                         */
